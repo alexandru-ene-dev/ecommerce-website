@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "text": "50% off on matrix merchandise!",
+    "src": "matrix.jpg",
+    "alt": "matrix merchandise",
+    "active": true
+  },
+  {
+    "id": 2,
+    "text": "20% off on latest video games!",
+    "src": "games.jpg",
+    "alt": "latest video games deal",
+    "active": false
+  },
+  {
+    "id": 3,
+    "text": "Buy 1, get 2! And many more on future tech!",
+    "src": "future.jpg",
+    "alt": "future deal",
+    "active": false
+  }
+]

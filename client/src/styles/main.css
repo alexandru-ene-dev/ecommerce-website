@@ -1,0 +1,95 @@
+
+/* -------------- MAIN ---------------- */
+
+.title {
+  max-width: 20em;
+  margin-inline: auto;
+  margin-top: 10rem;
+  margin-bottom: 4rem;
+  /* margin-top: clamp(10rem, 23vw, 13rem); */
+  /* margin-bottom: clamp(4rem, 10vw, 10rem); */
+  padding-inline: 1em;
+  color: var(--clr-title);
+  font-size: clamp(1rem, 1.5rem + 2vw, 5rem);
+}
+
+.new-deals-section {
+  height: clamp(30em, 50vw, 50em);
+}
+
+.controllers-wrapper {
+  position: relative;
+  top: 50%;
+  z-index: 1;
+}
+
+.controller {
+  position: absolute;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.75rem;
+  opacity: .8;
+  transition: opacity 300ms;
+}
+.controller:hover,
+.controller:focus {
+  opacity: 1;
+}
+
+.left-controller {
+  left: 15px;
+}
+.right-controller {
+  right: 15px;
+}
+
+.deals-list {
+  display: flex;
+  height: 100%;
+  position: relative;
+  overflow-x: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.deal-item {
+  position: relative;
+  flex-grow: 1;
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+
+.deal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+[data-active="true"] {
+  opacity: 1;
+}
+
+.deal-text {
+  max-width: 20em;
+  position: absolute;
+  top: 3em;
+  left: 1em;
+  color: var(--clr-deal);
+  font-size: clamp(1.25em, 3vw, 5em);
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.deal-text::after {
+  content: "|";
+  animation: blink 1s infinite step-end;
+}
+
+@keyframes blink {
+  50% { opacity: 0 }
+}
+
+/* ------------------------------------- */

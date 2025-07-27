@@ -1,0 +1,129 @@
+.register-title {
+  margin-top: 0;
+  font-size: 2rem;
+  text-align: center;
+  color: var(--clr-prim);
+}
+
+.create-account-section {
+  max-width: 40em;
+  margin-top: 11rem;
+  margin-inline: auto;
+  padding: clamp(1em, 5vw, 4em);
+  border-radius: 1em;
+  background-color: var(--register);
+  transition: background-color 300ms;
+
+  & label {
+    font-size: 1.15rem;
+    color: var(--clr-title);
+  }
+
+  & input:hover,
+  & input:focus {
+    border: var(--border-hov);
+  }
+}
+
+.terms-link {
+  color: var(--clr-prim);
+}
+
+.name-wrapper {
+  margin-bottom: 1em;
+}
+
+.name-wrapper_flex {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+}
+
+.name-wrapper_flex:nth-child(2) {
+  margin-top: 1em;
+}
+
+.register-pass-inp-wrapper {
+  position: relative;
+}
+
+.register-input {
+  width: 100%;
+  padding: .5em;
+  border-radius: .5em;
+  font-size: 1.15rem;
+}
+
+.email-wrapper-flex,
+.password-wrapper-flex {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+}
+
+.password-wrapper-flex {
+  margin-top: 1em;
+
+  & p {
+    margin-top: .25em;
+    margin-bottom: 0;
+    color: var(--foot-link-clr);
+  }
+}
+
+.checkbox-label {
+  display: block;
+  margin-top: 1em;
+  cursor: pointer;
+
+  & p {
+    display: inline;
+    margin: 0;
+    margin-left: .5em;
+    font-size: 1rem;
+    color: var(--foot-link-clr);
+  }
+}
+
+.create-account-btn {
+  display: block;
+  width: 100%;
+  margin-top: 2em;
+  padding: .5em 1em;
+  border: none;
+  border-radius: .5em;
+  background-color: var(--btn-bg);
+  color: var(--btn-clr);
+  font-size: 1.5rem;
+}
+
+.create-account-btn:hover,
+.create-account-btn:focus {
+  background-color: var(--btn-bg-hov);
+}
+
+.checkbox-inp {
+  width: 20px;
+  height: 0;
+  margin: 0;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.checkbox-inp::after {
+  content: "";
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  bottom: -10px;
+  border: 2px solid var(--menu-subtitle-clr);
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 300ms;
+}
+
+.checkbox-inp:checked::after {
+  content: "\2713";
+  background-color: var(--clr-prim2);
+}

@@ -1,0 +1,103 @@
+
+/* ------------- COMPONENTS -------------- */
+
+.go-top-btn {
+  display: none;
+  position: fixed;
+  bottom: 25%;
+  right: 20px;
+  background-color: var(--btn-bg);
+  border: none;
+}
+
+.go-top-btn:hover,
+.go-top-btn:focus {
+  background-color: var(--btn-bg-hov);
+}
+
+.go-top-btn[data-visible="true"] {
+  display: block;
+}
+
+.input {
+  display: block;
+  outline: 2px solid var(--border);
+  border: none;
+  background: none;
+  color: var(--inp-text);
+  text-align: center;
+  transition: outline 300ms;
+}
+
+.input::placeholder {
+  color: var(--inp-holder);
+}
+
+.input:focus,
+.input:hover {
+  outline: 2px solid var(--border-hov);
+}
+
+.input:focus {
+  background-color: var(--form-foc);
+}
+
+.theme-switcher {
+  max-height: 28px;
+  position: relative;
+}
+
+.theme-switcher-btn {
+  border: none;
+  background: none;
+}
+
+.theme-list {
+  display: flex;
+  flex-direction: column;
+  width: 90px;
+  z-index: 5000;
+  position: absolute;
+  right: .25em;
+  margin-top: .25em;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  width: 90px;
+  padding-inline: 10px;
+  border: 2px solid var(--theme-btn-bg);
+  background-color: var(--theme-btn-bg);
+  color: var(--them-btn-clr);
+}
+
+.theme-btn:hover,
+.theme-btn:focus {
+  background-color: var(--theme-btn-hov);
+}
+
+.theme-icon {
+  font-size: 20px;
+}
+
+.close-menu-btn {
+  display: block;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  z-index: 10;
+  padding: .25em .5em;
+  border: none;
+  background-color: var(--btn-bg);
+  color: var(--btn-clr);
+  font-size: 1.25rem;
+}
+
+.close-menu-btn:hover,
+.close-menu-btn:focus {
+  background-color: var(--btn-bg-hov);
+}
+
+/* ------------------------------------- */
