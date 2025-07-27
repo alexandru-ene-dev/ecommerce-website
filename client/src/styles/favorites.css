@@ -1,0 +1,43 @@
+.favorites-section {
+  margin-top: clamp(12rem, 2vw, 15rem);
+}
+
+.favorites-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5em;
+}
+
+.favorites-par {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.favorites-par,
+.favorites-title {
+  color: var(--clr-title);
+}
+
+.favorites-icon {
+  font-size: 3rem;
+}
+
+.back-shopping-btn {
+  display: block;
+  max-width: 15em;
+  margin-inline: auto;
+  margin-top: 2em;
+  padding: .5em 1em;
+  border-radius: 10px;
+  background-color: var(--btn-bg);
+  color: var(--btn-clr);
+  font-size: 1.1rem;
+  text-decoration: none;
+  text-align: center;
+}
+
+.back-shopping-btn:hover,
+.back-shopping-btn:focus {
+  background-color: var(--btn-bg-hov);
+}

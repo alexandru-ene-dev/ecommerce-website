@@ -1,0 +1,137 @@
+.login-wrapper {
+  position: fixed;
+  inset: 0;
+  top: 60px;
+  z-index: 2000;
+  padding: 1.5em;
+  border-radius: 10px;
+  background-color: var(--menu-bg-prim);
+  opacity: 0;
+  transition: opacity 200ms;
+  overflow: auto;
+}
+
+.login-wrapper[data-appear="true"] {
+  opacity: 1;
+}
+
+.login-wrapper[data-appear="false"] {
+  opacity: 0;
+}
+
+.login-title {
+  text-align: center;
+}
+
+.login-wrapper .login-title {
+  margin-top: 0;
+}
+
+.login-btn {
+  display: block;
+  width: 100%;
+  margin-inline: auto;
+  padding: 1em;
+  border-radius: 10px;
+  border: none;
+  background-color: var(--btn-bg);
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--btn-clr);
+}
+
+.login-form,
+.create-account-wrapper {
+  max-width: 30em;
+  margin-inline: auto;
+}
+
+.create-account-wrapper {
+  margin-top: 1.5em;
+}
+
+.login-form input {
+  display: block;
+  width: 100%;
+  margin-inline: auto;
+  margin-bottom: 1em;
+  padding: .5em;
+  border-radius: .5em;
+  font-size: 1.15rem;
+}
+
+.login-form input::placeholder {
+  color: var(--inp-log-holder);
+}
+
+.login-form input:focus {
+  background: none;
+}
+
+.login-pass-wrapper {
+  position: relative;
+}
+
+.visible-pass-btn {
+  position: absolute;
+  right: .5em;
+  top: 8px;
+  background: none;
+  border: none;
+  color: var(--clr-prim);
+}
+
+.visible-pass-btn:hover,
+.visible-pass-btn:focus {
+  color: var(--icon-hov);
+}
+
+.login-form a {
+  display: block;
+  width: fit-content;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: 0;
+  color: var(--txt-clr);
+  text-align: right;
+}
+
+.login-form a:hover,
+.login-form a:focus {
+  color: var(--txt-hov);
+}
+
+.close-login-btn {
+  display: flex;
+  justify-content: center;
+  width: 2em;
+  top: .5em;
+  right: 1em;
+  bottom: auto;
+  background: none;
+  font-size: .9rem;
+}
+
+.sign-in-btn {
+  padding: .5em 0;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.login-btn:hover,
+.login-btn:focus {
+  background-color: var(--btn-bg-hov);
+}
+
+.create-account-par {
+  color: var(--foot-link-clr);
+  text-align: justify;
+}
+
+.create-account-link {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-size: .85rem;
+  text-align: center;
+  text-decoration: none;
+}

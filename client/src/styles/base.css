@@ -1,0 +1,104 @@
+
+/* ------ BASE: RESET, TYPOGRAPHY, DEFAULTS ------- */
+
+:root {
+  box-sizing: border-box;
+  color-scheme: light dark;
+
+  /* color palette */
+  --bg: hsl(0, 0%, 0%);
+  --bg-sec: hsl(0, 0%, 11%);
+  --menu-subtitle-clr: hsl(0, 0%, 100%);
+  --menu-bg-prim: hsl(0, 0%, 20%);
+  --menu-bg-sec: hsl(0, 0%, 25%);
+  --menu-link-clr: hsl(0, 0%, 88%);
+  --menu-link-hov: hsl(0, 0%, 30%);
+  --desktop-nav-bg: hsl(0, 0%, 11%);
+  --clr-prim: hsl(146, 100%, 53%);
+  --clr-prim2: hsl(146, 100%, 35%);
+  --border: hsl(0, 0%, 30%);
+  --border-hov: hsl(0, 0%, 90%);
+  --txt-clr: hsl(0, 0%, 70%);
+  --txt-hov: hsl(0, 0%, 80%);
+  --icon-hov: hsl(0, 0%, 90%);
+  --sublink: hsl(0, 0%, 90%);
+  --sublink-hov: hsl(0, 0%, 65%);
+  --clr-title: hsl(0, 0%, 88%);
+  --clr-deal: hsl(0, 0%, 88%);
+  --inp-text: hsl(0, 0%, 88%);
+  --inp-holder: hsl(0, 0%, 60%);
+  --inp-log-holder: hsl(0, 0%, 60%);
+  --search-btn-foc: hsl(0, 0%, 30%);
+  --search-btn-clr: hsl(0, 0%, 88%);
+  --btn-bg: hsl(0, 0%, 35%);
+  --btn-clr: hsl(0, 0%, 88%);
+  --btn-bg-hov: hsl(0, 0%, 41%);
+  --footer-bg: hsl(0, 0%, 5%);
+  --foot-link-clr: hsl(0, 0%, 75%);
+  --foot-link-hov: hsl(0, 0%, 88%);
+  --foot-marker: hsl(0, 0%, 88%);
+  --theme-btn-bg: hsl(0, 0%, 20%);
+  --theme-btn-clr: hsl(0, 0%, 90%);
+  --theme-btn-hov: hsl(0, 0%, 30%);
+  --register: hsl(0, 0%, 10%);
+  --copyright-clr: hsl(0, 0%, 40%);
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  transition: background-color 400ms;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 600;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+button {
+  display: block;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  font-style: italic;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* --------------------------------------------- */
