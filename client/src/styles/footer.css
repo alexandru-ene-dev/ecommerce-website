@@ -11,8 +11,10 @@
 .newsletter-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 30em), 1fr));
-  gap: 3em;
+  column-gap: 3em;
+  row-gap: 2em;
   padding: clamp(1em, 3vw, 3em);
+  /* padding-top: 3em; */
   background-color: var(--bg-sec);
   transition: 300ms;
 }
@@ -46,7 +48,9 @@
 .newsletter-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-  gap: 2em;
+  column-gap: 2em;
+  row-gap: 1em;
+
 }
 
 .footer-input {
@@ -78,7 +82,7 @@
   margin-top: 1em;
   margin-bottom: 0;
   color: var(--clr-prim);
-  font-size: clamp(.75rem, 2vw, 1rem);
+  font-size: clamp(.75rem, 1.25vw, 1rem);
   line-height: 1.5;
   text-align: justify;
 }
@@ -99,7 +103,8 @@
 .links-social-wrapper {
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  padding: 0em 1em 0 1em;
+  /* padding-bottom: 0; */
 }
 
 .footer-links-panel-desktop {
@@ -165,6 +170,8 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  /* margin-top: .5em; */
+  margin-bottom: .5em;
 }
 
 .social-item {
@@ -197,12 +204,12 @@
 }
 
 .copyrights {
-  padding: 1em;
-  padding-top: 0;
-  margin-bottom: 0;
+  padding: 0 1rem clamp(3.5rem, 4vw, 4rem) 1rem;
+  margin-bottom: 0em;
+  margin-top: 0;
   text-align: center;
   text-transform: uppercase;
-  font-size: clamp(1rem, 3vw, 2rem);
+  font-size: clamp(1.25rem, 3vw, 2rem);
   color: var(--copyright-clr);
 }
 

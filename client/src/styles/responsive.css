@@ -10,7 +10,7 @@
     display: flex;
     justify-content: center;
     gap: 5em;
-    margin-top: 2em;
+    margin-top: 0em;
     
     & h2 {
       font-size: 1.5rem;
@@ -23,6 +23,20 @@
 
   .social-par {
     font-size: 1.5rem;
+  }
+
+  .intersect-img-flex {
+    display: flex;
+  }
+
+  .intersection-wrapper {
+    flex-wrap: nowrap;
+  }
+
+  .intersect-img {
+    object-fit: cover;
+    max-height: 30px;
+    max-width: 75px;
   }
 }
 
@@ -37,6 +51,7 @@
   .desktop-header {
     display: block;
     width: 100%;
+    max-width: 1800px;
     position: fixed;
     top: 0;
     left: 0;
@@ -109,7 +124,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 7.25em;
+    /* top: 7.25em; */
     margin-inline: auto;
     padding: 1em;
     padding-block: 3em;
@@ -156,14 +171,16 @@
     flex-direction: row;
     justify-content: space-evenly;
     gap: 3em;
-    margin-top: 0;
+    margin-bottom: 1em;
+    /* margin-top: 0; */
   }
 
   .footer-links-panel-desktop {
     gap: clamp(3em, 5vw, 7em);
+    margin-top: 2em;
 
     & h2 {
-      margin-top: 0;
+      margin-top: 0em;
     }
   }
 
@@ -195,20 +212,83 @@
     margin-top: 14rem;
   }
 
+  .sales-outer-wrapper {
+    margin-top: 9.5rem;
+  }
+
   .title {
-    margin-top: 14rem;
+    margin-top: 4rem;
     margin-bottom: 6rem;
   }
 
   .login-wrapper {
     right: 1em;
-    left: 70%;
-    bottom: 4em;
+    left: 65%;
+    bottom: 2em;
   }
 
   .create-account-section {
     margin-top: 13rem;
   }
+
+  .deals-list {
+    overflow-x: hidden;
+  }
+
+  .join-par {
+    --width: 1000px;
+  }
+
+  .product-wrapper {
+    margin-top: 11rem;
+    padding: 0;
+  }
+
+  /* .prod-img {
+    width: 50%;
+    max-width: 35em;
+  } */
+
+  .prod-flex {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 1em;
+  }
+
+  .prod-price-wrapper {
+    gap: 2em;
+    margin-top: 0;
+    margin-inline: 0;
+  }
+
+  .prod-price-inner {
+    gap: 2em;
+    margin: 0;
+  }
+
+  .prod-new-price {
+    margin: 0;
+  }
+
+  .prod-old-price {
+    margin: 0;
+  }
+
+  .intersection-wrapper {
+    display: flex;
+    gap: 1em;
+  }
+
+  .intersect-img-flex,
+  .intersect-price-btn-flex {
+    width: 50%;
+  }
+
+  .social-wrapper {
+    margin-top: 2em;
+  }
+
 }
 
 
@@ -218,6 +298,14 @@
   .newsletter-title,
   .newsletter-par {
     text-align: left;
+  }
+}
+
+@media (min-width: 1800px) {
+  .desktop-header,
+  .intersection-wrapper {
+    --width: 1800px;
+    left: calc(50% - var(--width) / 2);
   }
 }
 

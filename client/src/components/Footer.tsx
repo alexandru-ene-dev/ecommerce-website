@@ -44,7 +44,7 @@ const Footer = () => {
               value={state.footerInput} 
               placeholder="Enter your email address"
             />
-            <button className="subscribe-btn">Subscribe to newsletter</button>
+            <button className="subscribe-btn">Subscribe to Newsletter</button>
           </form>
 
           <p className="newsletter-notice">
