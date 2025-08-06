@@ -9,3 +9,7 @@ export const RegisterUserInputsSchema = z.object({
     message: 'Passwords do not match',
     path: ["confirmPath"]
 });
+export const LoginSchema = z.object({
+    email: z.email({ message: 'Invalid credentials' }),
+    password: z.string().min(8, { message: 'Invalid credentials' })
+});

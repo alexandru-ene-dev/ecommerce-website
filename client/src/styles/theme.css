@@ -18,6 +18,7 @@
     --border: hsl(146, 100%, 25%);
     --border-hov: hsl(0, 0%, 0%);
     --icon-hov: hsl(0, 0%, 0%);
+    --clr-new-title: hsl(146, 100%, 25%);
     --clr-title: hsl(0, 0%, 0%);
     --clr-deal: hsl(0, 0%, 88%);
     --inp-text: hsl(0, 0%, 0%);
@@ -41,6 +42,13 @@
     --register: hsl(146, 30%, 81%);
     --txt-clr: hsl(0, 0%, 70%);
     --txt-hov: hsl(0, 0%, 80%);
+    --txt-clr2: hsl(146, 100%, 25%);
+    --txt-hov2: hsl(146, 100%, 35%);
+    --error: hsl(0, 100%, 35%);
+    --sale-txt-bg: hsl(146, 100%, 25%);
+    --sale-txt-clr: hsl(146, 100%, 53%);
+    --sale-txt-hov: hsl(0, 0%, 90%);
+    --new-card-bg: hsl(146, 30%, 82%);
 
     background-color: var(--bg);
 
@@ -52,7 +60,7 @@
 
 
 body.dark-mode {
-  --bg: hsl(0, 0%, 0%);
+  --bg: hsl(0, 0%, 6%);
   --bg-sec: hsl(0, 0%, 11%);
   --menu-subtitle-clr: hsl(0, 0%, 100%);
   --menu-bg-prim: hsl(0, 0%, 20%);
@@ -65,6 +73,7 @@ body.dark-mode {
   --border: hsl(0, 0%, 30%);
   --border-hov: hsl(0, 0%, 90%);
   --icon-hov: hsl(0, 0%, 90%);
+  --clr-new-title: hsl(0, 0%, 88%);
   --clr-title: hsl(0, 0%, 88%);
   --clr-deal: hsl(0, 0%, 88%);
   --inp-text: hsl(0, 0%, 88%);
@@ -86,6 +95,13 @@ body.dark-mode {
   --register: hsl(0, 0%, 10%);
   --txt-clr: hsl(0, 0%, 70%);
   --txt-hov: hsl(0, 0%, 80%);
+  --txt-clr2: hsl(0, 0%, 88%);
+  --txt-hov2: hsl(0, 0%, 80%);
+  --error: hsl(0, 100%, 45%);
+  --sale-txt-bg: hsl(0, 0%, 20%);
+  --sale-txt-clr: hsl(0, 0%, 100%);
+  --sale-txt-hov: hsl(0, 0%, 80%);
+  --new-card-bg: hsl(0, 0%, 10%);
 }
 
 
@@ -105,6 +121,7 @@ body.light-mode {
   --border: hsl(146, 100%, 25%);
   --border-hov: hsl(0, 0%, 100%);
   --icon-hov: hsl(0, 0%, 100%);
+  --clr-new-title: hsl(146, 100%, 25%);
   --clr-title: hsl(0, 0%, 0%);
   --clr-deal: hsl(0, 0%, 88%);
   --inp-text: hsl(0, 0%, 0%);
@@ -127,6 +144,13 @@ body.light-mode {
   --register: hsl(146, 30%, 81%);
   --txt-clr: hsl(0, 0%, 90%);
   --txt-hov: hsl(0, 0%, 100%);
+  --txt-clr2: hsl(146, 100%, 25%);
+  --txt-hov2: hsl(146, 100%, 35%);
+  --error: hsl(0, 100%, 35%);
+  --sale-txt-bg: hsl(146, 100%, 25%);
+  --sale-txt-clr: hsl(0, 0%, 100%);
+  --sale-txt-hov: hsl(0, 0%, 90%);
+  --new-card-bg: hsl(146, 30%, 82%);
 
   background-color: var(--bg);
 

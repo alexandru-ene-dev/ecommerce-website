@@ -11,4 +11,10 @@ export const RegisterUserInputsSchema = z.object({
   path: ["confirmPath"]
 });
 
+export const LoginSchema = z.object({
+  email: z.email({ message: 'Invalid credentials' }),
+  password: z.string().min(8, { message: 'Invalid credentials' })
+});
+
+export type LoginUserInput = z.infer<typeof LoginSchema>;
 export type RegisterUserInput = z.infer<typeof RegisterUserInputsSchema>;

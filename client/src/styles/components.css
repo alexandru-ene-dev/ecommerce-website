@@ -85,9 +85,6 @@
 .close-menu-btn {
   display: block;
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  z-index: 10;
   padding: .25em .5em;
   border: none;
   background-color: var(--btn-bg);

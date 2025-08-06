@@ -1,5 +1,5 @@
 import { useState, type MouseEvent, type ChangeEvent, type FormEvent } from 'react';
-import registerUser from '../services/registerUser.ts';
+import registerUser from '../services/registerUserService.ts';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
@@ -10,7 +10,9 @@ const Register = () => {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ confirmPass, setConfirmPass ] = useState('');
+  const [ acceptTerms, setAcceptTerms ] = useState(false);
   const [ loggedIn, setLoggedIn ] = useState(false);
+  const [ error, setError ] = useState('');
 
   const navigate = useNavigate();
 
@@ -24,16 +26,30 @@ const Register = () => {
     setVisibleConfirmPass(prev => !prev);
   };
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const registration = await registerUser(
+      firstName, 
+      lastName, 
+      email, 
+      password, 
+      confirmPass,
+      acceptTerms
+    );
+
+    if (!registration.success && registration.message) {
+      setError(registration.message);
+      return;
+    }
+
+    setLoggedIn(true);
+    navigate('/home');
+  };
 
   return (
     <section className="create-account-section">
       <h1 className="register-title">Create Account</h1>
-      <form onSubmit={(e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        registerUser(firstName, lastName, email, password, confirmPass);
-        setLoggedIn(true);
-        navigate('/home');
-      }}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="name-wrapper">
           <div className="name-wrapper_flex">
             <label htmlFor="first-name">First Name *</label>
@@ -43,7 +59,6 @@ const Register = () => {
               className="input register-input" 
               id="first-name" 
               type="text" 
-              required 
             />
           </div>
 
@@ -55,7 +70,6 @@ const Register = () => {
               className="input register-input" 
               id="last-name" 
               type="text" 
-              required 
             />
           </div>
         </div>
@@ -67,8 +81,7 @@ const Register = () => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             className="input register-input" 
             id="email" 
-            type="email" 
-            required
+            type="email"
           />
         </div>
         
@@ -82,7 +95,6 @@ const Register = () => {
               className="input register-input" 
               id="password" 
               type={visiblePass? "text" : "password"} 
-              required 
             />
             <button 
               aria-label={visiblePass? "Hide password" : "Show password"} 
@@ -108,7 +120,6 @@ const Register = () => {
               className="input register-input" 
               id="confirm-pass" 
               type={visibleConfirmPass? "text" : "password"} 
-              required 
             />
             <button 
               aria-label={visibleConfirmPass? "Hide password" : "Show password"} 
@@ -125,7 +136,17 @@ const Register = () => {
         </div>
 
         <label className="checkbox-label">
-          <input className="checkbox-inp" type="checkbox" required />
+          <input
+            onChange={() => {
+              setAcceptTerms(prev => {
+                const f = !prev;
+                return f;
+              })}
+            }
+            className="checkbox-inp" 
+            type="checkbox"
+            checked={acceptTerms? true : false}
+          />
           <p>I have read and agree with <a className="terms-link" href="#">Progressio Terms and Conditions</a>, <a className="terms-link" href="#">Privacy Policy</a> and confirm I am at least 16 years old.</p>
         </label>
 
@@ -134,6 +155,7 @@ const Register = () => {
           <p>Optional: I subscribe to Progressio Newsletter</p>
         </label>
 
+        {error && <div className="error-message">{error}</div>}
         <button className="create-account-btn">Create account</button>
       </form>
     </section>

@@ -113,7 +113,7 @@ const Header = (
               </div>
             </button>
 
-            <Link onClick={closeModal} to="/home" className="logo">Progressio</Link>
+            <Link onClick={closeModal} to="/" className="logo">Progressio</Link>
 
             <div className="header-btns">
               <button onClick={toggleLoginMenu} className="account-btn header-btn">
@@ -187,7 +187,7 @@ const Header = (
       <header className="desktop-header" data-visible={visibleHeader? "true" : "false"}>
         <nav className="navigation">
           <div className="top-navigation">
-            <Link className="logo" to='/home'>Progressio</Link>
+            <Link className="logo" to='/'>Progressio</Link>
 
             <search className="search-wrapper">
               <form onSubmit={submitSearch} className="search-form">
