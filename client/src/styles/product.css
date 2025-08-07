@@ -1,6 +1,6 @@
 .product-wrapper {
   max-width: 1800px;
-  margin-top: 9rem;
+  margin-top: 10rem;
   margin-inline: auto;
   padding-inline: clamp(.75em, 2vw, 2em);
 
@@ -15,6 +15,7 @@
 }
 
 .prod-title {
+  margin-bottom: 2em;
   font-size: clamp(1.15rem, 2vw, 2rem);
   text-align: center;
   color: var(--txt-clr2);
@@ -139,7 +140,7 @@
   flex-wrap: wrap;
   column-gap: clamp(.5rem, 3vw, 5rem);
   /* row-gap: clamp(.5rem, 3vw, 5rem); */
-  row-gap: .25em;
+  row-gap: .85em;
   max-width: 1800px;
   position: fixed;
   bottom: 0em;
@@ -147,7 +148,7 @@
   right: 0em;
   z-index: 1;
   /* padding: clamp(.65em, 3vw, 2em); */
-  padding: .5em;
+  padding: clamp(.85em, 2vw, 1.5em);
   background-color: var(--menu-bg-prim);
   transform: translateY(0%);
   transition: transform 300ms;
@@ -163,51 +164,55 @@
 }
 
 .intersect-img-flex {
-  display: none;
+  display: flex;
   align-items: center;
-  justify-content: center;
   justify-content: space-around;
-  gap: clamp(2rem, 3vw, 5rem);
+  gap: clamp(2rem, 2vw, 5rem);
   width: 100%;
-  max-width: 25em;
+  max-width: 30em;
 
   & p {
     margin: 0;
-    font-size: clamp(.9rem, 1.75vw, 1.15rem);
+    color: var(--clr-deal);
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
   }
 }
 
 .intersect-price {
   display: flex;
-  gap: .5em;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: .5rem;
+  /* row-gap: 0; */
 }
 
 .intersect-price-btn-flex {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   justify-content: space-around;
   align-items: center;
   gap: clamp(.5rem, 2vw, 5rem);
   width: 100%;
-  max-width: 25em;
+  max-width: 30em;
   /* margin-top: 1em; */
 
   
   & .prod-sale-price-flex {
     /* flex-wrap: wrap; */
-    gap: .35em;
+    column-gap: .5rem;
   }
 
   & .sale-txt {
-    font-size: clamp(.75rem, 2vw, 1.1rem);
+    font-size: clamp(.95rem, 2vw, 1.25rem);
     padding-block: 0;
   }
 
   & .old-price {
-    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-size: clamp(1.15rem, 2vw, 1.5rem);
   }
 
   & .prod-new-price {
+    /* width: 100%; */
     font-size: clamp(1.25rem, 3vw, 2rem);
   }
 
@@ -217,10 +222,10 @@
     /* max-height: 35px; */
     /* max-width: clamp(165px, 15vw, 250px); */
     padding-inline: 1em;
-    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-size: clamp(1.15rem, 2vw, 1.25rem);
   }
 }
 
 .copy-btn .new-cart-icon {
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
 }

@@ -1,8 +1,30 @@
 import Main from "../components/Main";
+import { type Dispatch, type SetStateAction } from 'react';
 
-const Homepage = () => {
+const Homepage = (
+  { 
+    setIsBtnVisible,
+    // isHeaderVisible,
+    // setIsHeaderVisible,
+    // headerHeight,
+    // setHeaderHeight
+  }: 
+  {
+    setIsBtnVisible: Dispatch<SetStateAction<boolean>>,
+    // isHeaderVisible: boolean,
+    // setIsHeaderVisible: Dispatch<SetStateAction<boolean>>,
+    // headerHeight: number,
+    // setHeaderHeight: Dispatch<SetStateAction<number>>
+  }
+) => {
   return (
-    <Main />
+    <Main 
+      setIsBtnVisible={setIsBtnVisible}
+      // isHeaderVisible={isHeaderVisible}
+      // setIsHeaderVisible={setIsHeaderVisible}
+      // headerHeight={headerHeight}
+      // setHeaderHeight={setHeaderHeight}
+    />
   )
 };
 

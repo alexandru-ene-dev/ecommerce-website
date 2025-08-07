@@ -2,7 +2,10 @@
 /* -------------- MAIN ---------------- */
 
 .sales-outer-wrapper {
-  margin-top: 7.5rem;
+  /* position: fixed; */
+  width: 100%;
+  z-index: 2000;
+  /* margin-top: 7.5rem; */
   background-color: var(--sale-txt-bg);
   overflow: hidden;
 }
@@ -11,6 +14,7 @@
   display: flex;
   justify-content: center;
   width: min(100%, 40em);
+  /* width: 100%; */
   position: relative;
   margin-inline: auto;
   /* overflow-x: hidden; */
@@ -67,11 +71,10 @@ button[data-dir="next"] {
   }
 }
 
-
 .title {
   max-width: 20em;
   margin-inline: auto;
-  margin-top: 3rem;
+  margin-top: 13rem;
   margin-bottom: 4rem;
   padding-inline: 1em;
   color: var(--clr-title);

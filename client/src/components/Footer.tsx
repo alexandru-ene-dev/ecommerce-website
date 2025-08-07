@@ -1,11 +1,26 @@
-import { type ChangeEvent, type FormEvent, useState, useEffect } from "react";
+import { type ChangeEvent, type FormEvent, useState, useEffect, useRef } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useInputContext } from "../hooks/useInputContext";
 import { devLog } from "../utils/devLog";
 
-const Footer = () => {
+const Footer = (
+  {
+    isBtnVisible,
+    setIsBtnVisible,
+    stickyBtnHeight,
+    setStickyBtnHeight
+  }:
+  {
+    isBtnVisible: boolean,
+    setIsBtnVisible: Dispatch<SetStateAction<boolean>>,
+    stickyBtnHeight: number,
+    setStickyBtnHeight:  Dispatch<SetStateAction<number>>
+  }
+) => {
   const { state, dispatch } = useInputContext();
   const [ isFeedbackShown, setFeedback ] = useState<boolean>(false);
   const [ emailAddress, setEmailAddress] = useState<string>('');
+  const copyrightRef = useRef<HTMLParagraphElement>(null);
 
   const subscribe = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -13,6 +28,24 @@ const Footer = () => {
     setEmailAddress(state.footerInput);
     setFeedback(true);
   }
+
+
+  useEffect(() => {
+    const handleCopyrightPadding = () => {
+      const copyrightElement = copyrightRef.current;
+      if (!copyrightElement) return;
+
+      if (isBtnVisible) {
+        copyrightElement.style.paddingBottom = `${stickyBtnHeight + 15}px`;
+      } else {
+        setStickyBtnHeight(30);
+        copyrightElement.style.paddingBottom = `${stickyBtnHeight}px`;
+      }
+    };
+
+    handleCopyrightPadding();
+  }, [stickyBtnHeight]);
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -166,7 +199,7 @@ const Footer = () => {
         </section>
       </div>
 
-      <p className="copyrights">
+      <p ref={copyrightRef} className="copyrights">
         <small>&copy;</small> 2025 Progressio.com
       </p>
     </footer>
