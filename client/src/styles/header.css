@@ -1,11 +1,4 @@
-
-/* --------- MOBILE HEADER ---------- */
-
-.desktop-header {
-  display: none;
-}
-
-.mobile-header {
+.header {
   width: 100%;
   position: fixed;
   top: 0;
@@ -15,13 +8,31 @@
   transition: 300ms;
 }
 
-.mobile-header[data-visible="false"] {
-  transform: translateY(-100%);
+.header[data-visible="false"] {
+  transform: translateY(-75%);
 }
 
-.mobile-header[data-visible="true"] {
+.header[data-visible="true"] {
   transform: translateY(0%);
 }
+
+
+/* --------- MOBILE HEADER ---------- */
+
+.desktop-header {
+  display: none;
+}
+
+/* .mobile-header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
+  background-color: var(--bg-sec);
+  transition: 300ms;
+} */
+
 
 .navigation {
   display: flex;

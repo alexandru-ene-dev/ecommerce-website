@@ -28,12 +28,6 @@ app.use('/profile', loginMiddleware, profileRoute);
 app.use('/products', productsRoute);
 app.use('/favorites', addToFavoritesRoute);
 app.use('/', homeRoute);
-// app.use('/home', homeRoute);
-// app.get('*', (req, res) => {
-//   return res.status(404).json({
-//     success: false, message: 'We couldn\'t find the page you were looking for'
-//   });
-// });
 
 (async () => {
   try {

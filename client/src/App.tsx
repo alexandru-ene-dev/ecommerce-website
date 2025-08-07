@@ -2,6 +2,10 @@ import Header from './components/Header.tsx';
 import Menu from './components/Menu.tsx';
 import Footer from './components/Footer.tsx';
 import BackToTop from './components/BackToTop.tsx';
+import Login from './components/Login';
+import { ScrollTop } from './components/ScrollTop.tsx';
+import { HandlePadding } from './components/HandlePadding.tsx';
+// import StickySaleText from './components/StickySaleText.tsx';
 import NotFound from './pages/NotFound.tsx';
 import Homepage from './pages/Homepage.tsx';
 import Register from './pages/RegisterPage.tsx';
@@ -9,11 +13,9 @@ import Favorites from './pages/Favorites.tsx';
 import Cart from './pages/Cart.tsx';
 import About from './pages/About.tsx';
 import Contact from './pages/Contact.tsx';
-import Login from './components/Login';
 import Profile from './pages/Profile.tsx';
 import ProductPage from './pages/ProductPage.tsx';
 import { useMenuContext } from './hooks/useMenuContext.ts';
-import { ScrollTop } from './components/ScrollTop.tsx';
 import './styles/index.css';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState, type MouseEvent } from 'react';
@@ -24,6 +26,15 @@ function App() {
   const [ visibleMenu, setVisibleMenu ] = useState(false);
   const [ visibleLoginMenu, setVisibleLoginMenu ] = useState(false);
   const [ shouldRenderLogin, setShouldRender ] = useState(false);
+
+
+  // sticky button on product page
+  const [ isBtnVisible, setIsBtnVisible ] = useState(false);
+  const [ stickyBtnHeight, setStickyBtnHeight ] = useState(30);
+
+
+
+
   
   useEffect(() => {
     if (visibleLoginMenu) {
@@ -102,9 +113,27 @@ function App() {
         visibleMenu={visibleMenu} 
         showMenu={showMenu} 
         closeModal={closeModal}
-        visibleLoginMenu={visibleLoginMenu}
+        // visibleLoginMenu={visibleLoginMenu}
         toggleLoginMenu={toggleLoginMenu}
+        // isHeaderVisible={isHeaderVisible}
+        // setIsHeaderVisible={setIsHeaderVisible}
+        // headerHeight={headerHeight}
+        // setHeaderHeight={setHeaderHeight}
+        // isDesktopHeadVisible={isDesktopHeadVisible}
+        // setDesktopHeadVisible={setDesktopHeadVisible}
+        // desktopHeadHeight={desktopHeadHeight}
+        // setDesktopHeadHeight={setDesktopHeadHeight}
       />
+      {/* <StickySaleText 
+        isHeaderVisible={isHeaderVisible}
+        setIsHeaderVisible={setIsHeaderVisible}
+        headerHeight={headerHeight}
+        setHeaderHeight={setHeaderHeight}
+        isDesktopHeadVisible={isDesktopHeadVisible}
+        setDesktopHeadVisible={setDesktopHeadVisible}
+        desktopHeadHeight={desktopHeadHeight}
+        setDesktopHeadHeight={setDesktopHeadHeight}
+      /> */}
 
       {shouldRenderLogin && 
         <Login 
@@ -114,21 +143,46 @@ function App() {
 
       <Menu visibleMenu={visibleMenu} closeModal={closeModal} />
       <ScrollTop />
+      <HandlePadding 
+        setStickyBtnHeight={setStickyBtnHeight}
+        setIsBtnVisible={setIsBtnVisible}
+      />
       
       <Routes>
-        <Route path='/' element={<Homepage />} />
+        <Route path='/' element={
+          <Homepage 
+            setIsBtnVisible={setIsBtnVisible}
+            // isHeaderVisible={isHeaderVisible}
+            // setIsHeaderVisible={setIsHeaderVisible}
+            // headerHeight={headerHeight}
+            // setHeaderHeight={setHeaderHeight}
+          />} 
+        />
         <Route path='/register' element={<Register />} />
         <Route path='/favorites' element={<Favorites />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
-        <Route path='/products/:name' element={<ProductPage />} />
+        <
+          Route path='/products/:name' element={
+            <ProductPage 
+              isBtnVisible={isBtnVisible} 
+              setIsBtnVisible={setIsBtnVisible} 
+              stickyBtnHeight={stickyBtnHeight} 
+              setStickyBtnHeight={setStickyBtnHeight}  
+            />} 
+        />
         <Route path='/profile' element={<Profile />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
 
       <BackToTop />
-      <Footer />
+      <Footer 
+        isBtnVisible={isBtnVisible} 
+        setIsBtnVisible={setIsBtnVisible} 
+        stickyBtnHeight={stickyBtnHeight} 
+        setStickyBtnHeight={setStickyBtnHeight}  
+      />
     </>
   )
 }

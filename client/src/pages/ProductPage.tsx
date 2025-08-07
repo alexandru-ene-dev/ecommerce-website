@@ -1,11 +1,25 @@
 import { useEffect, useState, useRef } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
 import { getProduct } from "../services/getProduct";
 import { type New } from "../utils/whatsNews";
 import { addToFavorites } from "../services/addToFavorites";
 import axios from 'axios';
 
-export default function ProductPage() {
+export default function ProductPage(
+  {
+    isBtnVisible,
+    setIsBtnVisible,
+    stickyBtnHeight,
+    setStickyBtnHeight
+  }:
+  {
+    isBtnVisible: boolean,
+    setIsBtnVisible: Dispatch<SetStateAction<boolean>>,
+    stickyBtnHeight: number,
+    setStickyBtnHeight:  Dispatch<SetStateAction<number>>
+  }
+) {
   const [ isFavorite, setIsFavorite ]  = useState(false);
   const { name } = useParams();
   const [ productObj, setProductObj ] = useState<Partial<New>>({});
@@ -74,8 +88,11 @@ export default function ProductPage() {
         entries.forEach((entry: any) => {
           if (entry.isIntersecting) { 
             fixedWrapper.classList.add('hide');
+            setIsBtnVisible(false);
           } else {
             fixedWrapper.classList.remove('hide');
+            setIsBtnVisible(true);
+            setStickyBtnHeight(fixedWrapper.offsetHeight);
           }
         });
       };
@@ -88,6 +105,18 @@ export default function ProductPage() {
     };
 
     createIntersectionObserver();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const fixedWrapper = intersectionWrapperRef.current;
+      if (!fixedWrapper) return;
+
+      setStickyBtnHeight(fixedWrapper.offsetHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
 
