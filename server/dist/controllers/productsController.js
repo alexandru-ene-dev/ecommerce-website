@@ -1,7 +1,6 @@
 import { ProductModel } from '../models/ProductSchema.js';
 export const productsController = async (req, res) => {
     try {
-        console.log('Product route reached');
         const nameParam = req.params.name;
         if (!nameParam) {
             return res.status(404).json({

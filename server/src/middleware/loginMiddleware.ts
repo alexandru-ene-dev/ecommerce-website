@@ -1,8 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 
-dotenv.config();
 
 const JWT_SECRET = process.env.SECRET_KEY;
 if (!JWT_SECRET) {
@@ -12,25 +10,23 @@ if (!JWT_SECRET) {
 
 const loginMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const authorization = req.headers['authorization'];
-  
-    if (!authorization || !authorization.startsWith('Bearer ')) {
-      return res.status(401).json({
-        success: false,
-        message: 'Authorization token not provided or malformed (e.g., missing "Bearer" prefix)'
-      });
-    }
+    const tokenFromCookie = req.cookies?.token;
 
-    const token = authorization?.split(' ')[1];
+    const authorization = req.headers['authorization'];
+
+    const tokenFromHeader = 
+      authorization?.startsWith('Bearer ')? authorization?.split(' ')[1] : null;
+
+    const token = tokenFromCookie || tokenFromHeader;
 
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: 'Missing or invalid token'
+        message: 'Authentication failed: No token provided in cookies or headers'
       });
     }
 
-    jwt.verify(token, JWT_SECRET as string, (err, user) => {
+    jwt.verify(token, JWT_SECRET as string, (err: jwt.VerifyErrors | null, user: any) => {
       if (err) {
         if (err.name === 'TokenExpiredError') {
           return res.status(401).json({
@@ -69,7 +65,6 @@ const loginMiddleware = (req: Request, res: Response, next: NextFunction) => {
       message: 'Internal error occurred during authentication'
     });
   }
-  
 };
 
 export default loginMiddleware;

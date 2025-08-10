@@ -5,7 +5,6 @@ import BackToTop from './components/BackToTop.tsx';
 import Login from './components/Login';
 import { ScrollTop } from './components/ScrollTop.tsx';
 import { HandlePadding } from './components/HandlePadding.tsx';
-// import StickySaleText from './components/StickySaleText.tsx';
 import NotFound from './pages/NotFound.tsx';
 import Homepage from './pages/Homepage.tsx';
 import Register from './pages/RegisterPage.tsx';
@@ -18,24 +17,63 @@ import ProductPage from './pages/ProductPage.tsx';
 import { useMenuContext } from './hooks/useMenuContext.ts';
 import './styles/index.css';
 import { Route, Routes } from 'react-router-dom';
-import { useEffect, useState, type MouseEvent } from 'react';
+import { useEffect, useState, type MouseEvent, useContext } from 'react';
+import initializeAuth from './services/initializeAuth.tsx';
+import { useAuthContext } from './hooks/useAuthContext.ts';
+import { type NewProductType } from './components/types.ts';
+import { getLocalFavorites } from './utils/localFavorites.ts';
+import { FavoritesContext } from './context/FavoritesContext.tsx';
 
 
 function App() {
-  const { state, dispatch } = useMenuContext();
+  const { dispatch: menuDispatch } = useMenuContext();
+  const { dispatch: authDispatch } = useAuthContext();
   const [ visibleMenu, setVisibleMenu ] = useState(false);
   const [ visibleLoginMenu, setVisibleLoginMenu ] = useState(false);
   const [ shouldRenderLogin, setShouldRender ] = useState(false);
+  
+
+  const favContext = useContext(FavoritesContext);
+  if (!favContext) {
+    throw new Error('FavoritesContext must be used inside a <Provider />');
+  }
+  const { localFavorites, setLocalFavorites } = favContext;
+
+
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'favorites') {
+        const favs = getLocalFavorites();
+        setLocalFavorites(favs);
+      }
+    }
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  console.log(localFavorites);
+
 
 
   // sticky button on product page
   const [ isBtnVisible, setIsBtnVisible ] = useState(false);
   const [ stickyBtnHeight, setStickyBtnHeight ] = useState(30);
 
-
-
-
   
+  // initialize auth
+  useEffect(() => {
+    const auth = async () => {
+      const result = await initializeAuth();
+      if (!result.success) return;
+
+      authDispatch({ type: 'LOGIN', payload: result.user });
+    };
+
+    auth();
+  }, []);
+  
+
   useEffect(() => {
     if (visibleLoginMenu) {
       setShouldRender(true);
@@ -45,17 +83,19 @@ function App() {
     }
   }, [visibleLoginMenu]);
 
+
   const closeLoginMenu = () => {
     setVisibleLoginMenu(false);
   };
   
+
   const showMenu = (e: MouseEvent) => {
     const show = !visibleMenu;
     setVisibleMenu(show);
 
     if (!show) {
-      dispatch({ type: 'SET_VIEW', payload: 'menu' });
-      dispatch({ type: 'SET_CATEGORY', payload: null });
+      menuDispatch({ type: 'SET_VIEW', payload: 'menu' });
+      menuDispatch({ type: 'SET_CATEGORY', payload: null });
     }
 
     const target = e.currentTarget as HTMLElement;
@@ -67,17 +107,20 @@ function App() {
       target.dataset.closedIcon = 'true' : target.dataset.closeIcon = 'false';
   };
 
+
   const closeModal = () => {
     setVisibleMenu(false);
-    dispatch({ type: 'SET_VIEW', payload: 'menu' });
-    dispatch({ type: 'SET_CATEGORY', payload: null });
+    menuDispatch({ type: 'SET_VIEW', payload: 'menu' });
+    menuDispatch({ type: 'SET_CATEGORY', payload: null });
   }
+
 
   const toggleLoginMenu = () => {
     const show = !visibleLoginMenu;
     setVisibleLoginMenu(show);
     closeModal();
   };
+
 
   useEffect(() => {
     const handleBodyClick = (e: Event) => {
@@ -95,8 +138,8 @@ function App() {
         target.tagName === 'INPUT'
       ) {
         closeModal();
-        dispatch({ type: 'SET_VIEW', payload: 'menu' });
-        dispatch({ type: 'SET_CATEGORY', payload: null });
+        menuDispatch({ type: 'SET_VIEW', payload: 'menu' });
+        menuDispatch({ type: 'SET_CATEGORY', payload: null });
       }
     };
 
@@ -113,27 +156,8 @@ function App() {
         visibleMenu={visibleMenu} 
         showMenu={showMenu} 
         closeModal={closeModal}
-        // visibleLoginMenu={visibleLoginMenu}
         toggleLoginMenu={toggleLoginMenu}
-        // isHeaderVisible={isHeaderVisible}
-        // setIsHeaderVisible={setIsHeaderVisible}
-        // headerHeight={headerHeight}
-        // setHeaderHeight={setHeaderHeight}
-        // isDesktopHeadVisible={isDesktopHeadVisible}
-        // setDesktopHeadVisible={setDesktopHeadVisible}
-        // desktopHeadHeight={desktopHeadHeight}
-        // setDesktopHeadHeight={setDesktopHeadHeight}
       />
-      {/* <StickySaleText 
-        isHeaderVisible={isHeaderVisible}
-        setIsHeaderVisible={setIsHeaderVisible}
-        headerHeight={headerHeight}
-        setHeaderHeight={setHeaderHeight}
-        isDesktopHeadVisible={isDesktopHeadVisible}
-        setDesktopHeadVisible={setDesktopHeadVisible}
-        desktopHeadHeight={desktopHeadHeight}
-        setDesktopHeadHeight={setDesktopHeadHeight}
-      /> */}
 
       {shouldRenderLogin && 
         <Login 
@@ -150,28 +174,21 @@ function App() {
       
       <Routes>
         <Route path='/' element={
-          <Homepage 
-            setIsBtnVisible={setIsBtnVisible}
-            // isHeaderVisible={isHeaderVisible}
-            // setIsHeaderVisible={setIsHeaderVisible}
-            // headerHeight={headerHeight}
-            // setHeaderHeight={setHeaderHeight}
-          />} 
-        />
+          <Homepage setIsBtnVisible={setIsBtnVisible} />
+        }/>
         <Route path='/register' element={<Register />} />
         <Route path='/favorites' element={<Favorites />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
-        <
-          Route path='/products/:name' element={
+        <Route path='/products/:name' element={
             <ProductPage 
               isBtnVisible={isBtnVisible} 
               setIsBtnVisible={setIsBtnVisible} 
               stickyBtnHeight={stickyBtnHeight} 
               setStickyBtnHeight={setStickyBtnHeight}  
-            />} 
-        />
+            />
+        }/>
         <Route path='/profile' element={<Profile />} />
         <Route path='*' element={<NotFound />} />
       </Routes>

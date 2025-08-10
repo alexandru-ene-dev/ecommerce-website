@@ -1,6 +1,8 @@
 import express, { urlencoded } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import authRoute from './routes/authRoute.js';
 import registerRoute from './routes/registerRoute.js';
 import loginRoute from './routes/loginRoute.js';
 import profileRoute from './routes/profileRoute.js';
@@ -13,16 +15,18 @@ import loginMiddleware from './middleware/loginMiddleware.js';
 dotenv.config();
 const app = express();
 // middleware
+app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 // routes
+app.use('/profile', loginMiddleware, profileRoute);
+app.use('/api/auth/me', loginMiddleware, authRoute);
+app.use('/', homeRoute);
 app.use('/api/register', registerRoute);
 app.use('/api/login', loginRoute);
-app.use('/profile', loginMiddleware, profileRoute);
 app.use('/products', productsRoute);
 app.use('/favorites', addToFavoritesRoute);
-app.use('/', homeRoute);
 (async () => {
     try {
         await Database();

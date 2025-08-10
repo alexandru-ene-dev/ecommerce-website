@@ -6,33 +6,17 @@ import {
   type MouseEvent, type SetStateAction,
   type Dispatch
 } from 'react';
-
-import { whatsNew } from '../utils/whatsNews.ts';
 import { getHomeNewProducts } from '../services/getHomeNewProducts.ts';
-import { getProduct } from '../services/getProduct.ts'
-import { Link } from 'react-router-dom';
+import NewProduct from './NewProduct.tsx';
+import { type NewProductType } from './types.ts';
 
-type New = {
-  id: number,
-  title: string,
-  img: string,
-  alt: string,
-  oldPrice: number,
-  price: number,
-  sale: number
-  link: string
-}
 
 const Main = (
-  { 
-    setIsBtnVisible, 
-  }:
-  { 
-    setIsBtnVisible: Dispatch<SetStateAction<boolean>> 
-  }
+  { setIsBtnVisible }:
+  { setIsBtnVisible: Dispatch<SetStateAction<boolean>> }
 ) => {
   const [ haveNewProducts, setHaveNewProducts ] = useState(false);
-  const [ newProducts, setNewProducts ] = useState<New[]>([]);
+  const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
 
   const joinUsImg = new URL('../assets/images/join-us.jpg', import.meta.url).href;
 
@@ -97,22 +81,23 @@ const Main = (
   }, []);
 
 
-useEffect(() => {
-  const getProducts = async () => {
-    const products = await getHomeNewProducts();
+  useEffect(() => {
+    const getProducts = async () => {
+      const products = await getHomeNewProducts();
 
-    if (!products.success) {
-      setHaveNewProducts(false);
-      setNewProducts([]);
-      return;
-    }
+      if (!products.success) {
+        setHaveNewProducts(false);
+        setNewProducts([]);
+        return;
+      }
 
-    setHaveNewProducts(true);
-    setNewProducts(products.products);
-  };
+      setHaveNewProducts(true);
+      setNewProducts(products.products);
+    };
 
-  getProducts();
-}, []);
+    getProducts();
+  }, []);
+
 
   return (
     <>
@@ -158,53 +143,13 @@ useEffect(() => {
                 const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
                 const encodedQuery = item.title.replaceAll(' ', '-');
                 return (
-                  <div key={item.id} className="new-section-card">
-                    <div className="card-img-wrapper">
-                      <button className="add-fav-btn new-fav-btn">
-                        <span className="material-symbols-outlined new-fav-icon">favorite</span>
-                      </button>
-
-                      <div className="img-wrapper-inner">
-                        <Link 
-                          to={`${item.link}/${encodedQuery}`}
-                          onClick={() => {
-                            setIsBtnVisible(true)
-                            getProduct(encodedQuery)
-                          }}
-                          className="card-img-link">
-                          <img className="new-card-img" src={imgSrc} alt={item.alt} />
-                        </Link>
-                      </div>
-                    </div>
-
-                    <div className="new-card-details-wrapper">
-                      <Link 
-                        to={`${item.link}/${encodedQuery}`}
-                        onClick={() => {
-                          setIsBtnVisible(true)
-                          getProduct(encodedQuery)}
-                        }
-                        className="new-card-title">{item.title}</Link>
-
-                      <div className="sale-price-wrapper">
-                        <p className="new-card-sale-limit">
-                          <span className="sale-txt">{item.sale}% off</span>
-                          <span className="limit-txt">Limited Time</span>
-                        </p>
-                        <p className="new-card-price">
-                          <span className="old-price">${item.oldPrice}</span>
-                          <span className="new-price">${item.price}</span>
-                        </p>
-                      </div>
-
-                      <button className="add-cart-btn new-card-btn">
-                        <span className="material-symbols-outlined new-cart-icon">
-                          shopping_cart
-                        </span>
-                        <span>Add to Cart</span>
-                      </button>
-                    </div>
-                  </div>
+                  <NewProduct
+                    key={item.id}
+                    setIsBtnVisible={setIsBtnVisible}
+                    item={item} 
+                    imgSrc={imgSrc} 
+                    encodedQuery={encodedQuery} 
+                  />
                 )
               })}
             </div>

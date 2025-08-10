@@ -40,9 +40,10 @@
   flex-direction: column;
   align-items: center;
   gap: 1em;
-  padding-top: 1em;
+  /* padding-top: 1em;
   padding-bottom: 1em;
-  padding-inline: 1em;
+  padding-inline: 1em; */
+  padding: .5em;
 }
 
 .mobile-nav-wrapper {
@@ -305,6 +306,7 @@ body:has(.modal[data-visible="true"]) {
 }
 
 .header-btn-icon {
+  position: relative;
   font-size: 1.3rem;
 }
 

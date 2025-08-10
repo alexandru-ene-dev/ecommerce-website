@@ -49,6 +49,7 @@
     --sale-txt-clr: hsl(146, 100%, 53%);
     --sale-txt-hov: hsl(0, 0%, 90%);
     --new-card-bg: hsl(146, 30%, 82%);
+    --loader-clr: hsl(146, 100%, 100%);
 
     background-color: var(--bg);
 
@@ -102,6 +103,7 @@ body.dark-mode {
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 80%);
   --new-card-bg: hsl(0, 0%, 10%);
+  --loader-clr: hsl(146, 100%, 53%);
 }
 
 
@@ -151,6 +153,7 @@ body.light-mode {
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 90%);
   --new-card-bg: hsl(146, 30%, 82%);
+  --loader-clr: hsl(146, 100%, 100%);
 
   background-color: var(--bg);
 

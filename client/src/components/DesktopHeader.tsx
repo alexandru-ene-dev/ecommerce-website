@@ -1,8 +1,10 @@
 import DesktopMenu from "./DesktopMenu";
 import { Link } from 'react-router-dom';
-import { type ChangeEvent } from 'react';
+import { type ChangeEvent, useContext } from 'react';
 import type { DesktopHeaderType } from "./types";
 import ThemeSwitcher from "./ThemeSwitcher";
+import { FavoritesContext } from "../context/FavoritesContext";
+
 
 const DesktopHeader = (
   {
@@ -17,11 +19,17 @@ const DesktopHeader = (
   }: DesktopHeaderType
 ) => {
 
+  
+  const favContext = useContext(FavoritesContext);
+  if (!favContext) {
+    throw new Error('FavoritesContext must be used inside a <Provider />');
+  }
+  const { localFavorites } = favContext;
+
+
   return (
     <>  
-      <div
-        className="desktop-header" 
-      >
+      <div className="desktop-header">
         <nav className="navigation">
           <div className="top-navigation">
             <Link className="logo" to='/'>Progressio</Link>
@@ -50,7 +58,11 @@ const DesktopHeader = (
               </button>
 
               <Link to="/favorites" className="cart-btn header-btn">
-                <span className="material-symbols-outlined header-btn-icon">favorite</span>
+                <span className="material-symbols-outlined header-btn-icon">
+                  favorite
+                  {localFavorites.length > 0 && 
+                  <span className="fav-count">{localFavorites.length}</span>}
+                </span>
               </Link>
 
               <Link to="/cart" className="fav-btn header-btn">

@@ -1,6 +1,9 @@
 import { useState, type MouseEvent, type ChangeEvent, type FormEvent } from 'react';
 import registerUser from '../services/registerUserService.ts';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner.tsx';
+import delay from '../utils/delay.ts';
+import axios from 'axios';
 
 const Register = () => {
   const [ visiblePass, setVisiblePass ] = useState(false);
@@ -11,40 +14,75 @@ const Register = () => {
   const [ password, setPassword ] = useState('');
   const [ confirmPass, setConfirmPass ] = useState('');
   const [ acceptTerms, setAcceptTerms ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [ isLoading, setLoading ] = useState(false);
   const [ loggedIn, setLoggedIn ] = useState(false);
-  const [ error, setError ] = useState('');
+  const [ error, setError ] = useState<string | null>(null);
 
   const navigate = useNavigate();
+
 
   const togglePass = (e: MouseEvent) => {
     if (e) e.preventDefault();
     setVisiblePass(prev => !prev);
   };
 
+
   const toggleConfirmPass = (e: MouseEvent) => {
     if (e) e.preventDefault();
     setVisibleConfirmPass(prev => !prev);
   };
 
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const registration = await registerUser(
-      firstName, 
-      lastName, 
-      email, 
-      password, 
-      confirmPass,
-      acceptTerms
-    );
+    
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const userData = {
+        firstName, 
+        lastName, 
+        email, 
+        password, 
+        confirmPass,
+        acceptTerms
+      };
 
-    if (!registration.success && registration.message) {
-      setError(registration.message);
-      return;
+      const registration = await registerUser(userData);
+  
+      if (!registration.success && registration.message) {
+        setLoading(false);
+        setError(registration.message);
+        return;
+      }
+      
+      setError(null);
+
+      await delay(1000);
+      setLoading(false);
+      setIsModalOpen(true);
+      setLoggedIn(true);
+  
+      await delay(5000);
+      setIsModalOpen(false);
+
+      await delay(1000);
+      navigate('/');
+      location.reload();
+
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.message);
+      } else {
+        setError(`Unexpected error occurred: ${err}`);
+      }
+    } finally {
+      setLoading(false);
     }
-
-    setLoggedIn(true);
-    navigate('/home');
   };
+
 
   return (
     <section className="create-account-section">
@@ -84,7 +122,6 @@ const Register = () => {
             type="email"
           />
         </div>
-        
 
         <div className="password-wrapper-flex">
           <label htmlFor="password">Password *</label>
@@ -158,6 +195,25 @@ const Register = () => {
         {error && <div className="error-message">{error}</div>}
         <button className="create-account-btn">Create account</button>
       </form>
+
+      <div data-open={isModalOpen? "true" : "false"} className="success-register_modal">
+        <div className="success-register_modal-content">
+          <p className="success-register_par"> 
+            You now have a Progressio account!
+          </p>
+          <p className="success-register_par">Use your credentials to log in.</p>
+          <p className="success-register_par">Enjoy the experience of unbeatable tech deals, exclusive discounts, and the smartest way to shop online!</p>
+
+          <button className="close-menu-btn close-login-btn" onClick={() => setIsModalOpen(false)}>
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+      </div>
+
+      <LoadingSpinner 
+        isLoading={isLoading} 
+        setLoading={setLoading} 
+      />
     </section>
   );
 }

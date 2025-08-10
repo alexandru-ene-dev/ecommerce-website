@@ -1,11 +1,9 @@
 import type { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import { LoginSchema, type LoginUserInput } from '../schemas/authSchema.js';
 import User from '../models/UserSchema.js';
+import generateToken from '../utils/jwt.js';
 
-dotenv.config();
 
 export const loginController = async (
   req: Request<{}, {}, LoginUserInput>, 
@@ -41,26 +39,33 @@ export const loginController = async (
         message: 'Invalid credentials'
       });
     }
-
-    const payload = { email };
-    const SECRET = process.env.SECRET_KEY;
-
-    if (!SECRET) {
-      return res.status(500).json({
-        success: false,
-        message: 'No secret key has been found in the environment'
-      });
+    
+    // generate token  
+    const payload = {
+      id: user._id.toString(),
+      email: user.email
     }
-      
-    const token = jwt.sign(payload, SECRET, { expiresIn: '24h' });
+    const token = generateToken(payload);
 
-    return res.status(200).json({ 
-      token, 
-      success: 
-      true, message: 'Successfully logged in!'
-    });
+    return res
+      .cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000
+      })
+      .status(200)
+      .json({
+        success: true,
+        message: 'Successfully logged in!',
+        user: {
+          id: user._id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName
+        }
+      });
   } catch (err) {
-
     const message = err instanceof Error? err.message : 'Unknown error';
 
     return res.status(500).json({

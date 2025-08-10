@@ -3,9 +3,6 @@
 
 :root {
   box-sizing: border-box;
-  /* display: flex;
-  justify-content: center; */
-  /* margin-inline: auto; */
   color-scheme: light dark;
 
   /* color palette */
@@ -18,6 +15,7 @@
   --menu-link-hov: hsl(0, 0%, 30%);
   --desktop-nav-bg: hsl(0, 0%, 11%);
   --clr-prim: hsl(146, 100%, 53%);
+  --loader-clr: hsl(146, 100%, 53%);
   --clr-prim2: hsl(146, 100%, 35%);
   --border: hsl(0, 0%, 30%);
   --border-hov: hsl(0, 0%, 90%);
@@ -54,6 +52,7 @@
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 80%);
   --new-card-bg: hsl(0, 0%, 10%);
+  --loader-clr: hsl(146, 100%, 53%);
 }
 
 *, *::before, *::after {
