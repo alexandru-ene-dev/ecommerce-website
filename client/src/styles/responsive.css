@@ -58,20 +58,28 @@
   .navigation {
     flex-direction: column;
     align-items: normal;
-    gap: 1em;
     position: relative;
+    padding: 1em;
   }
 
   .top-navigation {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
     height: 3em;
+  }
+
+  .fav-count {
+    left: 15px;
+    font-size: .75rem;
+    width: 18px;
   }
 
   .desktop-nav_list {
     display: flex;
     justify-content: center;
+    margin: 0;
   }
 
   .desktop-nav_link {
@@ -108,12 +116,10 @@
     display: none;
     justify-content: center;
     height: 0;
-    /* position: absolute; */
     position: fixed;
     left: 0;
     right: 0;
     z-index: 3000;
-    /* top: 7.25em; */
     margin-inline: auto;
     padding: 1em;
     padding-block: 3em;
@@ -161,7 +167,6 @@
     justify-content: space-evenly;
     gap: 3em;
     margin-bottom: 1em;
-    /* margin-top: 0; */
   }
 
   .footer-links-panel-desktop {
@@ -201,13 +206,8 @@
     margin-top: 14rem;
   }
 
-  .sales-outer-wrapper {
-    /* display: none; */
-    /* margin-top: 9.5rem; */
-  }
-
   .title {
-    margin-top: 17.5rem;
+    margin-top: 14.5rem;
     margin-bottom: 6rem;
   }
 
@@ -230,7 +230,7 @@
   }
 
   .product-wrapper {
-    margin-top: 13rem;
+    margin-top: 13.5rem;
     padding: 0;
   }
 

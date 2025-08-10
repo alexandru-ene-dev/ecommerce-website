@@ -1,5 +1,11 @@
 export type User = {
-  email : string
+  id: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  favorites: number[],
+  iat?: number,
+  exp?: number
 }
 
 declare global {

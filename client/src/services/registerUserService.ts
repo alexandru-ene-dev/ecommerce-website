@@ -1,17 +1,28 @@
 import axios from 'axios';
 
-export type ValidationResult = {
-  success: boolean,
-  message?: string
-};
-
-export const validateInputs = (
+export type UserDataType = {
   firstName: string, 
   lastName: string, 
   email: string,
   password: string, 
   confirmPass: string,
   acceptTerms: boolean
+}
+
+export type ValidationResult = {
+  success: boolean,
+  message?: string
+};
+
+export const validateInputs = (
+  {
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPass,
+    acceptTerms
+  }: UserDataType
 ): ValidationResult => {
   try {
     if (!firstName || firstName.length < 2) {
@@ -50,28 +61,32 @@ export const validateInputs = (
 }
 
 const registerUser = async (
-  firstName: string, 
-  lastName: string, 
-  email: string,
-  password: string, 
-  confirmPass: string,
-  acceptTerms: boolean
+  {
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPass,
+    acceptTerms
+  }: UserDataType
 ): Promise<ValidationResult> => {
 
-  const validationResult = validateInputs(
+  const validationResult = validateInputs({
     firstName, 
     lastName, 
     email, 
     password, 
     confirmPass, 
     acceptTerms
-  );
+  });
+  
   if (!validationResult.success) {
     return { success: false, message: validationResult.message };
   }
 
   // proceed signing up user
   try {
+    axios.defaults.withCredentials = true;
     const payload = { firstName, lastName, email, password, confirmPass };
     const res = await axios.post(`http://localhost:8383/api/register`, payload);
     const data = res.data;
@@ -81,17 +96,20 @@ const registerUser = async (
   } catch (err) {
     if (axios.isAxiosError(err)) {
       const status = err.response?.status;
-      const data = err.response?.data;
+      const message = err.response?.data?.message;
 
       if (status === 409) {
-        return { success: false, message: `Conflict error: ${data.message}`};
+        return { success: false, message: `Conflict error: ${message}`};
       } else if (status === 400) {
-        return { success: false, message: `Validation error: ${data.message}`};
+        return { success: false, message: `Validation error: ${message}`};
       } else {
-        return { success: false, message: `Server error: ${data.message}`};
+        return { success: false, message: `Server error: ${message}`};
       }
     } else {
-      return { success: false, message: `Unexpected error: ${err}`};
+      return { 
+        success: false, 
+        message: `Unexpected error: ${(err as Error).message}`
+      };
     }
   }
 };

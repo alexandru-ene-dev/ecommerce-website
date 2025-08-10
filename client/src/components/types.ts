@@ -19,7 +19,7 @@ export type MobileHeaderType = {
   changeTheme: (e: MouseEvent) => void,
   searchInput: string,
   setSearchInput: Dispatch<SetStateAction<string>>,
-  closeModal: () => void
+  closeModal: () => void,
 };
 
 export type DesktopHeaderType = {
@@ -39,4 +39,15 @@ export type ThemeSwitcherType = {
   changeTheme: (e: MouseEvent) => void,
   toggleThemeMenu: (e: MouseEvent) => void,
   visibleThemeMenu: boolean
+}
+
+export type NewProductType = {
+  id: number,
+  title: string,
+  img: string,
+  alt: string,
+  oldPrice: number,
+  price: number,
+  sale: number
+  link: string
 }

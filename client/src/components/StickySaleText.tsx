@@ -1,31 +1,7 @@
 import { salesText } from '../utils/salesText.ts';
-import { 
-  useState, useRef, useEffect,
-  type Dispatch, type SetStateAction 
-} from 'react';
+import { useRef, useEffect } from 'react';
 
-const StickySaleText = (
-  {
-    // isHeaderVisible,
-    // setIsHeaderVisible,
-    // headerHeight,
-    // setHeaderHeight,
-    // isDesktopHeadVisible,
-    // setDesktopHeadVisible,
-    // desktopHeadHeight,
-    // setDesktopHeadHeight
-  }:
-  {
-    // isHeaderVisible: boolean,
-    // setIsHeaderVisible: Dispatch<SetStateAction<boolean>>,
-    // headerHeight: number,
-    // setHeaderHeight: Dispatch<SetStateAction<number>>,
-    // isDesktopHeadVisible: boolean,
-    // setDesktopHeadVisible: Dispatch<SetStateAction<boolean>>,
-    // desktopHeadHeight: number,
-    // setDesktopHeadHeight: Dispatch<SetStateAction<number>>,
-  }
-) => {
+const StickySaleText = () => {
   const salesTextOuterRef = useRef<HTMLDivElement>(null);
   const saleTextWrapper = useRef<HTMLDivElement>(null);
   const saleIndexRef = useRef<number>(1);
@@ -33,6 +9,7 @@ const StickySaleText = (
   const totalSlidesRef = useRef<number>(0);
   const isSaleTransitioning = useRef(false);
 
+  
   const moveSaleSlide = (index: number) => {
     const wrapper = saleTextWrapper.current;
     if (!wrapper) return;
@@ -41,6 +18,7 @@ const StickySaleText = (
     wrapper.style.transform = 
       `translateX(-${slideWidthRef.current * index}px)`;
   };
+
 
   // sale text button handlers
   const handlePrev = () => {
@@ -75,8 +53,6 @@ const StickySaleText = (
       wrapper.style.transition = 'none';
       wrapper.style.transform = `translateX(-${slideWidth * saleIndexRef.current}px)`;
     };
-
-    handleResize();
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -160,46 +136,6 @@ const StickySaleText = (
     };
   }, []);
 
-
-
-  // handle mobile sticky text slide margin from header
-  // useEffect(() => {
-  //   const handleStickyTextMargin = () => {
-  //     const saleWrapper = salesTextOuterRef.current;
-  //     if (!saleWrapper) return;
-
-  //     if (isHeaderVisible) {
-  //       saleWrapper.style.transition = 'transform 300ms';
-  //       saleWrapper.style.transform = `translateY(${headerHeight}px)`;
-  //     } 
-      
-  //     else {
-  //       saleWrapper.style.transform = `translateY(${0}px)`;
-  //     }
-  //   }
-
-  //   handleStickyTextMargin();
-  // }, [isHeaderVisible]);
-
-
-// handle desktop sticky text slide margin from header
-  // useEffect(() => {
-  //   const handleStickyTextMargin = () => {
-  //     const saleWrapper = salesTextOuterRef.current;
-  //     if (!saleWrapper) return;
-
-  //     if (isDesktopHeadVisible) {
-  //       saleWrapper.style.transition = 'transform 300ms';
-  //       saleWrapper.style.transform = `translateY(${desktopHeadHeight}px)`;
-  //     } 
-      
-      // else {
-      //   saleWrapper.style.transform = `translateY(${0}px)`;
-      // }
-    // }
-
-  //   handleStickyTextMargin();
-  // }, [isDesktopHeadVisible]);
 
   return (
     <div ref={salesTextOuterRef} className="sales-outer-wrapper">

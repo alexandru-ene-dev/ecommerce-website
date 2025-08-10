@@ -1,35 +1,36 @@
 import axios from 'axios';
+import { type UserType } from '../context/AuthContext/authTypes';
 
-type Response = {
-  success: boolean,
-  message: string
-  token?: any
-}
+
+type Response = 
+| { success: true, message: string, user: UserType } 
+| { success: false, message: string, user?: UserType }
 
 const loginUserService = async (email: string, password: string): Promise<Response> => {
   try {
     const payload = { email, password };
+    axios.defaults.withCredentials = true;
     const res = await axios.post('http://localhost:8383/api/login', payload);
-    const data = res.data;
+    const user = res.data.user;
 
     return {
       success: true,
       message: 'Successful login',
-      token: data.token
+      user
     }
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const backendMessage = err.response?.data?.message || 'No response from backend';
+      const message = err.response?.data?.message;
 
       return {
         success: false,
-        message: `Login failed: ${backendMessage}`
+        message: `Login failed: ${message}`,
       }
     }
 
     return {
       success: false,
-      message: 'Login failed: Unexpected error occurred'
+      message: `Login failed, unexpected error occurred: ${(err as Error).message}`
     }
   }
 };

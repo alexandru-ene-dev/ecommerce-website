@@ -22,7 +22,6 @@ const addToFavoritesController = async (req: Request, res: Response) => {
     }
 
     const product = await ProductModel.findOne({ title: productName });
-    console.log(productName);
     
     if (!product) {
       return res.status(404).json({

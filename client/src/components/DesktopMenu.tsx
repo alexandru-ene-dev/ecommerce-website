@@ -7,6 +7,7 @@ const DesktopMenu = () => {
     return (
       <li key={i} className="desktop-nav_item">
         <a className="desktop-nav_link" href="#">{cat.title}</a>
+        
         <div className="desktop-nav_link-card">
           <div className="link-card-wrapper">
             <ul className="desktop-nav_sub-list">

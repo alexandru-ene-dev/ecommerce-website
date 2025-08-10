@@ -5,6 +5,7 @@ import DesktopHeader from './DesktopHeader.tsx';
 import StickySaleText from './StickySaleText.tsx';
 import { type HeaderType } from './types.ts';
 
+
 const Header = (
   { 
     showMenu, 
@@ -18,17 +19,20 @@ const Header = (
   const [ visibleThemeMenu, setThemeMenu ] = useState(false);
   const [ themeIcon, setThemeIcon ] = useState('contrast');
   const [ lastScroll, setLastScroll ] = useState(0);
-  const { state, dispatch } = useInputContext();
+  const { dispatch } = useInputContext();
   const [ searchInput, setSearchInput ] = useState('');
+
 
   const submitSearch = (e: MouseEvent<HTMLFormElement>) => {
     if (e) e.preventDefault(); 
   };
 
+
   const toggleThemeMenu = (e: MouseEvent) => {
     e.stopPropagation();
     setThemeMenu(prev => !prev);
   }
+
 
   const changeTheme = (e: MouseEvent) => {
     const target = e.currentTarget as HTMLElement;
@@ -90,6 +94,7 @@ const Header = (
     window.addEventListener('scroll', toggleVisibleHeader);
     return () => window.removeEventListener('scroll', toggleVisibleHeader);
   }, [lastScroll]);
+
 
   return (
     <header className="header" data-visible={visibleHeader? "true" : "false"}>

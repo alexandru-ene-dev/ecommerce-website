@@ -1,16 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
 import { getProduct } from "../services/getProduct";
-import { type New } from "../utils/whatsNews";
-import { addToFavorites } from "../services/addToFavorites";
-import axios from 'axios';
+import { type NewProductType } from "../components/types";
+import { saveFavoritesLocally, removeFavoriteLocally } from "../utils/localFavorites";
+import { FavoritesContext } from "../context/FavoritesContext";
+
 
 export default function ProductPage(
   {
-    isBtnVisible,
     setIsBtnVisible,
-    stickyBtnHeight,
     setStickyBtnHeight
   }:
   {
@@ -22,11 +21,19 @@ export default function ProductPage(
 ) {
   const [ isFavorite, setIsFavorite ]  = useState(false);
   const { name } = useParams();
-  const [ productObj, setProductObj ] = useState<Partial<New>>({});
+  const [ productObj, setProductObj ] = useState<NewProductType | null>(null);
   const [ date, setDate ] = useState('');
   const addCartBtnRef = useRef<HTMLButtonElement | null>(null);
   const intersectionWrapperRef = useRef<HTMLDivElement | null>(null);
-  const imgSrc = new URL(`../assets/images/${productObj.img}`, import.meta.url).href;
+  const imgSrc = new URL(`../assets/images/${productObj?.img}`, import.meta.url).href;
+
+
+  const favContext = useContext(FavoritesContext);
+  if (!favContext) {
+    throw new Error('FavoritesContext must be used inside a <Provider />');
+  }
+  const { localFavorites, setLocalFavorites } = favContext;
+
 
   useEffect(() => {
     const getDate = () => {
@@ -41,6 +48,7 @@ export default function ProductPage(
     getDate();
   }, []);
 
+
   useEffect(() => {
     const fetchProduct = async () => {
       const product = await getProduct((name as any));
@@ -50,23 +58,49 @@ export default function ProductPage(
     fetchProduct();
   }, []);
 
+
   const addFavorites = () => {
-    setIsFavorite(prev => {
-      const newFavorite = !prev;
-      addToFavorites(newFavorite, name as any);
-      return newFavorite;
-    });
+    if (!productObj) return;
+
+    const newFavorite = !isFavorite;
+
+    if (newFavorite) {
+      setIsFavorite(newFavorite);
+      saveFavoritesLocally(productObj);
+      setLocalFavorites(prev => {
+        return [ ...prev, productObj ];
+      });
+    } else {
+      removeFavoriteLocally(productObj.id);
+      setIsFavorite(false);
+      setLocalFavorites(prev => {
+        const newArr = prev.filter(fav => fav.id !== productObj.id);
+        return newArr;
+      });
+    }
   };
+  
 
   useEffect(() => {
-    const getFavorite = async () => {
-      const res = await axios.get(`http://localhost:8383/favorites/${name}`);
-      const data = res.data;
-      setIsFavorite(data.isFavorite);  
-    };
+    if (!productObj) return;
 
-    getFavorite();
-  }, []);
+    const isProductFavorite = 
+      localFavorites.find(product => product.title === productObj.title);
+
+    if (isProductFavorite) {
+      setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
+    }
+
+    // const getFavorite = async () => {
+    //   const res = await axios.get(`http://localhost:8383/favorites/${name}`);
+    //   const data = res.data;
+    //   setIsFavorite(data.isFavorite);  
+    // };
+
+    // getFavorite();
+  }, [productObj]);
 
 
 
@@ -107,6 +141,7 @@ export default function ProductPage(
     createIntersectionObserver();
   }, []);
 
+
   useEffect(() => {
     const handleResize = () => {
       const fixedWrapper = intersectionWrapperRef.current;
@@ -121,23 +156,22 @@ export default function ProductPage(
 
 
 
-
   return (
     <main>
       <section className="product-wrapper">
-        <h1 className="prod-title">{(productObj as any).title || 'Not found'}</h1>
+        <h1 className="prod-title">{productObj?.title || 'Not found'}</h1>
         <div className="prod-flex">
           <div className="prod-img-wrapper">
-            <img className="prod-img" src={imgSrc} alt={productObj.alt} />
+            <img className="prod-img" src={imgSrc} alt={productObj?.alt} />
           </div>
 
           <div className="prod-price-wrapper">
             <div className="prod-price-inner">
               <div className="prod-sale-price-flex">
-                <p className="prod-old-price old-price">${productObj.oldPrice}</p>
-                <span className="sale-txt">{productObj.sale}% off</span>
+                <p className="prod-old-price old-price">${productObj?.oldPrice}</p>
+                <span className="sale-txt">{productObj?.sale}% off</span>
               </div>
-              <p className="prod-new-price new-price">${productObj.price}</p>
+              <p className="prod-new-price new-price">${productObj?.price}</p>
             </div>
 
             <p className="in-stock">
@@ -158,18 +192,18 @@ export default function ProductPage(
 
             <div ref={intersectionWrapperRef} className="intersection-wrapper">
               <div className="intersect-img-flex">
-                <img className="intersect-img" src={imgSrc} alt={productObj.alt} />
-                <p>{productObj.title}</p>
+                <img className="intersect-img" src={imgSrc} alt={productObj?.alt} />
+                <p>{productObj?.title}</p>
               </div>
 
               <div className="intersect-price-btn-flex">
                 <div className="intersect-price">
                   <div className="prod-sale-price-flex">
-                    <p className="prod-old-price old-price">${productObj.oldPrice}</p>
-                    <span className="sale-txt">{productObj.sale}%</span>
+                    <p className="prod-old-price old-price">${productObj?.oldPrice}</p>
+                    <span className="sale-txt">{productObj?.sale}%</span>
                   </div>
 
-                  <p className="prod-new-price new-price">${productObj.price}</p>
+                  <p className="prod-new-price new-price">${productObj?.price}</p>
                 </div>
 
                 <button className="new-card-btn copy-btn">

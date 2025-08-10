@@ -1,7 +1,9 @@
-import { type ChangeEvent, useRef } from 'react';
+import { type ChangeEvent, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { type MobileHeaderType } from './types';
 import ThemeSwitcher from './ThemeSwitcher';
+import { FavoritesContext } from '../context/FavoritesContext';
+
 
 const MobileHeader = (
   {
@@ -15,15 +17,20 @@ const MobileHeader = (
     changeTheme,
     searchInput,
     setSearchInput,
-    closeModal
+    closeModal,
   }: MobileHeaderType
 ) => {
   const hamburgerBtnRef = useRef<HTMLButtonElement>(null);
 
+  const favContext = useContext(FavoritesContext);
+  if (!favContext) {
+    throw new Error('FavoritesContext must be used inside a <Provider />');
+  }
+  const { localFavorites } = favContext;
+
+
   return (
-    <div
-      className="mobile-header" 
-    >
+    <div className="mobile-header">
       <nav className="navigation">
         <div className="mobile-nav-wrapper">
           <button 
@@ -47,7 +54,11 @@ const MobileHeader = (
             </button>
 
             <Link onClick={closeModal} to="/favorites" className="fav-btn header-btn">
-              <span className="material-symbols-outlined header-btn-icon">favorite</span>
+              <span className="material-symbols-outlined header-btn-icon">
+                favorite
+                {localFavorites.length > 0 && 
+                  <span className="fav-count">{localFavorites.length}</span>}
+              </span>
             </Link>
 
             <Link onClick={closeModal} to="/cart" className="cart-btn header-btn">
@@ -60,7 +71,6 @@ const MobileHeader = (
               themeIcon={themeIcon}
               changeTheme={changeTheme}
             />
-
           </div>
         </div>
 

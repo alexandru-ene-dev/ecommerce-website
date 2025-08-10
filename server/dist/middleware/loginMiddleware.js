@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
 const JWT_SECRET = process.env.SECRET_KEY;
 if (!JWT_SECRET) {
     console.error('FATAL ERROR: MISSING JWT SECRET KEY');
@@ -8,18 +6,14 @@ if (!JWT_SECRET) {
 }
 const loginMiddleware = (req, res, next) => {
     try {
+        const tokenFromCookie = req.cookies?.token;
         const authorization = req.headers['authorization'];
-        if (!authorization || !authorization.startsWith('Bearer ')) {
-            return res.status(401).json({
-                success: false,
-                message: 'Authorization token not provided or malformed (e.g., missing "Bearer" prefix)'
-            });
-        }
-        const token = authorization?.split(' ')[1];
+        const tokenFromHeader = authorization?.startsWith('Bearer ') ? authorization?.split(' ')[1] : null;
+        const token = tokenFromCookie || tokenFromHeader;
         if (!token) {
             return res.status(401).json({
                 success: false,
-                message: 'Missing or invalid token'
+                message: 'Authentication failed: No token provided in cookies or headers'
             });
         }
         jwt.verify(token, JWT_SECRET, (err, user) => {

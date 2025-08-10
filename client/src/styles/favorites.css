@@ -1,5 +1,16 @@
 .favorites-section {
   margin-top: clamp(12rem, 2vw, 15rem);
+  padding: 1em;
+  padding-top: 0;
+}
+
+.fav-title-txt {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2em;
+  gap: 1em;
 }
 
 .favorites-title {
@@ -9,35 +20,101 @@
   gap: .5em;
 }
 
-.favorites-par {
-  margin-bottom: 0;
-  text-align: center;
-}
-
 .favorites-par,
 .favorites-title {
+  margin: 0;
   color: var(--clr-title);
 }
 
 .favorites-icon {
-  font-size: 3rem;
+  font-size: 2rem;
 }
 
 .back-shopping-btn {
-  display: block;
+  display: flex;
+  justify-content: center;
   max-width: 15em;
   margin-inline: auto;
-  margin-top: 2em;
+  margin-top: 1em;
   padding: .5em 1em;
-  border-radius: 10px;
-  background-color: var(--btn-bg);
-  color: var(--btn-clr);
+  /* border-radius: 10px; */
+  /* background-color: var(--btn-bg); */
+  /* color: var(--btn-clr); */
   font-size: 1.1rem;
   text-decoration: none;
   text-align: center;
 }
 
-.back-shopping-btn:hover,
+/* .back-shopping-btn:hover,
 .back-shopping-btn:focus {
   background-color: var(--btn-bg-hov);
+} */
+
+.fav-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.fav-prod {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 2em;
+  padding: 1em;
+  border-radius: 10px;
+  background-color: var(--new-card-bg);
+
+  & .prod-title {
+    flex-basis: 15em;
+    margin-bottom: 0;
+    font-size: clamp(1rem, 1.15vw, 1.15rem);
+  }
+  
+  & .new-card-sale-limit {
+    font-size: clamp(.75rem, 1vw, .95rem);
+  }
+
+  & button {
+    font-size: 1rem;
+  }
+
+  & .new-cart-icon,
+  & .prod-fav-icon {
+    font-size: 1rem;
+  }
+
+}
+
+.fav-prod-img {
+  max-width: 140px;
+  aspect-ratio: 12 / 9;
+}
+
+.img-title-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 30em;
+  justify-content: space-around;
+  align-items: center;
+  column-gap: 2em;
+}
+
+.price-cart-wrap {
+  width: 23em;
+}
+
+.fav-count {
+  width: 15px;
+  position: absolute;
+  left: 10px;
+  top: -2px;
+  padding: 3px;
+  border-radius: 50%;
+  background-color: var(--red);
+  color: white;
+  font-size: .6rem;
+  font-family:Arial, Helvetica, sans-serif;
+  text-align: center;
 }
