@@ -1,25 +1,59 @@
 import { categories } from "../utils/categories";
+import { Link } from 'react-router-dom';
+import { type MouseEvent, useState } from "react";
 
 const DesktopMenu = () => {
+  const [ showMenu, setShowMenu ] = useState(false);
+
+  const [ activeIndex, setActiveIndex ] = useState<number | null>(null);
+
+  const handleMouseEnter = (index: number) => {
+    setActiveIndex(index);
+  };
+
+  const handleMouseOut = () => {
+    setActiveIndex(null);
+  };
+
+  const handleSublinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.currentTarget.blur();
+    setActiveIndex(null);
+  }; 
+
   const categoryElements = categories.map((cat, i) => {
     const imgSrc = new URL(`../assets/images/${cat.src}`, import.meta.url).href;
 
+    const isActive = activeIndex === i;
+
     return (
-      <li key={i} className="desktop-nav_item">
+      <li 
+        onMouseEnter={() => handleMouseEnter(i)}
+        onMouseLeave={handleMouseOut}
+        onFocus={() => handleMouseEnter(i)}
+        key={i} 
+        className="desktop-nav_item"
+      >
         <a className="desktop-nav_link" href="#">{cat.title}</a>
         
+        {isActive && (
         <div className="desktop-nav_link-card">
           <div className="link-card-wrapper">
             <ul className="desktop-nav_sub-list">
               {cat.subcategories.map((sub, index) => (
                 <li key={index} className="subcategory-item">
-                  <a className="sublink" href="#">{sub}</a>
+                  <Link
+                    onClick={handleSublinkClick} 
+                    className="sublink" 
+                    to={`/categories/${sub.slug}`}
+                  >
+                    {sub.name}
+                  </Link>
                 </li>
               ))}
             </ul>
           <img src={imgSrc} alt={cat.alt} />
           </div>
-        </div>
+        </div>)}
       </li>
     );
   });

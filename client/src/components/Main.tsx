@@ -6,9 +6,11 @@ import {
   type MouseEvent, type SetStateAction,
   type Dispatch
 } from 'react';
+import { Link } from 'react-router-dom';
 import { getHomeNewProducts } from '../services/getHomeNewProducts.ts';
 import NewProduct from './NewProduct.tsx';
 import { type NewProductType } from './types.ts';
+import HeroImage from '../assets/images/innovative-tech.jpg';
 
 
 const Main = (
@@ -101,9 +103,35 @@ const Main = (
 
   return (
     <>
-      <h1 className="title">
-        Future is here! Explore latest tech with smartest prices.
-      </h1>
+      <div className="hero-wrapper">
+        <img className="hero-img" src={HeroImage} alt="A highly tech background" />
+        <h1 className="title">
+          Future is here! Explore latest tech with smartest prices.
+        </h1>
+      </div>
+      
+      {haveNewProducts && <div className="new-section">
+        <h2 className="new-section_title">What's New?</h2>
+
+        <div className="new-section-grid-wrapper">
+          <div className="new-section-grid">
+            {newProducts.map(item => {
+              const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
+              const encodedQuery = item.title.replaceAll(' ', '-');
+              return (
+                <NewProduct
+                  key={item.id}
+                  setIsBtnVisible={setIsBtnVisible}
+                  item={item} 
+                  imgSrc={imgSrc} 
+                  encodedQuery={encodedQuery} 
+                />
+              )
+            })}
+          </div>
+        </div>
+      </div>}
+
       <main>
         <section className="new-deals-section">
           <div className="controllers-wrapper">
@@ -121,7 +149,7 @@ const Main = (
         </section>
 
         <div className="join-wrapper">
-          <a href="#">
+          <Link to="/register">
             <div className="join-img-wrapper">
               <img 
                 className="join-img" 
@@ -130,31 +158,10 @@ const Main = (
               <p className="join-par">Join us</p>
               <p className="join-par-sec">Cheaper Gear - 25% off when you join!</p>
             </div>
-          </a>
+          </Link>
         </div>
 
 
-        {haveNewProducts && <div className="new-section">
-          <h2 className="new-section_title">What's New?</h2>
-
-          <div className="new-section-grid-wrapper">
-            <div className="new-section-grid">
-              {newProducts.map(item => {
-                const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
-                const encodedQuery = item.title.replaceAll(' ', '-');
-                return (
-                  <NewProduct
-                    key={item.id}
-                    setIsBtnVisible={setIsBtnVisible}
-                    item={item} 
-                    imgSrc={imgSrc} 
-                    encodedQuery={encodedQuery} 
-                  />
-                )
-              })}
-            </div>
-          </div>
-        </div>}
 
       </main>
     </>

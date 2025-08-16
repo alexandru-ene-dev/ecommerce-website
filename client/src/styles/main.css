@@ -24,7 +24,6 @@
   border: none;
   color: var(--sale-txt-clr);
 
-  /* & span { font-size: clamp(1.5rem, 2vw, 2rem); } */
   & span { font-size: 1.5rem; }
 }
 
@@ -59,7 +58,7 @@ button[data-dir="next"] {
   width: 100%;
   flex-shrink: 0;
   color: var(--sale-txt-clr);
-  font-size: clamp(.85rem, 1.15vw, 1.25rem);
+  font-size: clamp(.85rem, 1vw, 1rem);
 
   &:hover,
   &:focus {
@@ -67,18 +66,9 @@ button[data-dir="next"] {
   }
 }
 
-.title {
-  max-width: 20em;
-  margin-inline: auto;
-  margin-top: 12rem;
-  margin-bottom: 3.5rem;
-  padding-inline: .75em;
-  color: var(--clr-title);
-  font-size: clamp(1rem, 1.5rem + 2vw, 5rem);
-}
-
 .new-deals-section {
   height: clamp(30em, 50vw, 40em);
+  margin-top: 5rem;
 }
 
 .controllers-wrapper {
@@ -164,7 +154,7 @@ button[data-dir="next"] {
 .join-wrapper {
   height: clamp(30em, 50vw, 40em);
   position: relative;
-  margin-top: 2em;
+  margin-top: 5rem;
 }
 
 .join-img-wrapper {
@@ -221,15 +211,16 @@ button[data-dir="next"] {
 }
 
 .new-section {
-  margin-top: 3em;
+  margin-top: 5rem;
   padding-inline: clamp(.5em, 2vw, 1em);
 }
 
 .new-section_title {
-  color: var(--clr-new-title);
+  margin-bottom: 0;
+  color: var(--clr-prim);
   text-transform: uppercase;
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .new-section-grid-wrapper {
@@ -243,6 +234,8 @@ button[data-dir="next"] {
   column-gap: clamp(.5em, 3vw, 3em);
   row-gap: clamp(1em, 3vw, 3em);
   justify-content: center;
+  padding: 1em;
+  padding-top: .25em;
 }
 
 @container new-section-grid (width > 800px) {
@@ -264,9 +257,8 @@ button[data-dir="next"] {
   padding: clamp(.35em, 2vw, 2em);
   border-radius: 1em;
   background-color: var(--new-card-bg);
-  transition: background-color 300ms;
+  transition: all 300ms;
 }
-
 
 .card-img-wrapper {
   height: clamp(10em, 20vw, 15em);
@@ -462,6 +454,29 @@ button[data-dir="next"] {
 
 .new-cart-icon {
   font-size: clamp(.75rem, 2vw, 1.25rem);
+}
+
+.hero-wrapper {
+  position: relative;
+  margin-top: 9rem;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  max-height: 35rem;
+  object-fit: cover;
+}
+
+.title {
+  max-width: 10em;
+  position: absolute;
+  top: clamp(1em, 7vw, 2em);
+  left: clamp(.5em, 5vw, 1.5em);
+  padding: .75em;
+  color: var(--clr-title);
+  font-size: clamp(1rem, 3.5vw, 3rem);
+  backdrop-filter: brightness(50%);
 }
 
 /* ------------------------------------- */

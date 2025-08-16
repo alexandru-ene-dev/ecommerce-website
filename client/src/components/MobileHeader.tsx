@@ -29,6 +29,12 @@ const MobileHeader = (
   const { localFavorites } = favContext;
 
 
+  const goToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeModal();
+  };
+
+
   return (
     <div className="mobile-header">
       <nav className="navigation">
@@ -46,7 +52,11 @@ const MobileHeader = (
             </div>
           </button>
 
-          <Link onClick={closeModal} to="/" className="logo">Progressio</Link>
+          <Link onClick={goToTop} to="/" className="logo">
+            Pr
+              <span className="material-symbols-outlined cog-icon">settings</span>
+            gressio
+          </Link>
 
           <div className="header-btns">
             <button onClick={toggleLoginMenu} className="account-btn header-btn">

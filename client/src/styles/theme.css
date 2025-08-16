@@ -16,8 +16,9 @@
     --clr-prim: hsl(146, 100%, 25%);
     --clr-prim2: hsl(146, 100%, 25%);
     --border: hsl(146, 100%, 25%);
-    --border-hov: hsl(0, 0%, 0%);
+    --border-hov: hsl(146, 30%, 82%);
     --icon-hov: hsl(0, 0%, 0%);
+    --cat-hov: hsl(146, 30%, 78%);
     --clr-new-title: hsl(146, 100%, 25%);
     --clr-title: hsl(0, 0%, 0%);
     --clr-deal: hsl(0, 0%, 88%);
@@ -74,6 +75,7 @@ body.dark-mode {
   --border: hsl(0, 0%, 30%);
   --border-hov: hsl(0, 0%, 90%);
   --icon-hov: hsl(0, 0%, 90%);
+  --cat-hov: hsl(0, 0%, 15%);
   --clr-new-title: hsl(0, 0%, 88%);
   --clr-title: hsl(0, 0%, 88%);
   --clr-deal: hsl(0, 0%, 88%);
@@ -123,6 +125,7 @@ body.light-mode {
   --border: hsl(146, 100%, 25%);
   --border-hov: hsl(0, 0%, 100%);
   --icon-hov: hsl(0, 0%, 100%);
+  --cat-hov: hsl(146, 30%, 78%);
   --clr-new-title: hsl(146, 100%, 25%);
   --clr-title: hsl(0, 0%, 0%);
   --clr-deal: hsl(0, 0%, 88%);

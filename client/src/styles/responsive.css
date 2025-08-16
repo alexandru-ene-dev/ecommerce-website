@@ -103,19 +103,12 @@
     & .desktop-nav_link {
       color: var(--icon-hov);
     }
-    
-    & .desktop-nav_link-card {
-      display: flex;
-      justify-content: center;
-      height: 25em;
-      opacity: 1;
-    }
   }
 
   .desktop-nav_link-card {
-    display: none;
+    display: flex;
     justify-content: center;
-    height: 0;
+    height: 25em;
     position: fixed;
     left: 0;
     right: 0;
@@ -124,7 +117,7 @@
     padding: 1em;
     padding-block: 3em;
     background-color: var(--desktop-nav-bg);
-    opacity: 0;
+    opacity: 1;
     transition: 300ms;
   }
 
@@ -206,15 +199,15 @@
     margin-top: 14rem;
   }
 
-  .title {
+  /* .title {
     margin-top: 14.5rem;
     margin-bottom: 6rem;
-  }
+  } */
 
   .login-wrapper {
     right: 1em;
-    left: 65%;
-    bottom: 2em;
+    left: auto;
+    bottom: 1em;
   }
 
   .create-account-section {
@@ -271,6 +264,18 @@
     margin-top: 2em;
   }
 
+  .category-page-main {
+    margin-top: 12rem;
+  }
+
+  .img-description-flex {
+    display: block;
+  }
+
+  .prod-category_description {
+    margin-top: 1em;
+  }
+
 }
 
 
@@ -280,6 +285,12 @@
   .newsletter-title,
   .newsletter-par {
     text-align: left;
+  }
+}
+
+@media (min-width: 90em) {
+  .img-description-flex {
+    display: flex;
   }
 }
 
@@ -293,6 +304,7 @@
   .go-top-btn {
     right: 5vw;
   }
+
 }
 
 /* ----------------------------------------- */

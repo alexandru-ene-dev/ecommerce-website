@@ -14,7 +14,6 @@
   column-gap: 3em;
   row-gap: 2em;
   padding: clamp(1em, 3vw, 3em);
-  /* padding-top: 3em; */
   background-color: var(--bg-sec);
   transition: 300ms;
 }
@@ -170,7 +169,6 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  /* margin-top: .5em; */
   margin-bottom: 0em;
 }
 

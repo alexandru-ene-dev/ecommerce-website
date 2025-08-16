@@ -146,16 +146,18 @@ const Login = (
 
             {error && <div className="error-message">${error}</div>}
 
-            <label htmlFor="keep-logged" className="keep-logged-label">
-              <input 
-                id="keep-logged" 
-                type="checkbox" 
-                className="keep-logged-checkbox checkbox-inp" 
-              />
-              <p className="keep-logged-text">Keep me logged in</p>
-            </label>
+            <div className="forgot-pass-wrap">
+              <label htmlFor="keep-logged" className="keep-logged-label">
+                <input 
+                  id="keep-logged" 
+                  type="checkbox" 
+                  className="keep-logged-checkbox checkbox-inp" 
+                />
+                <p className="keep-logged-text">Keep me logged in</p>
+              </label>
 
-            <a href="#">Forgot password?</a>
+              <a href="#">Forgot password?</a>
+            </div>
             
             <button className="login-btn sign-in-btn">Sign in</button>
 

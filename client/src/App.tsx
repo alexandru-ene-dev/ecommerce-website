@@ -23,6 +23,7 @@ import { useAuthContext } from './hooks/useAuthContext.ts';
 import { type NewProductType } from './components/types.ts';
 import { getLocalFavorites } from './utils/localFavorites.ts';
 import { FavoritesContext } from './context/FavoritesContext.tsx';
+import CategoryPage from './pages/CategoryPage.tsx';
 
 
 function App() {
@@ -51,9 +52,6 @@ function App() {
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
   }, []);
-
-  console.log(localFavorites);
-
 
 
   // sticky button on product page
@@ -190,6 +188,8 @@ function App() {
             />
         }/>
         <Route path='/profile' element={<Profile />} />
+        {/* <Route path='/categories/:category' element={<CategoryPage />} /> */}
+        <Route path='/categories/:subcategory/:subSubcategory?' element={<CategoryPage />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
 

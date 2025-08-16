@@ -1,7 +1,7 @@
 import { ProductModel } from '../models/ProductSchema.js';
 export const homeController = async (req, res) => {
     try {
-        const products = await ProductModel.find({});
+        const products = await ProductModel.find({ showOnHomepage: true }).limit(6);
         if (products.length === 0) {
             return res.status(404).json({
                 success: false,
