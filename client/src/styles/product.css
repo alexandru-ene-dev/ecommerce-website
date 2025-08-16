@@ -23,6 +23,7 @@
 
 .prod-flex {
   margin-top: 2em;
+  /* max-height: 20em; */
 }
 
 .prod-img-wrapper {
@@ -33,6 +34,8 @@
 .prod-img {
   width: 100%;
   max-width: 25em;
+  max-height: 18em;
+  /* object-fit: cover; */
 }
 
 .prod-price-wrapper {
@@ -212,7 +215,7 @@
     width: 50%;
     min-width: fit-content;
     padding-inline: 1em;
-    font-size: clamp(1.15rem, 2vw, 1.25rem);
+    font-size: clamp(1rem, 2vw, 1.25rem);
   }
 }
 

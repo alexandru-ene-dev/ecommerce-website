@@ -4,6 +4,7 @@
 .go-top-btn {
   display: none;
   position: fixed;
+  z-index: 2000;
   bottom: 25%;
   right: 10px;
   background-color: var(--btn-bg);

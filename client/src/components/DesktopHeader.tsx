@@ -32,7 +32,11 @@ const DesktopHeader = (
       <div className="desktop-header">
         <nav className="navigation">
           <div className="top-navigation">
-            <Link className="logo" to='/'>Progressio</Link>
+            <Link onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="logo" to='/'>
+              Pr
+              <span className="material-symbols-outlined cog-icon">settings</span>
+              gressio
+            </Link>
 
             <search className="search-wrapper">
               <form onSubmit={submitSearch} className="search-form">

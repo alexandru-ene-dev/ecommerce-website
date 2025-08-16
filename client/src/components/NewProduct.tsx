@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { type NewProductType } from './types';
 import type { Dispatch, SetStateAction } from 'react';
@@ -15,15 +15,14 @@ const NewProduct = (
     setIsBtnVisible 
   }:
   { 
-    imgSrc: string, 
-    encodedQuery: string, 
+    imgSrc: any, 
+    encodedQuery: any, 
     item: NewProductType
     setIsBtnVisible: Dispatch<SetStateAction<boolean>>
   }
 ) => {
 
   if (!item) return null;
-  const [ isFavorite, setIsFavorite ] = useState(false);
 
 
   const favContext = useContext(FavoritesContext);
@@ -31,23 +30,11 @@ const NewProduct = (
     throw new Error('FavoritesContext must be used inside a <Provider />');
   }
   const { localFavorites, setLocalFavorites } = favContext;
-
-
-  useEffect(() => {
-    if (!item?.id) return;
-    const found = localFavorites.some(fav => fav.id === item.id);
-
-    if (found) {
-      setIsFavorite(true);
-    } else {
-      setIsFavorite(false);
-    }
-  }, [item.id]);
-
-
+  const isFavorite = localFavorites.some(fav => fav.id === item.id);
+  
+  
   const handleFavorites = () => {
     const newFavorite = !isFavorite;
-    setIsFavorite(newFavorite);
 
     if (newFavorite) {
       saveFavoritesLocally(item);
@@ -80,7 +67,7 @@ const NewProduct = (
 
         <div className="img-wrapper-inner">
           <Link 
-            to={`${item.link}/${encodedQuery}`}
+            to={`/${item.link}/${encodedQuery}`}
             onClick={() => {
               setIsBtnVisible(true)
               getProduct(encodedQuery)
@@ -93,7 +80,7 @@ const NewProduct = (
 
       <div className="new-card-details-wrapper">
         <Link 
-          to={`${item.link}/${encodedQuery}`}
+          to={`/${item.link}/${encodedQuery}`}
           onClick={() => {
             setIsBtnVisible(true)
             getProduct(encodedQuery)}

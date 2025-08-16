@@ -1,9 +1,9 @@
 .login-wrapper {
   position: fixed;
   inset: 0;
-  top: 60px;
-  z-index: 2000;
-  padding: 1.5em;
+  top: 55px;
+  z-index: 3500;
+  padding: 1.15em;
   border-radius: 10px;
   background-color: var(--menu-bg-prim);
   opacity: 0;
@@ -21,11 +21,12 @@
 
 .login-title {
   text-align: center;
+  font-size: 1.15rem;
 }
 
-.login-wrapper .login-title {
-  margin-top: 0;
-}
+/* .login-wrapper .login-title {
+  margin-top: 2em;
+} */
 
 .login-btn {
   display: block;
@@ -111,8 +112,8 @@ input.keep-logged-checkbox {
   width: fit-content;
   margin-top: 1em;
   margin-bottom: 1em;
-  margin-left: auto;
-  margin-right: 0;
+  /* margin-left: auto; */
+  /* margin-right: 0; */
   color: var(--txt-clr);
   text-align: right;
 }
@@ -126,10 +127,10 @@ input.keep-logged-checkbox {
   display: flex;
   justify-content: center;
   width: 2em;
-  position: absolute;
+  position: sticky;
   top: .5em;
-  right: 1em;
-  bottom: auto;
+  left: calc(100% - 2em);
+  /* bottom: auto; */
   background: none;
   font-size: .9rem;
 }
@@ -137,7 +138,7 @@ input.keep-logged-checkbox {
 .sign-in-btn {
   padding: .5em 0;
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1rem;
 }
 
 .login-btn:hover,
@@ -156,4 +157,11 @@ input.keep-logged-checkbox {
   font-size: .85rem;
   text-align: center;
   text-decoration: none;
+}
+
+.forgot-pass-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: 1em;
 }

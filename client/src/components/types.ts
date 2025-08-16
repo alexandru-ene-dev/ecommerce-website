@@ -48,6 +48,9 @@ export type NewProductType = {
   alt: string,
   oldPrice: number,
   price: number,
-  sale: number
+  sale: number,
+  category: string,
+  subcategory: string,
+  content?: string[],
   link: string
 }

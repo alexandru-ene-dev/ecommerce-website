@@ -3,10 +3,18 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1100;
+  z-index: 3000;
   background-color: var(--bg-sec);
   transition: 300ms;
 }
+
+/* .header:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  backdrop-filter: blur(10px) brightness(70%);
+} */
 
 .header[data-visible="false"] {
   transform: translateY(-75%);
@@ -40,9 +48,6 @@
   flex-direction: column;
   align-items: center;
   gap: 1em;
-  /* padding-top: 1em;
-  padding-bottom: 1em;
-  padding-inline: 1em; */
   padding: .5em;
 }
 
@@ -116,7 +121,7 @@
 .modal {
   position: fixed;
   left: -100%;
-  z-index: 2000;
+  z-index: 2500;
   background-color: hsl(0 0% 0% / 0);
   transition: background-color 500ms;
 }
@@ -143,6 +148,7 @@
   bottom: 0;
   z-index: 1000;
   background-color: var(--menu-bg-prim);
+  /* backdrop-filter: blur(20px)  brightness(90%); */
   transition: 300ms;
 }
 
@@ -158,17 +164,12 @@ body:has(.modal[data-visible="true"]) {
   overflow-y: hidden;
 }
 
-/* .relative-menu-wrapper {
-  height: 100%;
-  position: relative;
-  overflow-y: auto;
-} */
-
 .products-categories-list {
   width: 100%;
   height: 100%;
   position: relative;
-  background-color: var(--menu-bg-prim);
+  /* background-color: hsl(0 0% 0% / .5); */
+  /* background-color: var(--menu-bg-prim); */
   transition: 300ms;
   overflow: auto;
 }
@@ -201,9 +202,14 @@ body:has(.modal[data-visible="true"]) {
   margin-bottom: 1em;
 }
 
+.product-subcategory-list {
+  height: calc(100% - 55px - 100px);
+}
+
 .subcategory-view {
   position: absolute;
   inset: 0;
+  background-color: var(--menu-bg-prim);
   transform: translateX(-100%);
   transition: 300ms;
 }
@@ -264,13 +270,35 @@ body:has(.modal[data-visible="true"]) {
   width: 80%;
 }
 
+.sub-close-btn {
+  position: absolute;
+  z-index: 4000;
+}
+
 .logo {
+  display: flex;
+  align-items: center;
   color: var(--clr-prim);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-decoration: none;
   text-transform: uppercase;
   font-size: clamp(1rem, 2vw, 2.25rem);
   font-weight: 800;
+}
+
+.cog-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: spinnn 5s linear infinite;
+  font-size: clamp(1.5rem, 2vw, 2.25rem);
+  padding: 0;
+  border-radius: 50%;
+} 
+
+@keyframes spinnn {
+  from { transform: rotateZ(0); }
+  to { transform: rotateZ(360deg); }
 }
 
 .account-wrapper {

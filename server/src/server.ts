@@ -11,6 +11,7 @@ import profileRoute from './routes/profileRoute.js';
 import productsRoute from './routes/productsRoute.js';
 import addToFavoritesRoute from './routes/addToFavoritesRoute.js';
 import homeRoute from './routes/homeRoute.js';
+import fetchProductsRoute from './routes/fetchProductsRoute.js';
 import Database from './config/database.js';
 import { PORT, corsOptions } from './config/config.js';
 import loginMiddleware from './middleware/loginMiddleware.js';
@@ -27,7 +28,8 @@ app.use(express.json());
 
 // routes
 app.use('/profile', loginMiddleware, profileRoute);
-app.use('/api/auth/me', loginMiddleware, authRoute)
+app.use('/api/auth/me', loginMiddleware, authRoute);
+app.use('/api/categories', fetchProductsRoute);
 app.use('/', homeRoute);
 app.use('/api/register', registerRoute);
 app.use('/api/login', loginRoute);

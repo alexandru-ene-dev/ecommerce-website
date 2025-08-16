@@ -1,6 +1,9 @@
 // import { useState } from 'react';
 import { categories, type Category } from '../utils/categories.ts';
 import { useMenuContext } from '../hooks/useMenuContext.ts';
+import delay from '../utils/delay.ts';
+import { Link } from 'react-router-dom';
+
 
 const Menu = (
   { visibleMenu, closeModal }: {
@@ -15,16 +18,20 @@ const Menu = (
     dispatch({ type: 'SET_CATEGORY', payload: category });
   }
 
-  const handleBack = () => {
+  const handleBack = async () => {
+    await delay(30);
     dispatch({ type: 'SET_VIEW', payload: 'menu' });
+    await delay(30);
     dispatch({ type: 'SET_CATEGORY', payload: null });
   };
 
-  const closeEverything = () => {
+  const closeEverything = async () => {
     closeModal();
+    await delay(30);
     dispatch({ type: 'SET_VIEW', payload: 'menu' });
     dispatch({ type: 'SET_CATEGORY', payload: null });
   };
+  
 
   return (
     <div className="modal" data-visible={visibleMenu? "true" : "false"}>
@@ -54,20 +61,24 @@ const Menu = (
             </button>
 
             <h2 className="selected-category-title">
-              { state.selectedCategory && state.selectedCategory.title }
+              { state?.selectedCategory?.title }
             </h2>
           </div>
         
           <ul className="product-subcategory-list">
-            {state.selectedCategory && state.selectedCategory.subcategories.map((sub, subIndex) => (
+            {state?.selectedCategory?.subcategories.map((sub, subIndex) => (
               <li className="subcategory-item" key={subIndex}>
-                <a className="subcategory-name" href="#">{sub}</a>
+                <Link onClick={closeModal} className="subcategory-name" to={`/categories/${sub.slug}`}>
+                  {sub.name}
+                </Link>
               </li>
             ))}
           </ul>
+
+          {state.view === 'subcategory' && <button className='close-menu-btn' onClick={closeEverything}>Close</button>}
         </div>
 
-        <button className="close-menu-btn" onClick={closeEverything}>Close</button>
+        {state.view === 'menu' && <button className='close-menu-btn' onClick={closeEverything}>Close</button>}
       </div>
     </div>
   );
