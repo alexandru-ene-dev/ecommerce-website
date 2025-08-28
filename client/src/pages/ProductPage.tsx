@@ -1,10 +1,14 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getProduct } from "../services/getProduct";
 import { type NewProductType } from "../components/types";
 import { saveFavoritesLocally, removeFavoriteLocally } from "../utils/localFavorites";
 import { FavoritesContext } from "../context/FavoritesContext";
+import delay from "../utils/delay";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { getCart, addToCart, isInCart, removeFromCart } from '../utils/cartStorage.ts';
+import useCartContext from '../hooks/useCartContext.ts';
 
 
 export default function ProductPage(
@@ -19,9 +23,12 @@ export default function ProductPage(
     setStickyBtnHeight:  Dispatch<SetStateAction<number>>
   }
 ) {
+
+  const { pathname } = useLocation();
   const [ isFavorite, setIsFavorite ]  = useState(false);
   const { name } = useParams();
   const [ productObj, setProductObj ] = useState<NewProductType | null>(null);
+
   const [ date, setDate ] = useState('');
   const addCartBtnRef = useRef<HTMLButtonElement | null>(null);
   const intersectionWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -33,6 +40,11 @@ export default function ProductPage(
     throw new Error('FavoritesContext must be used inside a <Provider />');
   }
   const { localFavorites, setLocalFavorites } = favContext;
+
+  const [ error, setError ] = useState<string | null>(null);
+
+  const [ isOnCart, setIsOnCart ] = useState(false);
+  const { localCart, setLocalCart } = useCartContext();
 
 
   useEffect(() => {
@@ -50,13 +62,17 @@ export default function ProductPage(
 
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const product = await getProduct((name as any));
-      setProductObj(product);
-    };
-
-    fetchProduct();
-  }, []);
+    try {
+      const fetchProduct = async () => {
+        const product = await getProduct((name as any));
+        setProductObj(product);
+      };
+  
+      fetchProduct();
+    } catch (err) {
+      throw new Error('Couldn\'t fetch the product');
+    }
+  }, [pathname]);
 
 
   const addFavorites = () => {
@@ -155,6 +171,38 @@ export default function ProductPage(
   }, []);
 
 
+  useEffect(() => {
+    if (productObj) {
+      setIsOnCart(isInCart(productObj._id));
+    }
+  }, [productObj?._id]);
+
+  
+  const handleCart = async () => {
+    try {
+      if (isOnCart && productObj) {
+        removeFromCart(productObj._id);
+        setLocalCart(prev => {
+          const newLocalCart = prev.filter(p => p._id !== productObj._id);
+          return newLocalCart;
+        });
+      } else {
+        if (productObj) {
+          addToCart(productObj);
+          setLocalCart(prev => {
+            const newLocalCart = [ ...prev, productObj ];
+            return newLocalCart;
+          });
+        }
+      }
+      
+      setIsOnCart(!isOnCart);
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
+
+
 
   return (
     <main>
@@ -188,8 +236,6 @@ export default function ProductPage(
               <span className="delivery-fee-span">starting from $20</span>
             </p>
 
-
-
             <div ref={intersectionWrapperRef} className="intersection-wrapper">
               <div className="intersect-img-flex">
                 <img className="intersect-img" src={imgSrc} alt={productObj?.alt} />
@@ -206,22 +252,20 @@ export default function ProductPage(
                   <p className="prod-new-price new-price">${productObj?.price}</p>
                 </div>
 
-                <button className="new-card-btn copy-btn">
+                <button onClick={handleCart} className="new-card-btn copy-btn">
                   <span className="material-symbols-outlined new-cart-icon">
                     shopping_cart
                   </span>
-                  <span>Add to Cart</span>
+                  <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
                 </button>
               </div>
             </div>
 
-
-
-            <button ref={addCartBtnRef} className="add-cart-btn new-card-btn">
+            <button onClick={handleCart} ref={addCartBtnRef} className="add-cart-btn new-card-btn">
               <span className="material-symbols-outlined new-cart-icon">
                 shopping_cart
               </span>
-              <span>Add to Cart</span>
+              <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
             </button>
 
             <button onClick={addFavorites} className="new-card-btn prod-fav-btn">

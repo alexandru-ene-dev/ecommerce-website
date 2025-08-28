@@ -39,7 +39,7 @@ const Favorites = () => {
         })}
       </div>
 
-      <Link to="/" className="back-shopping-btn new-card-btn">Back to shopping</Link>
+      <Link to="/" className="back-shopping-btn new-card-btn">Back to Main Page</Link>
     </section>
     </>
   );

@@ -11,7 +11,8 @@ export type UserDataType = {
 
 export type ValidationResult = {
   success: boolean,
-  message?: string
+  message?: string,
+  user?: any
 };
 
 export const validateInputs = (
@@ -92,7 +93,11 @@ const registerUser = async (
     const data = res.data;
 
     console.log(data);
-    return { success: true, message: 'User signed up' };
+    return { 
+      success: true, 
+      message: 'User signed up', 
+      user: data.user 
+    };
   } catch (err) {
     if (axios.isAxiosError(err)) {
       const status = err.response?.status;

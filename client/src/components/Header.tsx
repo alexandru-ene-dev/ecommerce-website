@@ -11,7 +11,7 @@ const Header = (
     showMenu, 
     closeModal, 
     visibleMenu, 
-    toggleLoginMenu,
+    toggleLoginMenu
   }: HeaderType
 ) => {
 

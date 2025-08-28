@@ -8,13 +8,6 @@
   transition: 300ms;
 }
 
-/* .header:after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  backdrop-filter: blur(10px) brightness(70%);
-} */
 
 .header[data-visible="false"] {
   transform: translateY(-75%);
@@ -30,17 +23,6 @@
 .desktop-header {
   display: none;
 }
-
-/* .mobile-header {
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1100;
-  background-color: var(--bg-sec);
-  transition: 300ms;
-} */
-
 
 .navigation {
   display: flex;
@@ -142,13 +124,12 @@
   flex-direction: column;
   width: min(100%, 35em);
   position: fixed;
-  top: 7.5em;
+  top: 9em;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 1000;
   background-color: var(--menu-bg-prim);
-  /* backdrop-filter: blur(20px)  brightness(90%); */
   transition: 300ms;
 }
 
@@ -168,8 +149,6 @@ body:has(.modal[data-visible="true"]) {
   width: 100%;
   height: 100%;
   position: relative;
-  /* background-color: hsl(0 0% 0% / .5); */
-  /* background-color: var(--menu-bg-prim); */
   transition: 300ms;
   overflow: auto;
 }
@@ -318,6 +297,7 @@ body:has(.modal[data-visible="true"]) {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -325,12 +305,21 @@ body:has(.modal[data-visible="true"]) {
   color: var(--clr-prim);
   font-weight: 700;
   text-decoration: none;
-  transition: 300ms;
+  cursor: pointer;
+  user-select: none;
 }
 
 .header-btn:hover,
 .header-btn:focus {
-  color: var(--icon-hov)
+  color: var(--icon-hov);
+
+  & .header-btn_name-icon {
+    border: 2px solid var(--icon-hov);
+  }
+
+  & p {
+    color: var(--clr-prim);
+  }
 }
 
 .header-btn-icon {
@@ -395,6 +384,40 @@ body:has(.modal[data-visible="true"]) {
   outline: none;
   color: var(--search-btn-clr);
   background-color: var(--search-btn-foc);
+}
+
+.header-btn_name-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 21px;
+  height: 21px;
+  padding-bottom: 2px;
+  border-radius: 50%;
+  border: 2px solid var(--clr-prim);
+  background-color: var(--account-icon-bg);
+  color: var(--icon-hov);
+  font-size: .75rem;
+}
+
+.fav-cart-count {
+  width: 15px;
+  position: absolute;
+  left: 10px;
+  top: -2px;
+  padding: 3px;
+  border-radius: 50%;
+  background-color: var(--red);
+  color: white;
+  font-size: .6rem;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
 }
 
 /* ------------------------------------ */

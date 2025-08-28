@@ -1,13 +1,32 @@
-.login-wrapper {
+.account-modal {
+  margin-top: 10em;
   position: fixed;
-  inset: 0;
-  top: 55px;
+  filter: blur(10px);
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 40em;
+  max-height: 40em;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 40px;
   z-index: 3500;
   padding: 1.15em;
   border-radius: 10px;
   background-color: var(--menu-bg-prim);
   opacity: 0;
   transition: opacity 200ms;
+  overflow: auto;
+
+  & button,
+  & a {
+    font-size: 1rem;
+  }
+}
+
+input.login-wrapper.login-wrapper {
   overflow: auto;
 }
 
@@ -22,11 +41,8 @@
 .login-title {
   text-align: center;
   font-size: 1.15rem;
+  margin-top: 0;
 }
-
-/* .login-wrapper .login-title {
-  margin-top: 2em;
-} */
 
 .login-btn {
   display: block;
@@ -95,6 +111,11 @@
   cursor: pointer;
 }
 
+.keep-logged-label:hover,
+.keep-logged-label:focus-within {
+  text-decoration: underline;
+}
+
 input.keep-logged-checkbox {
   width: fit-content;
   margin: 0;
@@ -106,21 +127,18 @@ input.keep-logged-checkbox {
   margin: 0;
 }
 
-
 .login-form a {
   display: block;
   width: fit-content;
   margin-top: 1em;
   margin-bottom: 1em;
-  /* margin-left: auto; */
-  /* margin-right: 0; */
-  color: var(--txt-clr);
+  color: var(--txt-deal);
   text-align: right;
 }
 
 .login-form a:hover,
 .login-form a:focus {
-  color: var(--txt-hov);
+  color: var(--icon-hov);
 }
 
 .close-login-btn {
@@ -128,9 +146,7 @@ input.keep-logged-checkbox {
   justify-content: center;
   width: 2em;
   position: sticky;
-  top: .5em;
   left: calc(100% - 2em);
-  /* bottom: auto; */
   background: none;
   font-size: .9rem;
 }
@@ -147,7 +163,8 @@ input.keep-logged-checkbox {
 }
 
 .create-account-par {
-  color: var(--foot-link-clr);
+  margin-bottom: 2em;
+  color: var(--account-par);
   text-align: justify;
 }
 
@@ -164,4 +181,35 @@ input.keep-logged-checkbox {
   flex-wrap: wrap;
   justify-content: space-between;
   column-gap: 1em;
+}
+
+.logout-confirm-par {
+  margin-top: 0;
+  text-align: center;
+}
+
+.logout-confirm-modal {
+  background-color: var(--menu-bg-sec);
+  padding: 1em;
+  margin-top: 1em;
+  border-radius: 10px;
+}
+
+.confirm-logout-btn {
+  justify-content: center;
+  margin-top: 1em;
+  padding: .75em;
+  text-align: center;
+}
+
+.account-stats button,
+.account-stats a {
+  justify-content: center;
+  padding: .5em 1em;
+}
+
+.account-stats a {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  text-decoration: none;
 }

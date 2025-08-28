@@ -1,10 +1,15 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { type NewProductType } from './types';
 import type { Dispatch, SetStateAction } from 'react';
 import { getProduct } from '../services/getProduct.ts';
 import { saveFavoritesLocally, removeFavoriteLocally } from '../utils/localFavorites.ts';
 import { FavoritesContext } from '../context/FavoritesContext.tsx';
+import useLoadingContext from '../hooks/useLoadingContext.ts';
+import delay from '../utils/delay.ts';
+import { addToCartService } from '../services/addToCartService.ts';
+import { getCart, addToCart, isInCart, removeFromCart } from '../utils/cartStorage.ts';
+import useCartContext from '../hooks/useCartContext.ts';
 
 
 const NewProduct = (
@@ -23,6 +28,8 @@ const NewProduct = (
 ) => {
 
   if (!item) return null;
+  const { setLoading } = useLoadingContext();
+  const [ error, setError ] = useState<string | null>(null);
 
 
   const favContext = useContext(FavoritesContext);
@@ -31,6 +38,10 @@ const NewProduct = (
   }
   const { localFavorites, setLocalFavorites } = favContext;
   const isFavorite = localFavorites.some(fav => fav.id === item.id);
+
+
+  const [ isOnCart, setIsOnCart ] = useState(false);
+  const { localCart, setLocalCart } = useCartContext();
   
   
   const handleFavorites = () => {
@@ -48,7 +59,44 @@ const NewProduct = (
         return newArr;
       });
     }
-  }
+  };
+
+
+  useEffect(() => {
+    setIsOnCart(isInCart(item._id));
+  }, [item._id]);
+
+  
+  const handleCart = async () => {
+    try {
+      if (isOnCart) {
+        removeFromCart(item._id);
+        setLocalCart(prev => {
+          const newLocalCart = prev.filter(p => p._id !== item._id);
+          return newLocalCart;
+        });
+      } else {
+        addToCart(item);
+        setLocalCart(prev => {
+          const newLocalCart = [ ...prev, item ];
+          return newLocalCart;
+        });
+      }
+      
+      setIsOnCart(!isOnCart);
+
+      // const result = await addToCartService(newCart, item._id);
+  
+      // if (!result.success) {
+      //   console.error(result.message);
+      //   return;
+      // }
+
+      // console.log(result);
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  };
 
 
   return (
@@ -68,11 +116,15 @@ const NewProduct = (
         <div className="img-wrapper-inner">
           <Link 
             to={`/${item.link}/${encodedQuery}`}
-            onClick={() => {
-              setIsBtnVisible(true)
-              getProduct(encodedQuery)
+            onClick={async () => {
+              setLoading(true);
+              setIsBtnVisible(true);
+              await delay(700);
+              getProduct(encodedQuery);
+              setLoading(false);
             }}
-            className="card-img-link">
+            className="card-img-link"
+          >
             <img className="new-card-img" src={imgSrc} alt={item.alt} />
           </Link>
         </div>
@@ -81,10 +133,13 @@ const NewProduct = (
       <div className="new-card-details-wrapper">
         <Link 
           to={`/${item.link}/${encodedQuery}`}
-          onClick={() => {
-            setIsBtnVisible(true)
-            getProduct(encodedQuery)}
-          }
+          onClick={async () => {
+            setIsBtnVisible(true);
+            setLoading(true);
+            await delay(700);
+            getProduct(encodedQuery);
+            setLoading(false);
+          }}
           className="new-card-title">{item.title}</Link>
 
         <div className="sale-price-wrapper">
@@ -98,11 +153,11 @@ const NewProduct = (
           </p>
         </div>
 
-        <button className="add-cart-btn new-card-btn">
+        <button onClick={handleCart} className="add-cart-btn new-card-btn">
           <span className="material-symbols-outlined new-cart-icon">
             shopping_cart
           </span>
-          <span>Add to Cart</span>
+          <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
         </button>
       </div>
     </div>

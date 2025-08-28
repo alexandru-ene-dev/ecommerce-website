@@ -5,9 +5,13 @@ import NewProduct from "../components/NewProduct.tsx";
 import { type NewProductType } from "../components/types.ts";
 import { nanoid } from 'nanoid';
 import { Link, useLocation } from 'react-router-dom';
+import delay from "../utils/delay.ts";
+import LoaderLine from "../components/LoaderLine.tsx";
+import useLoadingContext from "../hooks/useLoadingContext.ts";
 
 
 const CategoryPage = () => {
+  const { isLoading, setLoading } = useLoadingContext();
   const { subcategory, subSubcategory } = useParams();
   const { pathname } = useLocation();
 
@@ -91,6 +95,7 @@ const CategoryPage = () => {
       if (!slug) return;
       
       const fetchProd = async () => {
+        setLoading(true);
         const result = await fetchProducts(slug);
         
         if (!result || !result.success) {
@@ -119,6 +124,13 @@ const CategoryPage = () => {
       setError((err as Error).message);
       setProducts([]);
       setSubSubcategories([]);
+    } finally {
+      const awaitDelay = async () => {
+        await delay(500);
+        setLoading(false);
+      };
+
+      awaitDelay();
     }
   }, [subcategory, subSubcategory]);
 
@@ -132,7 +144,6 @@ const CategoryPage = () => {
       <div className={
         isProductFromSubSub? "category-page-sub-prod new-section-grid-wrapper" : (isSubcategoryPage? "category-page-subcategories" : "category-page-products")
       }>
-        {/* {isProductFromSubSub && <div className="new-section-grid">{subSubElements}</div>} */}
         {isProductFromSubSub? 
           <div className="new-section-grid">{subSubElements}</div> : 
           (isSubcategoryPage? subcategoryElements : productElements)
