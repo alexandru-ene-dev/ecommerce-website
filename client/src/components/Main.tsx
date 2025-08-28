@@ -11,12 +11,16 @@ import { getHomeNewProducts } from '../services/getHomeNewProducts.ts';
 import NewProduct from './NewProduct.tsx';
 import { type NewProductType } from './types.ts';
 import HeroImage from '../assets/images/innovative-tech.jpg';
+import useLoadingContext from '../hooks/useLoadingContext.ts';
+import delay from '../utils/delay.ts';
 
 
 const Main = (
   { setIsBtnVisible }:
   { setIsBtnVisible: Dispatch<SetStateAction<boolean>> }
 ) => {
+  const { setLoading } = useLoadingContext();
+
   const [ haveNewProducts, setHaveNewProducts ] = useState(false);
   const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
 
@@ -25,7 +29,6 @@ const Main = (
   const dealSlideRef = useRef<HTMLUListElement>(null);
   const dealElements = images.map(({ text, src, alt, active, id }: DealProps) => {
     const imageUrl = new URL(`../assets/images/${src}`, import.meta.url).href;
-
     return (
       <Deal
         key={id}
@@ -63,6 +66,7 @@ const Main = (
       }
     }
   };
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -149,7 +153,14 @@ const Main = (
         </section>
 
         <div className="join-wrapper">
-          <Link to="/register">
+          <Link 
+            onClick={async () => {
+              setLoading(true);
+              await delay(700);
+              setLoading(false);
+            }} 
+            to="/register"
+          >
             <div className="join-img-wrapper">
               <img 
                 className="join-img" 

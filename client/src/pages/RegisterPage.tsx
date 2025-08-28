@@ -4,22 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner.tsx';
 import delay from '../utils/delay.ts';
 import axios from 'axios';
+import { useAuthContext } from '../hooks/useAuthContext.ts';
+
 
 const Register = () => {
   const [ visiblePass, setVisiblePass ] = useState(false);
   const [ visibleConfirmPass, setVisibleConfirmPass ] = useState(false);
   const [ firstName, setFirstName ] = useState('');
   const [ lastName, setLastName ] = useState('');
+
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ confirmPass, setConfirmPass ] = useState('');
   const [ acceptTerms, setAcceptTerms ] = useState(false);
+
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ isLoading, setLoading ] = useState(false);
-  const [ loggedIn, setLoggedIn ] = useState(false);
+  // const [ loggedIn, setLoggedIn ] = useState(false);
   const [ error, setError ] = useState<string | null>(null);
-
+  
   const navigate = useNavigate();
+  const { state, dispatch } = useAuthContext();
 
 
   const togglePass = (e: MouseEvent) => {
@@ -63,7 +68,10 @@ const Register = () => {
       await delay(1000);
       setLoading(false);
       setIsModalOpen(true);
-      setLoggedIn(true);
+      // setLoggedIn(true);
+      
+      console.log(registration.user);
+      dispatch({ type: 'LOGIN', payload: registration.user });
   
       await delay(5000);
       setIsModalOpen(false);
@@ -87,6 +95,7 @@ const Register = () => {
   return (
     <section className="create-account-section">
       <h1 className="register-title">Create Account</h1>
+
       <form onSubmit={handleSubmit} noValidate>
         <div className="name-wrapper">
           <div className="name-wrapper_flex">
@@ -204,7 +213,10 @@ const Register = () => {
           <p className="success-register_par">Use your credentials to log in.</p>
           <p className="success-register_par">Enjoy the experience of unbeatable tech deals, exclusive discounts, and the smartest way to shop online!</p>
 
-          <button className="close-menu-btn close-login-btn" onClick={() => setIsModalOpen(false)}>
+          <button 
+            className="close-menu-btn close-login-btn" 
+            onClick={() => setIsModalOpen(false)}
+          >
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>

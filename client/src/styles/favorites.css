@@ -1,7 +1,6 @@
 .favorites-section {
-  margin-top: clamp(12rem, 2vw, 15rem);
-  padding: .5em;
-  padding-top: 0;
+  margin-top: 10rem;
+  padding: 1em;
 }
 
 .fav-title-txt {
@@ -24,10 +23,11 @@
 .favorites-title {
   margin: 0;
   color: var(--clr-title);
+  font-weight: 700;
 }
 
 .favorites-icon {
-  font-size: 2rem;
+  font-size: 1.75rem;
 }
 
 .back-shopping-btn {
@@ -61,30 +61,58 @@
   background-color: var(--new-card-bg);
 
   & .sale-price-wrapper {
+    justify-content: space-between;
     column-gap: 1em;
-    flex-wrap: nowrap;
   }
 
-  & .prod-title {
-    width: 13em;
-    margin-top: 0;
-    margin-bottom: 0;
-    font-size: clamp(.85rem, 1vw, 1rem);
-  }
-  
   & .new-card-sale-limit {
-    font-size: clamp(.75rem, 1vw, .95rem);
     gap: .5em;
   }
-
+  
+  & .new-card-price {
+    justify-content: normal;
+    
+    & * {
+      width: 50%;
+    }
+  }
+  
+  & .new-price {
+    font-size: 1.5rem;
+  }
+  
+  & .old-price {
+    font-size: 1.35rem;
+  }
+  
+  & .sale-txt,
+  & .limit-txt {
+    font-size: .9rem;
+  }
+  
+  & .new-cart-icon,
+  & .prod-fav-icon,
+  & .prod-title,
   & button {
     font-size: 1rem;
   }
 
-  & .new-cart-icon,
-  & .prod-fav-icon {
-    font-size: 1rem;
+  .prod-title {
+    text-align: initial;
   }
+}
+
+.prod-title-link {
+  text-decoration: none;
+}
+
+.prod-title:hover,
+.prod-title:focus {
+  color: var(--txt-hov2);
+}
+
+.prod-title-link:focus-within img {
+  scale: 1.1;
 }
 
 .fav-prod-inner {
@@ -95,37 +123,136 @@
   row-gap: 1em;
 }
 
+.fav-prod-img-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
 .fav-prod-img {
-  /* height: 50px; */
-  max-width: clamp(60px, 8vw, 120px);
-  aspect-ratio: 12 / 9;
-  /* object-fit: cover; */
+  max-height: 17em;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transition: scale 300ms;
+}
+
+.fav-prod-img:hover {
+  scale: 1.1;
 }
 
 .img-title-wrap {
   display: flex;
-  width: 100%;
-  max-width: 23rem;
+  flex-wrap: wrap;
+  max-width: 30rem;
   justify-content: space-between;
   align-items: center;
+  gap: 1em;
 }
 
 .price-cart-wrap {
   width: 100%;
-  max-width: 23rem;
+  max-width: 20rem;
 }
 
-.fav-count {
-  width: 15px;
+.fav-hover_menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 30em;
+  right: 0;
+  position: fixed;
+  top: 50px;
+  z-index: 4000;
+  padding: 1em;
+  background-color: var(--menu-bg-prim);
+  cursor: auto;
+}
+
+/* .fav-hover_menu:after {
+  width: 20px;
+  height: 0;
+  content: '';
   position: absolute;
-  left: 10px;
-  top: -2px;
-  padding: 3px;
-  border-radius: 50%;
-  background-color: var(--red);
+  top: -16px;
+  right: 50%;
+  border-top: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--menu-bg-prim);
+  padding: 0; 
+} */
+
+.fav-hover_prod {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  padding: .5em;
+  border-bottom: 2px solid var(--border);
+  cursor: auto;
+}
+
+.fav-hover_btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+  /* font-size: clamp(.75rem, 1vw, 1rem); */
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.fav-hover_remove-btn:hover {
+  background-color: var(--theme-btn-hov);
+}
+
+.fav-hover_prod:last-of-type {
+  border-bottom: 2px solid transparent;
+}
+
+.fav-hover_img {
+  max-width: 2.5em;
+  max-height: 2.5em;
+}
+
+.fav-hover_prod-title {
+  max-width: 15em;
+  max-height: 4em;
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   color: white;
-  font-size: .6rem;
-  font-family:Arial, Helvetica, sans-serif;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  font-size: .75rem;
+}
+
+.fav-hover_prod-price {
+  font-size: 1rem;
+}
+
+.fav-hover_remove-btn {
+  background: none;
+  border: none;
+  position: relative;
+  isolation: isolate;
+  
+  & span { font-size: 1.25rem; }
+}
+
+.fav-hover_fav-icon {
+  font-size: 1rem;
+}
+
+.fav-hover_menu-no-fav {
   text-align: center;
 }
+
+.fav-hover_cart-ico {
+  font-size: 1.15rem;
+}
+
+
+
 

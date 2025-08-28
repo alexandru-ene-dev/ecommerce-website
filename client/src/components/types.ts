@@ -42,6 +42,7 @@ export type ThemeSwitcherType = {
 }
 
 export type NewProductType = {
+  _id: string,
   id: number,
   title: string,
   img: string,

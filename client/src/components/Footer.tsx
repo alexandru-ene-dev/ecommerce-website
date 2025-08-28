@@ -57,39 +57,41 @@ const Footer = (
 
   return (
     <footer className="footer">
-      <section className="newsletter-section">
-        <div className="newsletter-left">
-          <h2 className="newsletter-title">Let's connect</h2>
-          <p className="newsletter-par">
-            Stay up to date with our huge sales, tech trends and giveaways campaigns.
-          </p>
-        </div>
-        
-        <div className="newsletter-right">
-          <form onSubmit={subscribe} className="newsletter-form">
-            <input
-              className="input footer-input"
-              type="email" 
-              onChange={(e: ChangeEvent<HTMLInputElement>) => dispatch({
-                type: "SET_FOOTER_INPUT",
-                payload: e.target.value
-              })} 
-              value={state.footerInput} 
-              placeholder="Enter your email address"
-            />
-            <button className="subscribe-btn">Subscribe to Newsletter</button>
-          </form>
+      <div className="newsletter-section-container">
+        <section className="newsletter-section">
+          <div className="newsletter-left">
+            <h2 className="newsletter-title">Let's connect</h2>
+            <p className="newsletter-par">
+              Stay up to date with our huge sales, tech trends and giveaways campaigns.
+            </p>
+          </div>
+          
+          <div className="newsletter-right">
+            <form onSubmit={subscribe} className="newsletter-form">
+              <input
+                className="input footer-input"
+                type="email" 
+                onChange={(e: ChangeEvent<HTMLInputElement>) => dispatch({
+                  type: "SET_FOOTER_INPUT",
+                  payload: e.target.value
+                })} 
+                value={state.footerInput} 
+                placeholder="Enter your email address"
+              />
+              <button className="subscribe-btn">Subscribe to Newsletter</button>
+            </form>
 
-          <p className="newsletter-notice">
-            By subscribing, you agree to receive marketing communications from PROGRESSIO and partners by email. You also consent to the use of your details in accordance with our Privacy Policy.
-          </p>
+            <p className="newsletter-notice">
+              By subscribing, you agree to receive marketing communications from PROGRESSIO and partners by email. You also consent to the use of your details in accordance with our Privacy Policy.
+            </p>
 
-          <section className={`subscribe-feedback ${isFeedbackShown? 'shown' : ''}`}>
-            <p>You successfully subscribed to our newsletter using {emailAddress}!</p> 
-            <p>Expect upcoming deals, we always have something that might spark your interest!</p>
-          </section>
-        </div>
-      </section>
+            <section className={`subscribe-feedback ${isFeedbackShown? 'shown' : ''}`}>
+              <p>You successfully subscribed to our newsletter using {emailAddress}!</p> 
+              <p>Expect upcoming deals, we always have something that might spark your interest!</p>
+            </section>
+          </div>
+        </section>
+      </div>
 
       <div className="links-social-wrapper">
         <section className="footer-links-panel-mobile">

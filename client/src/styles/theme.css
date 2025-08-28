@@ -7,7 +7,7 @@
     --bg-sec: hsl(146, 30%, 75%);
     --menu-subtitle-clr: hsl(0, 0%, 100%);
     --menu-bg-prim: hsl(146, 30%, 65%);
-    --menu-bg-sec: hsl(0, 0%, 25%);
+    --menu-bg-sec: hsl(146, 30%, 55%);
     --menu-link-clr: hsl(0, 0%, 95%);
     --menu-link-hov: hsl(146, 100%, 25%);
     --desktop-nav-bg: hsl(146, 30%, 75%);
@@ -51,6 +51,8 @@
     --sale-txt-hov: hsl(0, 0%, 90%);
     --new-card-bg: hsl(146, 30%, 82%);
     --loader-clr: hsl(146, 100%, 100%);
+    --account-icon-bg: hsl(146, 100%, 25%);
+    --account-par: hsl(0, 0%, 95%);
 
     background-color: var(--bg);
 
@@ -106,6 +108,8 @@ body.dark-mode {
   --sale-txt-hov: hsl(0, 0%, 80%);
   --new-card-bg: hsl(0, 0%, 10%);
   --loader-clr: hsl(146, 100%, 53%);
+  --account-icon-bg: transparent;
+  --account-par: hsl(0, 0%, 88%);
 }
 
 
@@ -114,7 +118,7 @@ body.light-mode {
   --bg-sec: hsl(146, 30%, 75%);
   --menu-subtitle-clr: hsl(0, 0%, 100%);
   --menu-bg-prim: hsl(146, 30%, 65%);
-  --menu-bg-sec: hsl(0, 0%, 25%);
+  --menu-bg-sec: hsl(146, 30%, 55%);
   --menu-link-clr: hsl(0, 0%, 95%);
   --menu-link-hov: hsl(146, 100%, 25%);
   --desktop-nav-bg: hsl(146, 30%, 75%);
@@ -157,6 +161,8 @@ body.light-mode {
   --sale-txt-hov: hsl(0, 0%, 90%);
   --new-card-bg: hsl(146, 30%, 82%);
   --loader-clr: hsl(146, 100%, 100%);
+  --account-icon-bg: hsl(146, 100%, 25%);
+  --account-par: hsl(0, 0%, 95%);
 
   background-color: var(--bg);
 

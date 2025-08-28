@@ -5,7 +5,9 @@ const authReducer = (state: AuthStateType, action: AuthActionsType ) => {
     case 'LOGIN':
       return { ...state, isLoggedIn: true, user: action.payload };
     case 'LOGOUT':
-    return { ...state, isLoggedIn: false, user: null };
+      return { ...state, isLoggedIn: false, user: null };
+    case 'EDIT_NAME':
+      return { ...state, user: action.payload };
     default:
       return state;
   }

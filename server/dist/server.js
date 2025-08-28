@@ -13,6 +13,9 @@ import fetchProductsRoute from './routes/fetchProductsRoute.js';
 import Database from './config/database.js';
 import { PORT, corsOptions } from './config/config.js';
 import loginMiddleware from './middleware/loginMiddleware.js';
+import logoutRoute from './routes/logoutRoute.js';
+import addToCartRoute from './routes/addToCartRoute.js';
+import editNameRoute from './routes/editNameRoute.js';
 dotenv.config();
 const app = express();
 // middleware
@@ -21,9 +24,12 @@ app.use(cors(corsOptions));
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 // routes
+app.use('/editName', editNameRoute);
 app.use('/profile', loginMiddleware, profileRoute);
 app.use('/api/auth/me', loginMiddleware, authRoute);
+app.use('/api/auth/logout', logoutRoute);
 app.use('/api/categories', fetchProductsRoute);
+app.use('/cart', addToCartRoute);
 app.use('/', homeRoute);
 app.use('/api/register', registerRoute);
 app.use('/api/login', loginRoute);
