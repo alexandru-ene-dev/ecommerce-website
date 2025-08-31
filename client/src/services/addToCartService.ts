@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const addToCartService = async (isOnCart: boolean, productId: string) => {
+const addToCartService = async (userId: string, isOnCart: boolean, productId: string) => {
   try {
-    const payload = { isOnCart, productId };
+    const payload = { isOnCart, productId, userId };
     const res = await axios.post(`http://localhost:8383/cart`, payload);
     const data = res.data;
     
@@ -15,13 +15,15 @@ export const addToCartService = async (isOnCart: boolean, productId: string) => 
 
     return {
       success: true,
-      product: data.product
+      message: data.message,
+      product: data.product,
+      updatedCart: data.cart
     };
   } catch (err) {
     if (axios.isAxiosError(err)) {
       return {
         success: false,
-        message: err.message
+        message: `Axios error: ${err.message}`
       }
     }
     return {
@@ -30,3 +32,5 @@ export const addToCartService = async (isOnCart: boolean, productId: string) => 
     }
   }
 };
+
+export { addToCartService };

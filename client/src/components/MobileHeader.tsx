@@ -1,17 +1,18 @@
-import { type ChangeEvent, useContext, useRef, useState, useEffect } from 'react';
+import { type ChangeEvent, useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { type MobileHeaderType } from './types';
 import ThemeSwitcher from './ThemeSwitcher';
-import { FavoritesContext } from '../context/FavoritesContext';
+
 import { useAuthContext } from '../hooks/useAuthContext';
 import useLoadingContext from '../hooks/useLoadingContext';
 import useCartContext from '../hooks/useCartContext';
 import delay from '../utils/delay';
-import { getProduct } from '../services/getProduct';
-import { useNavigate } from 'react-router-dom';
-import { removeFavoriteLocally } from '../utils/localFavorites';
-import { addToCart, removeFromCart } from '../utils/cartStorage';
+
 import { useAvatar } from '../context/AuthContext/AvatarContext';
+import useFavoritesContext from '../hooks/useFavoritesContext';
+import useHandleCart from '../hooks/useHandleCart';
+import useHandleFavorites from '../hooks/useHandleFavorites';
+import { useInputContext } from '../hooks/useInputContext';
 
 
 const MobileHeader = (
@@ -20,10 +21,11 @@ const MobileHeader = (
     showMenu,
     submitSearch,
     toggleLoginMenu,
+
     toggleThemeMenu,
     visibleThemeMenu,
-    themeIcon,
     changeTheme,
+
     searchInput,
     setSearchInput,
     closeModal,
@@ -31,31 +33,24 @@ const MobileHeader = (
 ) => {
 
   const hamburgerBtnRef = useRef<HTMLButtonElement>(null);
-  const favContext = useContext(FavoritesContext);
-  if (!favContext) {
-    throw new Error('FavoritesContext must be used inside a <Provider />');
-  }
-  const { localFavorites, setLocalFavorites } = favContext;
-
-
-  const { state } = useAuthContext();
-  const nameInitial = state.user?.firstName.slice(0, 1).toUpperCase();
+  const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
+  const { state } = useAuthContext();
+
+  const nameInitial = state.user?.firstName.slice(0, 1).toUpperCase();
   const { setLoading } = useLoadingContext();
-
-
   const [ isFavoritesHovered, setIsFavoritesHovered ] = useState(false);
   const { avatar } = useAvatar();
-  const navigate = useNavigate();
-  
+
+  const [ showAccount, setShowAccount ] = useState(false);
+  const { handleCart } = useHandleCart(setLocalCart);
+  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
+  const { state: themeState } = useInputContext();
+
   
   const toggleFavMenu = () => {
     setIsFavoritesHovered(prev => !prev);
   };
-  
-  // const handleMouseLeave = async () => {
-  //   setIsFavoritesHovered(false);
-  // };
 
 
   const handleReload = async () => {
@@ -82,44 +77,6 @@ const MobileHeader = (
   }, []);
 
 
-  const removeFromFavorites = (index: number) => {
-    const removedFav = localFavorites.find(fav => fav === localFavorites[index]);
-
-    if (!removedFav) return;
-
-    removeFavoriteLocally(removedFav.id);
-    
-    setLocalFavorites(prev => {
-      const newFavorites = prev.filter(fav => fav.id !== removedFav.id);
-      return newFavorites;
-    });
-  };
-
-
-  const handleCart = (index: number) => {
-    // clicked product
-    const prod = localFavorites.find(prod => prod._id === localFavorites[index]._id);
-    if (!prod) return;
-  
-    // does it exist in cart?
-    const inCartProd = localCart.find(p => p._id === prod._id);
-
-    if (inCartProd) {
-      removeFromCart(prod._id);
-      setLocalCart(prev => {
-        const newCart = prev.filter(p => p._id !== prod._id);
-        return newCart;
-      });
-    } else {
-      addToCart(prod);
-      setLocalCart(prev => {
-        const newCart = [ ...prev, prod];
-        return newCart;
-      });
-    }
-  };
-
-
   return (
     <div className="mobile-header">
       <nav className="navigation">
@@ -144,26 +101,34 @@ const MobileHeader = (
           </Link>
 
           <div className="header-btns">
-            <button onClick={toggleLoginMenu} className="account-btn header-btn">
-              {state.isLoggedIn && avatar? <img className="avatar" src={avatar} /> :
-                <span className={
-                  state.isLoggedIn ?
-                    "header-btn_name-icon" :
-                    "material-symbols-outlined header-btn-icon"
-                }>
-                  {state.isLoggedIn? nameInitial : "account_circle"}
-                </span>
-              }
+            <div
+              onClick={toggleLoginMenu}
+              onMouseEnter={state?.isLoggedIn? () => setShowAccount(true) : () => null} 
+              onMouseLeave={() => setShowAccount(false)}
+              className="account-btn-wrapper"
+            >
+              <button 
+                onClick={toggleLoginMenu} 
+                className="account-btn header-btn"
+              >
+                {state.isLoggedIn && avatar? 
+                  <img className="avatar" src={avatar} /> :
+                  <span className={
+                    state.isLoggedIn ?
+                      "header-btn_name-icon" :
+                      "material-symbols-outlined header-btn-icon"
+                  }>
+                    {state.isLoggedIn? nameInitial : "account_circle"}
+                  </span>
+                }
+              </button>
 
-
-              {/* <span className={
-                state.isLoggedIn ?
-                  "header-btn_name-icon" :
-                  "material-symbols-outlined header-btn-icon"
-              }>
-                {state.isLoggedIn? nameInitial : "account_circle"}
-              </span> */}
-            </button>
+              {showAccount && <div onClick={toggleLoginMenu} className="account-hov-menu">
+                <h2>Progressio Account</h2>
+                <p>{`${state?.user?.firstName} ${state?.user?.lastName}`}</p>
+                <p>{state?.user?.email}</p>
+              </div>}
+            </div>
 
             <div className="fav-wrap">
               <button 
@@ -175,15 +140,21 @@ const MobileHeader = (
               >
                 <span className="material-symbols-outlined header-btn-icon">
                   favorite
-                  {localFavorites.length > 0 && 
-                    <span className="fav-cart-count">{localFavorites.length}</span>}
+                  {localFavorites && localFavorites?.length > 0 && 
+                    <span className="fav-cart-count">{localFavorites?.length}</span>}
                 </span>
               </button>
 
               {isFavoritesHovered && 
                 <div onClick={(e) => e.stopPropagation()} className="fav-hover_menu">
-                  {localFavorites.map((prod, i) => {
-                    const inCartProd = localCart.find(p => p._id === prod._id);
+                  <h1 className="favorites-title">
+                    <span className="material-symbols-outlined favorites-icon">favorite</span>
+                    <span>Your Favorites</span>
+                  </h1>
+
+                  {localFavorites && localFavorites.map((prod) => {
+                    const isFavorite = localFavorites && localFavorites.some(p => p._id === prod._id);
+                    const isInCart = localCart && localCart.some(p => p._id === prod._id);
                     const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
                     const slug = prod.title.replaceAll(' ', '-');
                     
@@ -199,23 +170,25 @@ const MobileHeader = (
 
                         <p className="fav-hover_prod-price">${prod.price}</p>
 
-                        <button onClick={() => removeFromFavorites(i)} className="fav-hover_remove-btn">
+                        <button 
+                          onClick={() => handleFavorites(prod, isFavorite)} className="fav-hover_remove-btn"
+                        >
                           <span className="material-symbols-outlined">close</span>
                         </button>
 
                         <button 
-                          onClick={() => handleCart(i)}
+                          onClick={() => handleCart(prod, isInCart)}
                           className="fav-hover_remove-btn"
                         >
                           <span className="material-symbols-outlined fav-hover_cart-ico">
-                            {inCartProd? "remove_shopping_cart" : "add_shopping_cart"}
+                            {isInCart? "remove_shopping_cart" : "add_shopping_cart"}
                           </span>
                         </button> 
                       </div>
                     );
                   })}
 
-                  {localFavorites.length === 0 && 
+                  {localFavorites && localFavorites.length === 0 && 
                     <div className="fav-hover_menu-no-fav"><span className="material-symbols-outlined fav-hover_fav-icon">favorite</span> You didn't save any favorites yet...</div>
                   }
 
@@ -233,7 +206,7 @@ const MobileHeader = (
             <Link onClick={closeModal} to="/cart" className="cart-btn header-btn">
               <span className="material-symbols-outlined header-btn-icon">
                 shopping_cart
-                {localCart.length > 0 && 
+                {localCart && localCart.length > 0 && 
                   <span className="fav-cart-count">{localCart.length}</span>}
               </span>
             </Link>
@@ -241,7 +214,7 @@ const MobileHeader = (
             <ThemeSwitcher
               toggleThemeMenu={toggleThemeMenu}
               visibleThemeMenu={visibleThemeMenu}
-              themeIcon={themeIcon}
+              themeIcon={themeState.themeIcon}
               changeTheme={changeTheme}
             />
           </div>

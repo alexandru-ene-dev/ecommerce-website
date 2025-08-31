@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { type MouseEvent, useState } from "react";
 
 const DesktopMenu = () => {
-  const [ showMenu, setShowMenu ] = useState(false);
-
   const [ activeIndex, setActiveIndex ] = useState<number | null>(null);
 
   const handleMouseEnter = (index: number) => {
@@ -22,7 +20,6 @@ const DesktopMenu = () => {
 
   const categoryElements = categories.map((cat, i) => {
     const imgSrc = new URL(`../assets/images/${cat.src}`, import.meta.url).href;
-
     const isActive = activeIndex === i;
 
     return (

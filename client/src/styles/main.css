@@ -12,6 +12,7 @@
   justify-content: center;
   width: min(100%, 40em);
   position: relative;
+  isolation: isolate;
   margin-inline: auto;
   overflow: hidden;
 }
@@ -19,7 +20,7 @@
 .sales-inner-wrapper button {
   position: absolute;
   top: calc(50% - 1em);
-  z-index: 1;
+  z-index: -1;
   background: none;
   border: none;
   color: var(--sale-txt-clr);
@@ -389,6 +390,7 @@ button[data-dir="next"] {
 }
 
 .sale-txt {
+  color: white;
   background-color: var(--red);
   padding: .15em;
 }

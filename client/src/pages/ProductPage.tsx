@@ -1,14 +1,13 @@
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { getProduct } from "../services/getProduct";
 import { type NewProductType } from "../components/types";
-import { saveFavoritesLocally, removeFavoriteLocally } from "../utils/localFavorites";
-import { FavoritesContext } from "../context/FavoritesContext";
-import delay from "../utils/delay";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { getCart, addToCart, isInCart, removeFromCart } from '../utils/cartStorage.ts';
+
 import useCartContext from '../hooks/useCartContext.ts';
+import useFavoritesContext from "../hooks/useFavoritesContext.ts";
+import useHandleFavorites from "../hooks/useHandleFavorites.ts";
+import useHandleCart from "../hooks/useHandleCart.ts";
 
 
 export default function ProductPage(
@@ -25,26 +24,36 @@ export default function ProductPage(
 ) {
 
   const { pathname } = useLocation();
-  const [ isFavorite, setIsFavorite ]  = useState(false);
   const { name } = useParams();
   const [ productObj, setProductObj ] = useState<NewProductType | null>(null);
-
   const [ date, setDate ] = useState('');
   const addCartBtnRef = useRef<HTMLButtonElement | null>(null);
+
   const intersectionWrapperRef = useRef<HTMLDivElement | null>(null);
   const imgSrc = new URL(`../assets/images/${productObj?.img}`, import.meta.url).href;
-
-
-  const favContext = useContext(FavoritesContext);
-  if (!favContext) {
-    throw new Error('FavoritesContext must be used inside a <Provider />');
-  }
-  const { localFavorites, setLocalFavorites } = favContext;
-
-  const [ error, setError ] = useState<string | null>(null);
-
-  const [ isOnCart, setIsOnCart ] = useState(false);
+  const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
+  // const [ error, setError ] = useState<string | null>(null);
+
+  const isFavorite = localFavorites && localFavorites.some(fav => fav._id === productObj?._id);
+  const isOnCart = localCart && localCart.some((fav => fav._id === productObj?._id));  
+  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
+  const { handleCart } = useHandleCart(setLocalCart);
+
+
+  // fetch product
+  useEffect(() => {
+    try {
+      const fetchProduct = async () => {
+        const product = await getProduct((name as any));
+        setProductObj(product);
+      };
+  
+      fetchProduct();
+    } catch (err) {
+      throw new Error('Couldn\'t fetch the product');
+    }
+  }, [pathname]);
 
 
   useEffect(() => {
@@ -61,65 +70,6 @@ export default function ProductPage(
   }, []);
 
 
-  useEffect(() => {
-    try {
-      const fetchProduct = async () => {
-        const product = await getProduct((name as any));
-        setProductObj(product);
-      };
-  
-      fetchProduct();
-    } catch (err) {
-      throw new Error('Couldn\'t fetch the product');
-    }
-  }, [pathname]);
-
-
-  const addFavorites = () => {
-    if (!productObj) return;
-
-    const newFavorite = !isFavorite;
-
-    if (newFavorite) {
-      setIsFavorite(newFavorite);
-      saveFavoritesLocally(productObj);
-      setLocalFavorites(prev => {
-        return [ ...prev, productObj ];
-      });
-    } else {
-      removeFavoriteLocally(productObj.id);
-      setIsFavorite(false);
-      setLocalFavorites(prev => {
-        const newArr = prev.filter(fav => fav.id !== productObj.id);
-        return newArr;
-      });
-    }
-  };
-  
-
-  useEffect(() => {
-    if (!productObj) return;
-
-    const isProductFavorite = 
-      localFavorites.find(product => product.title === productObj.title);
-
-    if (isProductFavorite) {
-      setIsFavorite(true);
-    } else {
-      setIsFavorite(false);
-    }
-
-    // const getFavorite = async () => {
-    //   const res = await axios.get(`http://localhost:8383/favorites/${name}`);
-    //   const data = res.data;
-    //   setIsFavorite(data.isFavorite);  
-    // };
-
-    // getFavorite();
-  }, [productObj]);
-
-
-
   // intersection observer sticky add to cart button
   useEffect(() => {
     const createIntersectionObserver = () => {
@@ -134,7 +84,7 @@ export default function ProductPage(
         threshold: 0.5
       };
   
-      const handleIntersection: IntersectionObserverCallback = (entries, observer) => {
+      const handleIntersection: IntersectionObserverCallback = (entries) => {
         entries.forEach((entry: any) => {
           if (entry.isIntersecting) { 
             fixedWrapper.classList.add('hide');
@@ -169,39 +119,6 @@ export default function ProductPage(
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-
-  useEffect(() => {
-    if (productObj) {
-      setIsOnCart(isInCart(productObj._id));
-    }
-  }, [productObj?._id]);
-
-  
-  const handleCart = async () => {
-    try {
-      if (isOnCart && productObj) {
-        removeFromCart(productObj._id);
-        setLocalCart(prev => {
-          const newLocalCart = prev.filter(p => p._id !== productObj._id);
-          return newLocalCart;
-        });
-      } else {
-        if (productObj) {
-          addToCart(productObj);
-          setLocalCart(prev => {
-            const newLocalCart = [ ...prev, productObj ];
-            return newLocalCart;
-          });
-        }
-      }
-      
-      setIsOnCart(!isOnCart);
-    } catch (err) {
-      setError((err as Error).message);
-    }
-  };
-
 
 
   return (
@@ -252,7 +169,12 @@ export default function ProductPage(
                   <p className="prod-new-price new-price">${productObj?.price}</p>
                 </div>
 
-                <button onClick={handleCart} className="new-card-btn copy-btn">
+                <button 
+                  onClick={() => {
+                    if (productObj) handleCart(productObj, isOnCart);
+                  }} 
+                  className="new-card-btn copy-btn"
+                >
                   <span className="material-symbols-outlined new-cart-icon">
                     shopping_cart
                   </span>
@@ -261,16 +183,28 @@ export default function ProductPage(
               </div>
             </div>
 
-            <button onClick={handleCart} ref={addCartBtnRef} className="add-cart-btn new-card-btn">
+            <button 
+              onClick={() => {
+                if (productObj) handleCart(productObj, isOnCart);
+              }} 
+              ref={addCartBtnRef} 
+              className="add-cart-btn new-card-btn"
+            >
               <span className="material-symbols-outlined new-cart-icon">
                 shopping_cart
               </span>
               <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
             </button>
 
-            <button onClick={addFavorites} className="new-card-btn prod-fav-btn">
+            <button 
+              onClick={() => {
+                if (productObj) handleFavorites(productObj, isFavorite);
+              }} 
+              className="new-card-btn prod-fav-btn"
+            >
               <span 
-                data-favorite={isFavorite? "true" : "false"} className="material-symbols-outlined prod-fav-icon"
+                data-favorite={isFavorite? "true" : "false"}
+                className="material-symbols-outlined prod-fav-icon"
               >
                 favorite
               </span>

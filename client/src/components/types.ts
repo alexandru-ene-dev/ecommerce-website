@@ -15,7 +15,6 @@ export type MobileHeaderType = {
   toggleLoginMenu: () => void,
   toggleThemeMenu: (e: MouseEvent) => void,
   visibleThemeMenu: boolean,
-  themeIcon: string,
   changeTheme: (e: MouseEvent) => void,
   searchInput: string,
   setSearchInput: Dispatch<SetStateAction<string>>,
@@ -28,7 +27,6 @@ export type DesktopHeaderType = {
   toggleLoginMenu: () => void,
   toggleThemeMenu: (e: MouseEvent) => void,
   visibleThemeMenu: boolean,
-  themeIcon: string,
   changeTheme: (e: MouseEvent) => void,
   searchInput: string,
   setSearchInput: Dispatch<SetStateAction<string>>

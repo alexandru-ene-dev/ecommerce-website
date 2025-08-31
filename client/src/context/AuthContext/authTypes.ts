@@ -5,7 +5,9 @@ export type UserType = {
   firstName: string,
   lastName: string,
   email: string,
-  favorites: number[]
+  favorites: [],
+  cart: []
+  avatar: string
 };
 
 export type AuthContextType = {
@@ -22,7 +24,11 @@ export type AuthChildrenType = {
   children: ReactNode
 }
 
-export type AuthActionsType = {
-  type: 'LOGIN' | 'LOGOUT' | 'EDIT_NAME',
-  payload: UserType | null
-};
+export type AuthActionsType = 
+  // type: 'LOGIN' | 'LOGOUT' | 'EDIT_NAME',
+  // payload: UserType | null | { firstName: string, lastName: string }
+
+  | { type: 'LOGIN', payload: UserType }
+  | { type: 'LOGOUT', payload: null }
+  | { type: 'EDIT_NAME', payload: { firstName: string, lastName: string } };
+;

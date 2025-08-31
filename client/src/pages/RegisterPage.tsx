@@ -1,10 +1,16 @@
-import { useState, type MouseEvent, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type MouseEvent, type ChangeEvent, type FormEvent, useContext } from 'react';
 import registerUser from '../services/registerUserService.ts';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner.tsx';
 import delay from '../utils/delay.ts';
+
 import axios from 'axios';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
+import ValidationItem from '../components/ValidationItem.tsx';
+import useCartContext from '../hooks/useCartContext.ts';
+import { FavoritesContext } from '../context/FavoritesContext.tsx';
+
+import { useAvatar } from '../context/AuthContext/AvatarContext.tsx';
 
 
 const Register = () => {
@@ -12,19 +18,37 @@ const Register = () => {
   const [ visibleConfirmPass, setVisibleConfirmPass ] = useState(false);
   const [ firstName, setFirstName ] = useState('');
   const [ lastName, setLastName ] = useState('');
-
   const [ email, setEmail ] = useState('');
+
   const [ password, setPassword ] = useState('');
   const [ confirmPass, setConfirmPass ] = useState('');
   const [ acceptTerms, setAcceptTerms ] = useState(false);
-
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ isLoading, setLoading ] = useState(false);
-  // const [ loggedIn, setLoggedIn ] = useState(false);
+
   const [ error, setError ] = useState<string | null>(null);
-  
   const navigate = useNavigate();
-  const { state, dispatch } = useAuthContext();
+  const { dispatch } = useAuthContext();
+
+  const validations = {
+    length: password.length >= 8,
+    lowercase: /[a-z]/.test(password),
+    uppercase: /[A-Z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[!@#$%^&*~]/.test(password),
+  };
+
+  const isFirstNameValid = /^[a-zA-Z\s]{2,}$/.test(firstName.trim());
+  const isLastNameValid = /^[a-zA-Z\s]{2,}$/.test(lastName.trim());
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isPasswordValid = Object.values(validations).every(Boolean);
+
+  const { setLocalCart } = useCartContext();
+  const favContext = useContext(FavoritesContext);
+  if (!favContext) return;
+  const { setLocalFavorites } = favContext;
+
+  const { setAvatar } = useAvatar();
 
 
   const togglePass = (e: MouseEvent) => {
@@ -55,6 +79,21 @@ const Register = () => {
         acceptTerms
       };
 
+      if (!isFirstNameValid || !isLastNameValid) {
+        setError(`Name must contain at least 2 characters and only letters`);
+        return;
+      }
+
+      if (!isEmailValid) {
+        setError(`Invalid email format`);
+        return;
+      }
+
+      if (!isPasswordValid) {
+        setError(`Password doesn't meet strength requirements`);
+        return;
+      }
+
       const registration = await registerUser(userData);
   
       if (!registration.success && registration.message) {
@@ -64,21 +103,23 @@ const Register = () => {
       }
       
       setError(null);
-
       await delay(1000);
       setLoading(false);
       setIsModalOpen(true);
-      // setLoggedIn(true);
-      
-      console.log(registration.user);
       dispatch({ type: 'LOGIN', payload: registration.user });
-  
+
       await delay(5000);
       setIsModalOpen(false);
+      navigate('/profile');
 
-      await delay(1000);
-      navigate('/');
-      location.reload();
+      const safeCart = 
+        Array.isArray(registration.user.cart)? registration.user.cart : [];
+      const safeFav = 
+        Array.isArray(registration.user.favorites)? registration.user.favorites : [];
+
+      setLocalCart(safeCart);
+      setLocalFavorites(safeFav);
+      setAvatar(null);
 
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -154,7 +195,16 @@ const Register = () => {
               </span>
             </button>
           </div>
+
           <p>Must include at least 8 characters, an upper and a lowercase character, a number and a special character.</p>
+
+          <ul className="password-requirements">
+            <ValidationItem label="At least 8 characters" valid={validations.length} />
+            <ValidationItem label="At least one lowercase letter" valid={validations.lowercase} />
+            <ValidationItem label="At least one uppercase letter" valid={validations.uppercase} />
+            <ValidationItem label="At least one number" valid={validations.number} />
+            <ValidationItem label="At least one special character (!@#$%^&*)" valid={validations.special} />
+          </ul>
         </div>
         
         <div className="password-wrapper-flex">

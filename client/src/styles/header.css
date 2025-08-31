@@ -208,6 +208,7 @@ body:has(.modal[data-visible="true"]) {
 .back-menu-btn {
   height: 30px;
   background-color: var(--btn-bg);
+  color: white;
   border: none;
 }
 
@@ -398,6 +399,7 @@ body:has(.modal[data-visible="true"]) {
   background-color: var(--account-icon-bg);
   color: var(--icon-hov);
   font-size: .75rem;
+  cursor: pointer;
 }
 
 .fav-cart-count {
@@ -418,6 +420,52 @@ body:has(.modal[data-visible="true"]) {
   width: 25px;
   height: 25px;
   border-radius: 50%;
+}
+
+.account-btn-wrapper {
+  position: relative;
+}
+
+.account-hov-menu {
+  width: 9.75em;
+  position: absolute;
+  right: -24px;
+  top: 40px;
+  padding: 1em;
+  background-color: var(--menu-bg-prim);
+  border-radius: 10px;
+  z-index: 6000;
+  cursor: pointer;
+  color: white;
+
+  & p {
+    margin: 0 0 .5em 0;
+    font-size: .8rem;
+  }
+
+  & p:last-child {
+    margin-bottom: 0;
+  }
+
+  & h2 {
+    margin-top: 0;
+    font-size: .85rem;
+  }
+}
+
+.account-hov-menu:hover > button {
+  border: 2px solid var(--border-hov);
+}
+
+.account-hov-menu:after {
+  height: 20px;
+  width: 10px;
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 112px;
+  border: 7px solid transparent;
+  border-bottom: 10px solid var(--menu-bg-prim);
 }
 
 /* ------------------------------------ */

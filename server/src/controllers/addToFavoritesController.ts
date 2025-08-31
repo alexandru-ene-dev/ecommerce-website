@@ -1,9 +1,13 @@
 import type { Request, Response } from 'express';
 import { ProductModel } from '../models/ProductSchema.js';
+import UserModel from '../models/UserSchema.js';
+
 
 const addToFavoritesController = async (req: Request, res: Response) => {
   try {
     const isFavorite = req.body.isFavorite;
+    const userId = req.body.userId;
+    const productId = req.body.productId;
 
     if (isFavorite === null) {
       return res.status(400).json({
@@ -12,30 +16,39 @@ const addToFavoritesController = async (req: Request, res: Response) => {
       })
     }
     
-    const productName = req.body.product.replaceAll('-', ' ');
-
-    if (!productName || productName === null) {
-      return res.status(400).json({
-        success: false,
-        message: 'Client error: Product name missing from request body'
-      });
-    }
-
-    const product = await ProductModel.findOne({ title: productName });
-    
+    const product = await ProductModel.findById(productId);
     if (!product) {
       return res.status(404).json({
         success: false,
-        message: 'No product matched'
+        message: 'No product found'
       });
     }
 
-    await product.updateOne({ $set: { isFavorite } });
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'No user found'
+      });
+    }
+
+    if (isFavorite) {
+      // Remove from favorites
+      user.favorites = user.favorites.filter(fav => fav._id.toString() !== productId);
+    } else {
+      // Add to favorites
+      user.favorites.push(product);
+    }
+
+    await user.save();
 
     return res.status(200).json({
       success: true,
-      message: 'Product added to favorites'
+      message: isFavorite? 'Product removed from favorites' : 'Product added to favorites',
+      product,
+      favorites: user.favorites
     });
+
   } catch (err) {
     return {
       success: false,

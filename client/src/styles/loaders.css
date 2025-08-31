@@ -106,7 +106,6 @@
   align-items: center;
   position: fixed;
   inset: 0;
-  /* max-height: 100vh; */
   z-index: 2500;
   isolation: isolate;
   background-color: hsl(0 0% 0% / 0);

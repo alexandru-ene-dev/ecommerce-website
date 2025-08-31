@@ -1,16 +1,23 @@
-
-import { removeFromCart } from "../utils/cartStorage";
 import { Link } from 'react-router-dom';
 import useCartContext from "../hooks/useCartContext";
+
+import useFavoritesContext from "../hooks/useFavoritesContext";
+import useHandleFavorites from "../hooks/useHandleFavorites";
+import useHandleCart from "../hooks/useHandleCart";
 
 
 const Cart = () => {
   const { localCart, setLocalCart } = useCartContext();
-  
+  const { localFavorites, setLocalFavorites } = useFavoritesContext();
+  const { handleCart } = useHandleCart(setLocalCart);
+  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
 
+  
   const cartProductElements = localCart && localCart.map(prod => {
     const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
     const slug = prod.title.replace(' ', '-');
+    const isFavorite = localFavorites && localFavorites.some(p => p._id === prod._id);
+    const isInCart = localCart && localCart.some(p => p._id === prod._id);
 
     return (
       <div key={prod._id} className="cart-product">
@@ -27,18 +34,25 @@ const Cart = () => {
 
           <button
             className="add-cart-btn new-card-btn"
-            onClick={() => {
-              removeFromCart(prod._id);
-              setLocalCart(prev => {
-                const newCart = (prev as any).filter((p: any) => p._id !== prod._id);
-                return newCart;
-              });
-            }}
-          >
+            onClick={() => handleCart(prod, isInCart)}
+          > 
             <span className="material-symbols-outlined new-cart-icon">
               shopping_cart
             </span>
             <span>Remove from Cart</span>
+          </button>
+
+          <button 
+            onClick={() => handleFavorites(prod, isFavorite)} 
+            className="new-card-btn prod-fav-btn"
+          >
+            <span 
+              data-favorite={isFavorite? "true" : "false"}
+              className="material-symbols-outlined prod-fav-icon"
+            >
+              favorite
+            </span>
+            <span>{isFavorite? 'Added to Favorites' : 'Add to Favorites'}</span>
           </button>
         </div>
       </div>
