@@ -13,6 +13,7 @@
   margin-bottom: 2em;
   padding-inline: 1em;
   font-size: 1.5rem;
+  color: var(--txt-clr2);
 }
 
 .cart-title_wrap {
@@ -81,8 +82,4 @@
 
 .cart-product_title:hover {
   color: var(--txt-hov2);
-}
-
-.cart-title {
-  color: var(--clr-title);
 }

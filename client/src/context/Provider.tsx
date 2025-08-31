@@ -6,7 +6,8 @@ import { reducer } from './reducer';
 const initialState: StateType = {
   searchInput: '',
   footerInput: '',
-  theme: 'os_default',
+  theme: 'os-default',
+  themeIcon: 'contrast'
 };
 
 // create provider

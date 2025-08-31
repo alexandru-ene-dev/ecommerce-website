@@ -290,6 +290,11 @@
     margin-top: 12rem;
   }
 
+  .account-hov-menu {
+    top: 40px;
+    right: -25px;
+  }
+
 }
 
 

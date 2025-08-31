@@ -1,5 +1,6 @@
 import { type ThemeSwitcherType } from "./types";
 
+
 const ThemeSwitcher = (
   {
     toggleThemeMenu,
@@ -8,6 +9,7 @@ const ThemeSwitcher = (
     changeTheme
   }: ThemeSwitcherType
 ) => {
+
   return (
     <div onClick={toggleThemeMenu} className="theme-switcher">
       <button 

@@ -1,6 +1,7 @@
 import { useInputContext } from '../hooks/useInputContext';
 import { type MouseEvent, useState, useEffect } from 'react'; 
 import MobileHeader from './MobileHeader.tsx';
+
 import DesktopHeader from './DesktopHeader.tsx';
 import StickySaleText from './StickySaleText.tsx';
 import { type HeaderType } from './types.ts';
@@ -17,7 +18,6 @@ const Header = (
 
   const [ visibleHeader, setVisibleHeader ] = useState(true);
   const [ visibleThemeMenu, setThemeMenu ] = useState(false);
-  const [ themeIcon, setThemeIcon ] = useState('contrast');
   const [ lastScroll, setLastScroll ] = useState(0);
   const { dispatch } = useInputContext();
   const [ searchInput, setSearchInput ] = useState('');
@@ -41,20 +41,20 @@ const Header = (
     if (target.dataset.theme === 'os') {
       document.body.classList.remove('light-mode');
       document.body.classList.remove('dark-mode');
-      dispatch({ type: 'TOGGLE_THEME', payload: 'os_default' });
-      setThemeIcon('contrast');
+      dispatch({ type: 'TOGGLE_THEME', theme: 'os-default', themeIcon: 'contrast' });
+      localStorage.setItem('theme', 'os_default');
 
     } else if (target.dataset.theme === 'light') {
       document.body.classList.remove('dark-mode');
       document.body.classList.add('light-mode');
-      dispatch({ type: 'TOGGLE_THEME', payload: 'light_theme' });
-      setThemeIcon('light_mode');
+      dispatch({ type: 'TOGGLE_THEME', theme: 'light-mode', themeIcon: 'light_mode' });
+      localStorage.setItem('theme', 'light-mode');
 
     } else {
       document.body.classList.remove('light-mode');
       document.body.classList.add('dark-mode');
-      dispatch({ type: 'TOGGLE_THEME', payload: 'dark_theme' });
-      setThemeIcon('dark_mode');
+      dispatch({ type: 'TOGGLE_THEME', theme: 'dark-mode', themeIcon: 'dark_mode' });
+      localStorage.setItem('theme', 'dark-mode');
     }
   };
 
@@ -103,11 +103,12 @@ const Header = (
         visibleMenu={visibleMenu}
         closeModal={closeModal}
         visibleHeader={visibleHeader}
+
         submitSearch={submitSearch}
         toggleLoginMenu={toggleLoginMenu}
         toggleThemeMenu={toggleThemeMenu}
         visibleThemeMenu={visibleThemeMenu}
-        themeIcon={themeIcon}
+
         changeTheme={changeTheme}
         searchInput={searchInput}
         setSearchInput={setSearchInput}
@@ -118,8 +119,8 @@ const Header = (
         submitSearch={submitSearch}
         toggleLoginMenu={toggleLoginMenu}
         toggleThemeMenu={toggleThemeMenu}
+
         visibleThemeMenu={visibleThemeMenu}
-        themeIcon={themeIcon}
         changeTheme={changeTheme}
         searchInput={searchInput}
         setSearchInput={setSearchInput}

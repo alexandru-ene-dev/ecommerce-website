@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { type NewProductType } from './types';
 import type { Dispatch, SetStateAction } from 'react';
 import { getProduct } from '../services/getProduct.ts';
-import { saveFavoritesLocally, removeFavoriteLocally } from '../utils/localFavorites.ts';
-import { FavoritesContext } from '../context/FavoritesContext.tsx';
 import useLoadingContext from '../hooks/useLoadingContext.ts';
+
 import delay from '../utils/delay.ts';
-import { addToCartService } from '../services/addToCartService.ts';
-import { getCart, addToCart, isInCart, removeFromCart } from '../utils/cartStorage.ts';
 import useCartContext from '../hooks/useCartContext.ts';
+import useFavoritesContext from '../hooks/useFavoritesContext.ts';
+import useHandleFavorites from '../hooks/useHandleFavorites.ts';
+import useHandleCart from '../hooks/useHandleCart.ts';
 
 
 const NewProduct = (
@@ -29,81 +28,113 @@ const NewProduct = (
 
   if (!item) return null;
   const { setLoading } = useLoadingContext();
-  const [ error, setError ] = useState<string | null>(null);
-
-
-  const favContext = useContext(FavoritesContext);
-  if (!favContext) {
-    throw new Error('FavoritesContext must be used inside a <Provider />');
-  }
-  const { localFavorites, setLocalFavorites } = favContext;
-  const isFavorite = localFavorites.some(fav => fav.id === item.id);
-
-
-  const [ isOnCart, setIsOnCart ] = useState(false);
   const { localCart, setLocalCart } = useCartContext();
+  const { localFavorites, setLocalFavorites } = useFavoritesContext();
+  const isFavorite = localFavorites && localFavorites.some(fav => fav.id === item.id);
+
+  const isOnCart = localCart && localCart.some(prod => prod._id === item._id);
+  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
+  const { handleCart } = useHandleCart(setLocalCart);
+
+
+  // const handleFavorites = async () => {
+  //   try {
+  //     const isLoggedIn = state.isLoggedIn;
+  //     const userId = state?.user?._id || '';
+
+  //     if (isLoggedIn) {
+  //       const result = await addToFavorites(userId, isFavorite, item._id);
+
+  //       if (!result.success) {
+  //         console.error(result.message);
+  //         return;
+  //       }
+
+  //        // Update favorites
+  //       setLocalFavorites(prev => {
+  //         if (isFavorite) {
+  //           // Item was favorite, so we remove it
+  //           return prev.filter(p => p._id !== item._id);
+  //         } else {
+  //           // Item was not favorite so we add it
+  //           return [ ...prev, result.product ];
+  //         }
+  //       });
+
+  //       console.log(result, 'Favorites updated');
+  //       return;
+  //     }
+
+  //     if (isFavorite) {
+  //       removeFavoriteLocally(item.id);
+  //       setLocalFavorites(prev => {
+  //         const newArr = prev.filter(fav => fav.id !== item.id);
+  //         return newArr;
+  //       });
+
+  //     } else {
+  //       saveFavoritesLocally(item);
+  //       setLocalFavorites(prev => {
+  //         return [ ...prev, item ];
+  //       });
+  //     }
+
+  //   } catch (err) {
+  //     setError((err as Error).message);
+  //   }
+  // };
+
   
-  
-  const handleFavorites = () => {
-    const newFavorite = !isFavorite;
+  // const handleCart = async () => {
+  //   try {
+  //     const isLoggedIn = state.isLoggedIn;
+  //     const userId = state?.user?._id || '';
 
-    if (newFavorite) {
-      saveFavoritesLocally(item);
-      setLocalFavorites(prev => {
-        return [ ...prev, item ];
-      });
-    } else {
-      removeFavoriteLocally(item.id);
-      setLocalFavorites(prev => {
-        const newArr = prev.filter(fav => fav.id !== item.id);
-        return newArr;
-      });
-    }
-  };
+  //     if (isLoggedIn) {
+  //       const result = await addToCartService(userId, isOnCart, item._id);
 
+  //       if (!result.success) {
+  //         console.error(result.message);
+  //         return;
+  //       }
 
-  useEffect(() => {
-    setIsOnCart(isInCart(item._id));
-  }, [item._id]);
+  //       setLocalCart(prev => {
+  //         if (isOnCart) {
+  //           return prev.filter(p => p._id !== item._id);
+  //         } else {
+  //           return [ ...prev, result.product ];
+  //         }
+  //       });
 
-  
-  const handleCart = async () => {
-    try {
-      if (isOnCart) {
-        removeFromCart(item._id);
-        setLocalCart(prev => {
-          const newLocalCart = prev.filter(p => p._id !== item._id);
-          return newLocalCart;
-        });
-      } else {
-        addToCart(item);
-        setLocalCart(prev => {
-          const newLocalCart = [ ...prev, item ];
-          return newLocalCart;
-        });
-      }
+  //       console.log(result, 'Cart updated');
+  //       return;
+  //     }
+
+  //     if (isOnCart) {
+  //       removeFromCart(item._id);
+  //       setLocalCart(prev => {
+  //         const newLocalCart = prev.filter(p => p._id !== item._id);
+  //         return newLocalCart;
+  //       });
+  //     } else {
+  //       addToCart(item);
+  //       setLocalCart(prev => {
+  //         const newLocalCart = [ ...prev, item ];
+  //         return newLocalCart;
+  //       });
+  //     }
       
-      setIsOnCart(!isOnCart);
-
-      // const result = await addToCartService(newCart, item._id);
-  
-      // if (!result.success) {
-      //   console.error(result.message);
-      //   return;
-      // }
-
-      // console.log(result);
-    } catch (err) {
-      setError((err as Error).message);
-    }
-  };
+  //   } catch (err) {
+  //     setError((err as Error).message);
+  //   }
+  // };
 
 
   return (
     <div className="new-section-card">
       <div className="card-img-wrapper">
         <button 
-          onClick={handleFavorites} 
+          onClick={() => handleFavorites(item, isFavorite)} 
           className="add-fav-btn new-fav-btn">
           <span 
             data-favorite={isFavorite? "true" : "false"}
@@ -153,11 +184,13 @@ const NewProduct = (
           </p>
         </div>
 
-        <button onClick={handleCart} className="add-cart-btn new-card-btn">
+        <button onClick={() => handleCart(item, isOnCart)} className="add-cart-btn new-card-btn">
           <span className="material-symbols-outlined new-cart-icon">
             shopping_cart
           </span>
-          <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
+          <span>
+            {isOnCart? 'Remove from Cart' : 'Add to Cart'}
+          </span>
         </button>
       </div>
     </div>

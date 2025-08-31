@@ -1,31 +1,22 @@
 import { Link } from 'react-router-dom';
-import { useState, useContext } from 'react';
 import FavoriteProduct from '../components/FavoriteProduct';
-import { FavoritesContext } from '../context/FavoritesContext';
+import useFavoritesContext from '../hooks/useFavoritesContext';
 
 
 const Favorites = () => {
-  const [ message, setMessage ] = useState('');
-
-
-  const favContext = useContext(FavoritesContext);
-  if (!favContext) {
-    throw new Error('FavoritesContext must be used inside a provider');
-  }
-  const { localFavorites } = favContext;
+  const { localFavorites } = useFavoritesContext();
 
 
   return (
-    <>
     <section className="favorites-section">
       <div className="fav-title-txt">
         <h1 className="favorites-title">
           <span className="material-symbols-outlined favorites-icon">favorite</span>
-          <span>Favorites</span>
+          <span>Your Favorites</span>
         </h1>
 
         <p className="favorites-par">{
-          localFavorites.length > 0?
+          localFavorites && localFavorites.length > 0?
             `You have ${localFavorites.length} favorite ${
               localFavorites.length > 1? 'products' : 'product'
             }` : 
@@ -34,14 +25,13 @@ const Favorites = () => {
       </div>
 
       <div className="fav-container">
-        {localFavorites.map(fav => {
+        {localFavorites && localFavorites.map(fav => {
           return <FavoriteProduct key={fav.id} fav={fav} />
         })}
       </div>
 
       <Link to="/" className="back-shopping-btn new-card-btn">Back to Main Page</Link>
     </section>
-    </>
   );
 }
 

@@ -20,10 +20,14 @@ import loginMiddleware from './middleware/loginMiddleware.js';
 import logoutRoute from './routes/logoutRoute.js';
 import addToCartRoute from './routes/addToCartRoute.js';
 import editNameRoute from './routes/editNameRoute.js';
+import uploadAvatarRoute from './routes/uploadAvatarRoute.js';
+
+import changePasswordRoute from './routes/changePasswordRoute.js';
 
 
 dotenv.config();
 const app: Application = express();
+
 
 // middleware
 app.use(cookieParser());
@@ -31,20 +35,26 @@ app.use(cors(corsOptions));
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 
+
 // routes
+app.use('/users', uploadAvatarRoute);
 app.use('/editName', editNameRoute);
 app.use('/profile', loginMiddleware, profileRoute);
 app.use('/api/auth/me', loginMiddleware, authRoute);
 app.use('/api/auth/logout', logoutRoute);
+
 app.use('/api/categories', fetchProductsRoute);
 app.use('/cart', addToCartRoute);
 app.use('/', homeRoute);
 app.use('/api/register', registerRoute);
 app.use('/api/login', loginRoute);
+
 app.use('/products', productsRoute);
 app.use('/favorites', addToFavoritesRoute);
+app.use('/account/change-password', changePasswordRoute);
 
 
+// connect to database & run server
 (async () => {
   try {
     await Database();
