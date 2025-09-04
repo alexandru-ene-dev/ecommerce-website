@@ -1,4 +1,6 @@
-import axios from 'axios';
+import api from "../api";
+import handleErrors from "../utils/handleErrors";
+
 
 export type UserDataType = {
   firstName: string, 
@@ -14,6 +16,7 @@ export type ValidationResult = {
   message?: string,
   user?: any
 };
+
 
 export const validateInputs = (
   {
@@ -49,14 +52,18 @@ export const validateInputs = (
     }
 
     if (!acceptTerms) {
-      return { success: false, message: 'Please agree with our terms and conditions before continue' };
+      return { 
+        success: false, 
+        message: 'Please agree with our terms and conditions before continue' 
+      };
     }
     
     return { success: true };
+
   } catch (err) {
     return {
       success: false,
-      message: `Unexpected error occurred: ${(err as Error).message}`
+      message: handleErrors(err)
     };
   }
 }
@@ -87,35 +94,21 @@ const registerUser = async (
 
   // proceed signing up user
   try {
-    axios.defaults.withCredentials = true;
     const payload = { firstName, lastName, email, password, confirmPass };
-    const res = await axios.post(`http://localhost:8383/api/register`, payload);
+    const res = await api.post('/api/register', payload);
     const data = res.data;
 
-    console.log(data);
     return { 
       success: true, 
       message: 'User signed up', 
       user: data.user 
     };
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      const status = err.response?.status;
-      const message = err.response?.data?.message;
 
-      if (status === 409) {
-        return { success: false, message: `Conflict error: ${message}`};
-      } else if (status === 400) {
-        return { success: false, message: `Validation error: ${message}`};
-      } else {
-        return { success: false, message: `Server error: ${message}`};
-      }
-    } else {
-      return { 
-        success: false, 
-        message: `Unexpected error: ${(err as Error).message}`
-      };
-    }
+  } catch (err) {
+    return { 
+      success: false, 
+      message: handleErrors(err)
+    };
   }
 };
 

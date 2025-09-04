@@ -28,7 +28,6 @@
   background: none;
   color: var(--inp-text);
   text-align: center;
-  transition: outline 300ms;
 }
 
 .input::placeholder {
@@ -54,25 +53,43 @@
   background: none;
 }
 
+.theme-list_wrapper {
+  width: 120px;
+  position: absolute;
+  z-index: 5000;
+  right: -5px;
+  top: 40px;
+}
+
+.theme-list_wrapper:after {
+  width: 10px;
+  height: 20px;
+  content: '';
+  position: absolute;
+  top: -19px;
+  right: 10px;
+  border: 7px solid transparent;
+  border-bottom: 10px solid var(--menu-bg-prim);
+}
+
 .theme-list {
   display: flex;
   flex-direction: column;
-  width: 90px;
-  z-index: 5000;
-  position: absolute;
-  right: .25em;
-  margin-top: .25em;
+  margin: 0;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .theme-btn {
   display: flex;
   align-items: center;
-  gap: .5em;
-  width: 90px;
-  padding-inline: 10px;
-  border: 2px solid var(--theme-btn-bg);
+  gap: .75em;
+  width: 120px;
+  padding: 5px 20px;
+  border: none;
   background-color: var(--theme-btn-bg);
   color: var(--theme-btn-clr);
+  font-size: 1.15rem;
 }
 
 .theme-btn:hover,
@@ -81,7 +98,7 @@
 }
 
 .theme-icon {
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .close-menu-btn {
@@ -94,9 +111,93 @@
   font-size: 1.25rem;
 }
 
+.close-menu-btn.sub {
+  position: absolute;
+  bottom: 0;
+}
+
 .close-menu-btn:hover,
 .close-menu-btn:focus {
   background-color: var(--btn-bg-hov);
+}
+
+.clear-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+  max-width: 50em;
+  position: relative;
+  margin-inline: auto;
+  margin-bottom: 2em;
+}
+
+.clear-wrap.no-favorites {
+  justify-content: center;
+}
+
+.clear-wrap .new-card-btn {
+  max-width: 12em;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.clear-confirmation {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 30em;
+  position: relative;
+  padding: 1em;
+  border-radius: 10px;
+  background-color: var(--new-card-bg);
+  overflow: hidden;
+  transform: translateX(0);
+}
+
+.clear-confirmation p {
+  width: 100%;
+  max-width: 20em;
+  color: var(--txt-clr2);
+  margin-inline: auto;
+  margin-top: 0;
+}
+
+.clear-confirmation .new-card-btn {
+  max-width: 20em;
+  width: 100%;
+}
+
+.clear-confirmation div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em;
+  width: 100%;
+
+}
+
+.clear-status {
+  position: absolute;
+  width: 300px;
+  top: -20px;
+  left: calc(50% - 300px / 2);
+  text-align: center;
+  color: var(--txt-clr2);
+}
+
+.back-shopping-btn {
+  display: flex;
+  justify-content: center;
+  max-width: 15em;
+  margin-inline: auto;
+  margin-top: 0;
+  padding: .5em 1em;
+  font-size: 1.1rem;
+  text-decoration: none;
+  text-align: center;
 }
 
 /* ------------------------------------- */

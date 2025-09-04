@@ -28,7 +28,7 @@
     --inp-brd-hov: hsl(0, 0%, 100%);
     --search-btn-foc: hsl(146, 100%, 25%);
     --search-btn-clr: hsl(0, 0%, 88%);
-    --form-foc: hsl(146, 30%, 67%);
+    --form-foc: hsl(146, 30%, 77%);
     --btn-bg: hsl(146, 100%, 25%);
     --btn-clr: hsl(0, 0%, 88%);
     --btn-bg-hov: hsl(146, 100%, 30%);
@@ -110,6 +110,7 @@ body.dark-mode {
   --loader-clr: hsl(146, 100%, 53%);
   --account-icon-bg: transparent;
   --account-par: hsl(0, 0%, 88%);
+  --form-foc: hsl(0, 0%, 17%);
 }
 
 
@@ -138,7 +139,7 @@ body.light-mode {
   --inp-holder: hsl(146, 30%, 45%);
   --search-btn-foc: hsl(146, 100%, 25%);
   --search-btn-clr: hsl(0, 0%, 88%);
-  --form-foc: hsl(146, 30%, 67%);
+  --form-foc: hsl(146, 30%, 77%);
   --btn-bg: hsl(146, 100%, 25%);
   --btn-clr: hsl(0, 0%, 88%);
   --btn-bg-hov: hsl(146, 100%, 30%);

@@ -8,7 +8,8 @@ const UserSchema = new mongoose.Schema({
     favorites: [],
     cart: [],
     avatar: Buffer,
-    avatarMimeType: { type: String }
+    avatarMimeType: { type: String },
+    theme: { type: String, default: 'os-default' }
 });
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password'))

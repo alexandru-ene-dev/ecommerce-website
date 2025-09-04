@@ -1,4 +1,5 @@
 import { type ReactNode, type Dispatch } from 'react';
+import { type Theme } from '../types';
 
 export type UserType = {
   _id: string,
@@ -7,7 +8,8 @@ export type UserType = {
   email: string,
   favorites: [],
   cart: []
-  avatar: string
+  avatar: string,
+  theme: Theme
 };
 
 export type AuthContextType = {

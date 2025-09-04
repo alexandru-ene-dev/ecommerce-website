@@ -2,6 +2,7 @@ import { categories } from "../utils/categories";
 import { Link } from 'react-router-dom';
 import { type MouseEvent, useState } from "react";
 
+
 const DesktopMenu = () => {
   const [ activeIndex, setActiveIndex ] = useState<number | null>(null);
 

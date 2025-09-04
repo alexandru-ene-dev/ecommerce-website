@@ -78,6 +78,7 @@ const Footer = (
                 value={state.footerInput} 
                 placeholder="Enter your email address"
               />
+
               <button className="subscribe-btn">Subscribe to Newsletter</button>
             </form>
 

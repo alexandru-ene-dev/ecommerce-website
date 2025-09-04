@@ -108,6 +108,13 @@ const Register = () => {
       setIsModalOpen(true);
       dispatch({ type: 'LOGIN', payload: registration.user });
 
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPass('');
+      setAcceptTerms(false);
+
       await delay(5000);
       setIsModalOpen(false);
       navigate('/profile');
@@ -183,6 +190,7 @@ const Register = () => {
               id="password" 
               type={visiblePass? "text" : "password"} 
             />
+
             <button 
               aria-label={visiblePass? "Hide password" : "Show password"} 
               onClick={togglePass} 
@@ -217,6 +225,7 @@ const Register = () => {
               id="confirm-pass" 
               type={visibleConfirmPass? "text" : "password"} 
             />
+
             <button 
               aria-label={visibleConfirmPass? "Hide password" : "Show password"} 
               onClick={toggleConfirmPass} 
@@ -265,7 +274,16 @@ const Register = () => {
 
           <button 
             className="close-menu-btn close-login-btn" 
-            onClick={() => setIsModalOpen(false)}
+            onClick={() => {
+              setFirstName('');
+              setLastName('');
+              setEmail('');
+              setPassword('');
+              setConfirmPass('');
+              setAcceptTerms(false);
+              setIsModalOpen(false);
+              navigate('/profile');
+            }}
           >
             <span className="material-symbols-outlined">close</span>
           </button>

@@ -3,6 +3,7 @@ import { useMemo, useReducer } from 'react';
 import { type StateType, type Children } from "./types";
 import { reducer } from './reducer';
 
+
 const initialState: StateType = {
   searchInput: '',
   footerInput: '',

@@ -1,6 +1,35 @@
 
 /* ------------ MEDIA QUERIES ------------- */
 
+@media (min-width: 500px) {
+  .favorites-menu_content-wrapper {
+    width: 25em;
+    position: absolute;
+    right: -15px;
+    top: 38px;
+    border-radius: 10px;
+  }
+
+  .favorites-menu_content-wrapper:after {
+    display: block;
+  }
+}
+
+@media (min-width: 700px) {
+  .login-wrapper {
+    width: 35em;
+    position: absolute;
+    right: -15px;
+    top: 38px;
+    border-radius: 10px;
+    bottom: initial;
+  }
+
+  .login-wrapper::after {
+    display: block;
+  }
+}
+
 @media (min-width: 45em) {
   .footer-links-panel-mobile {
     display: none;
@@ -32,12 +61,6 @@
   .intersection-wrapper {
     flex-wrap: nowrap;
   }
-
-  /* .login-wrapper {
-    width: 100%;
-    right: 0;
-    left: auto;
-  } */
 }
 
 
@@ -48,19 +71,15 @@
     max-width: 1800px;
   }
 
-  .mobile-header {
-    display: none;
+  .header[data-visible="false"] {
+    top: -116px;
   }
-
-  .desktop-header {
-    display: block;
-    width: 100%;
+  
+  .mobile-nav-wrapper {
+    justify-content: space-around;
   }
 
   .navigation {
-    flex-direction: column;
-    align-items: normal;
-    position: relative;
     padding: 1em;
   }
 
@@ -87,7 +106,6 @@
   .desktop-nav_link {
     font-size: clamp(1.15rem, 1vw, 1.5rem);
     color: var(--clr-prim);
-    transition: color 300ms;
   }
 
   .desktop-nav_link:hover,
@@ -201,9 +219,9 @@
     margin-top: 12rem;
   }
 
-  .login-wrapper {
+  /* .login-wrapper {
     top: 5em;
-  }
+  } */
 
   .create-account-section {
     margin-top: 13rem;
@@ -291,10 +309,39 @@
   }
 
   .account-hov-menu {
-    top: 40px;
-    right: -25px;
+    top: 47px;
+    right: -12px;
   }
 
+  .favorites-menu_content-wrapper {
+    right: -12px;
+    top: 47px;
+  }
+
+  .login-wrapper {
+    right: -12px;
+    top: 47px;
+  }
+
+  .theme-list_wrapper {
+    right: -3px;
+    top: 47px;
+  }
+
+  .theme-list_wrapper:after {
+    height: 20px;
+    right: 9px;
+    border: 10px solid transparent;
+    border-bottom: 10px solid var(--menu-bg-prim);
+  }
+
+  .recently-viewed {
+    padding: 0 3em 1em;
+  }
+
+  .clear-wrap {
+    max-width: 70em;
+  }
 }
 
 

@@ -57,6 +57,7 @@ export const addToCartController = async (req: Request, res: Response) => {
       product: foundProduct,
       cart: user.cart
     });
+    
   } catch (err) {
     return res.status(500).json({
       success: false,

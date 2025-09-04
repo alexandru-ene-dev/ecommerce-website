@@ -23,3 +23,7 @@ export const removeFromCart = (productId: string): void => {
 export const isInCart = (productId: string): boolean => {
   return getCart().map(prod => prod._id).includes(productId);
 };
+
+export const clearLocalCart = (): void => {
+  localStorage.removeItem(CART_KEY);
+};

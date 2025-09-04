@@ -53,9 +53,9 @@
 
 .prod-category_description {
   max-width: 17rem;
+  margin-top: 0;
   font-size: clamp(1.15rem, 1.2vw, 1.35rem);
   color: var(--txt-clr2);
-  margin-top: 0;
 }
 
 .prod-category_link:hover,

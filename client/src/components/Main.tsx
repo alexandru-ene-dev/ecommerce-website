@@ -1,18 +1,21 @@
-import Deal from './Deal.tsx';
-import { type DealProps } from './Deal'; 
-import images from '../assets/images/images.json';
 import { 
   useRef, useEffect, useState, 
   type MouseEvent, type SetStateAction,
   type Dispatch
 } from 'react';
+
+import Deal from './Deal.tsx';
+import { type DealProps } from './Deal'; 
+import images from '../assets/images/images.json';
 import { Link } from 'react-router-dom';
 import { getHomeNewProducts } from '../services/getHomeNewProducts.ts';
+
 import NewProduct from './NewProduct.tsx';
 import { type NewProductType } from './types.ts';
 import HeroImage from '../assets/images/innovative-tech.jpg';
 import useLoadingContext from '../hooks/useLoadingContext.ts';
 import delay from '../utils/delay.ts';
+import RecentlyViewed from './RecentlyViewed.tsx';
 
 
 const Main = (
@@ -23,7 +26,6 @@ const Main = (
 
   const [ haveNewProducts, setHaveNewProducts ] = useState(false);
   const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
-
   const joinUsImg = new URL('../assets/images/join-us.jpg', import.meta.url).href;
 
   const dealSlideRef = useRef<HTMLUListElement>(null);
@@ -106,16 +108,16 @@ const Main = (
 
 
   return (
-    <>
+    <main>
       <div className="hero-wrapper">
         <img className="hero-img" src={HeroImage} alt="A highly tech background" />
         <h1 className="title">
           Future is here! Explore latest tech with smartest prices.
         </h1>
       </div>
-      
+    
       {haveNewProducts && <div className="new-section">
-        <h2 className="new-section_title">What's New?</h2>
+        <h2 className="section_title">What's New?</h2>
 
         <div className="new-section-grid-wrapper">
           <div className="new-section-grid">
@@ -136,46 +138,44 @@ const Main = (
         </div>
       </div>}
 
-      <main>
-        <section className="new-deals-section">
-          <div className="controllers-wrapper">
-            <button data-direction="left" onClick={changeSlide} className="controller left-controller">
-              <span className="controller-icon">&#8678;</span>
-            </button>
-            <button data-direction="right" onClick={changeSlide}className="controller right-controller">
-              <span className="controller-icon">&#8680;</span>
-            </button>
-          </div>
-
-          <ul ref={dealSlideRef} className="deals-list">
-            {dealElements}
-          </ul>
-        </section>
-
-        <div className="join-wrapper">
-          <Link 
-            onClick={async () => {
-              setLoading(true);
-              await delay(700);
-              setLoading(false);
-            }} 
-            to="/register"
-          >
-            <div className="join-img-wrapper">
-              <img 
-                className="join-img" 
-                src={joinUsImg} 
-                alt="A tech office with people working" />
-              <p className="join-par">Join us</p>
-              <p className="join-par-sec">Cheaper Gear - 25% off when you join!</p>
-            </div>
-          </Link>
+      <section className="new-deals-section">
+        <div className="controllers-wrapper">
+          <button data-direction="left" onClick={changeSlide} className="controller left-controller">
+            <span className="controller-icon">&#8678;</span>
+          </button>
+          <button data-direction="right" onClick={changeSlide}className="controller right-controller">
+            <span className="controller-icon">&#8680;</span>
+          </button>
         </div>
 
+        <ul ref={dealSlideRef} className="deals-list">
+          {dealElements}
+        </ul>
+      </section>
 
+      <div className="join-wrapper">
+        <Link 
+          onClick={async () => {
+            setLoading(true);
+            await delay(700);
+            setLoading(false);
+          }} 
+          to="/register"
+        >
+          <div className="join-img-wrapper">
+            <img 
+              className="join-img" 
+              src={joinUsImg} 
+              alt="A tech office with people working" />
+            <p className="join-par">Join us</p>
+            <p className="join-par-sec">Cheaper Gear - 25% off when you join!</p>
+          </div>
+        </Link>
+      </div>
 
-      </main>
-    </>
+      <RecentlyViewed />
+
+    </main>
   );
 };
 

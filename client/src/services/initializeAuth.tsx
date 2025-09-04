@@ -1,9 +1,10 @@
-import axios from 'axios';
+import api from "../api";
+import handleErrors from "../utils/handleErrors";
+
 
 const initializeAuth = async () => {
   try {
-    axios.defaults.withCredentials = true;
-    const res = await axios.get('http://localhost:8383/api/auth/me');
+    const res = await api.get('/api/auth/me');
     const user = res.data.user;
 
     return {
@@ -11,17 +12,11 @@ const initializeAuth = async () => {
       message: 'You are already logged in',
       user
     }
-  } catch(err) {
-    if (axios.isAxiosError(err)) {
-      return {
-        success: false,
-        message: (err as Error).message
-      }
-    }
 
+  } catch(err) {
     return {
       success: false,
-      message: `Unexpected error occurred: ${(err as Error).message}`
+      message: handleErrors(err)
     }
   }
 };
