@@ -5,10 +5,10 @@ import generateToken from '../utils/jwt.js';
 export const loginController = async (req, res) => {
     const result = LoginSchema.safeParse(req.body);
     if (!result.success) {
-        const errorMessage = result.error.issues.map(err => err.message);
+        // const errorMessage = result.error.issues.map(err => err.message);
         return res.status(400).json({
             success: false,
-            message: errorMessage
+            message: 'Invalid credentials'
         });
     }
     const { email, password } = result.data;

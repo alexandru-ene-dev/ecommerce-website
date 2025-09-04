@@ -1,10 +1,10 @@
-import axios from 'axios';
+import api from "../api";
+import handleErrors from "../utils/handleErrors";
+
 
 export const getProduct = async (nameParam: string) => {
   try {
-    const res = await axios.get(
-      `http://localhost:8383/products/${nameParam}`
-    );
+    const res = await api.get(`/products/${nameParam}`);
     const data = res.data;
     const product = data.product;
     
@@ -16,16 +16,11 @@ export const getProduct = async (nameParam: string) => {
     }
 
     return product;
+    
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      return {
-        success: false,
-        message: err.message
-      }
-    }
     return {
       success: false,
-      message: `Unexpected error: ${err}`
+      message: handleErrors(err)
     }
   }
 };

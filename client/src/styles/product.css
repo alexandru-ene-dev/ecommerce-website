@@ -18,7 +18,7 @@
   max-width: 25em;
   margin-bottom: 2em;
   margin-inline: auto;
-  font-size: clamp(1.15rem, 2vw, 2rem);
+  font-size: clamp(1.15rem, 1.45vw, 1.45rem);
   text-align: center;
   color: var(--txt-clr2);
 }
@@ -149,7 +149,7 @@
   bottom: 0em;
   left: 0em;
   right: 0em;
-  z-index: 1;
+  z-index: 2;
   padding: clamp(.75em, 2vw, 1.5em);
   background-color: var(--menu-bg-prim);
   transform: translateY(0%);

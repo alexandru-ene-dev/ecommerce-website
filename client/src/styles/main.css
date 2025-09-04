@@ -216,7 +216,7 @@ button[data-dir="next"] {
   padding-inline: clamp(.5em, 2vw, 1em);
 }
 
-.new-section_title {
+.section_title {
   color: var(--clr-prim);
   text-transform: uppercase;
   text-align: center;

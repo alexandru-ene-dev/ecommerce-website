@@ -6,23 +6,18 @@
 
 .login-wrapper {
   width: 100%;
-  max-width: 40em;
-  max-height: 40em;
-  position: fixed;
+  position: fixed; 
   bottom: 0;
   right: 0;
   top: 40px;
   z-index: 3500;
   padding: 1.15em;
-  border-radius: 10px;
   background-color: var(--menu-bg-prim);
-  opacity: 0;
   transition: opacity 200ms;
-  overflow: auto;
 
   & button,
   & a {
-    font-size: 1rem;
+    font-size: .9rem;
   }
 
   & .new-card-btn {
@@ -31,16 +26,16 @@
   }
 }
 
-input.login-wrapper.login-wrapper {
-  overflow: auto;
-}
-
-.login-wrapper[data-appear="true"] {
-  opacity: 1;
-}
-
-.login-wrapper[data-appear="false"] {
-  opacity: 0;
+.login-wrapper::after {
+  display: none;
+  width: 10px;
+  height: 10px;
+  content: '';
+  position: absolute;
+  top: -19px;
+  right: 16px;
+  border: 10px solid transparent;
+  border-bottom: 10px solid var(--menu-bg-prim);
 }
 
 .login-title {
@@ -58,7 +53,6 @@ input.login-wrapper.login-wrapper {
   border-radius: 10px;
   border: none;
   background-color: var(--btn-bg);
-  text-transform: uppercase;
   font-weight: 700;
   color: var(--btn-clr);
 }
@@ -158,9 +152,15 @@ input.keep-logged-checkbox {
 }
 
 .sign-in-btn {
+  display: flex;
+  justify-content: center;
   padding: .5em 0;
   font-weight: 700;
-  font-size: 1rem;
+  text-decoration: none;
+}
+
+.sign-in-btn:last-child {
+  margin-top: 1em;
 }
 
 .login-btn:hover,
@@ -169,7 +169,7 @@ input.keep-logged-checkbox {
 }
 
 .create-account-par {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   color: var(--account-par);
   text-align: justify;
 }
@@ -187,11 +187,17 @@ input.keep-logged-checkbox {
   flex-wrap: wrap;
   justify-content: space-between;
   column-gap: 1em;
+  color: white;
+
+  & input {
+    color: inherit;
+  }
 }
 
 .logout-confirm-par {
   margin-top: 0;
   text-align: center;
+  color: white;
 }
 
 .logout-confirm-modal {
@@ -235,7 +241,7 @@ input.keep-logged-checkbox {
 
 .login-avatar {
   margin: 1em auto;
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
 }

@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom';
 import useCartContext from "../hooks/useCartContext";
-
 import useFavoritesContext from "../hooks/useFavoritesContext";
 import useHandleFavorites from "../hooks/useHandleFavorites";
 import useHandleCart from "../hooks/useHandleCart";
+
+import clearUserCart from '../services/clearUserCart';
+import { useAuthContext } from '../hooks/useAuthContext';
+import LoadingSpinner from '../components/LoadingSpinner';
+import delay from '../utils/delay';
+import { useState } from 'react';
+import { clearLocalCart } from '../utils/cartStorage';
 
 
 const Cart = () => {
@@ -11,6 +17,11 @@ const Cart = () => {
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { handleCart } = useHandleCart(setLocalCart);
   const { handleFavorites } = useHandleFavorites(setLocalFavorites);
+
+  const [ isDeleteCartMode, setDeleteCartMode ] = useState(false);
+  const { state } = useAuthContext();
+  const [ status, setStatus ] = useState('');
+  const [ isLoading, setLoading ] = useState(false);
 
   
   const cartProductElements = localCart && localCart.map(prod => {
@@ -60,28 +71,100 @@ const Cart = () => {
   });
 
 
-  return (
-    <div className="cart-wrapper">
-      <h1 className="cart-title">
-        <div className="cart-title_wrap">
-          <span className="material-symbols-outlined">shopping_cart</span>
-          <span>Your Cart</span>
-        </div>
-        
-        {localCart && localCart.length > 0? 
-          <div className="cart-title_info">
-            You have {localCart.length} {localCart.length > 1? 'products' : 'product'} in your cart
-          </div> : 
-          <div className="cart-title_info">Your cart is empty</div>
-        }
-      </h1>
+  const clearCart = async () => {
+    setLoading(true);
+    if (state.isLoggedIn && state?.user?._id) {
+      const res = await clearUserCart(state.user._id);
+      
+      if (!res.success) {
+        await delay(700);
+        setStatus(res.message);
+        setLoading(false);
+        return;
+      }
 
-      <div className="cart-products-wrapper">
-        {cartProductElements}
-      </div>
+      await delay(700);
+      setStatus(res.message);
+      setLoading(false);
+      setDeleteCartMode(false);
+
+      setLocalCart([]);
+      await delay(3000);
+      setStatus('');
+
+    } else {
+      await delay(700);
+      setStatus('Products have been cleared');
+      setLoading(false);
+      clearLocalCart();
+
+      setLocalCart([]);
+      setDeleteCartMode(false);
+      await delay(3000);
+      setStatus('');
+    }
+  };
+
+
+  return (
+    <section className="favorites-section">
+      {status && <p className="clear-status">{status}</p>}
+
+      <div className={!localCart.length? "clear-wrap no-favorites" : "clear-wrap"}>
+        <div className="fav-title-txt">
+          <h1 className="favorites-title">
+            <span className="material-symbols-outlined favorites-icon">shopping_cart</span>
+            <span>Your Cart</span>
+          </h1>
+
+          <p className="favorites-par">{
+            localCart && localCart.length > 0?
+              `You have ${localCart.length} ${
+                localCart.length > 1? 'products' : 'product'
+              } in your cart` : 
+              'You cart is empty'
+          }</p>
+        </div>
+
+        {isDeleteCartMode? 
+          (<div className="clear-confirmation">
+            <LoadingSpinner isLoading={isLoading} setLoading={setLoading} />
+            <p>Are you sure you want to remove all the products from your cart? This action cannot be undone.</p>
+
+            <div>
+              <button 
+                className="new-card-btn"
+                onClick={clearCart}
+              >
+                Yes, clear cart
+              </button>
+              <button 
+                className="new-card-btn" 
+                onClick={() => setDeleteCartMode(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>) :
+          
+          (localCart.length?  
+            <button 
+              onClick={() => setDeleteCartMode(true)} 
+              className="new-card-btn"
+            >
+              Clear Cart
+            </button> : null)
+        }
+      </div>  
+
+      {localCart.length?
+        <div className="cart-products-wrapper">
+          {cartProductElements}
+        </div> : null
+      }
 
       <Link to="/" className="back-shopping-btn new-card-btn">Back to Main Page</Link>
-    </div>
+    </section>
   );
 }
 

@@ -12,10 +12,10 @@ export const loginController = async (
   const result = LoginSchema.safeParse(req.body);
 
   if (!result.success) {
-    const errorMessage = result.error.issues.map(err => err.message);
+    // const errorMessage = result.error.issues.map(err => err.message);
     return res.status(400).json({ 
       success: false, 
-      message: errorMessage 
+      message: 'Invalid credentials'
     });
   }
 
@@ -65,6 +65,7 @@ export const loginController = async (
           lastName: user.lastName
         }
       });
+
   } catch (err) {
     const message = err instanceof Error? err.message : 'Unknown error';
 

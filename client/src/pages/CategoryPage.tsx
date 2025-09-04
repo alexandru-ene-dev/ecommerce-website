@@ -3,15 +3,15 @@ import { useEffect, useState } from 'react';
 import fetchProducts from '../services/fetchProducts.ts';
 import NewProduct from "../components/NewProduct.tsx";
 import { type NewProductType } from "../components/types.ts";
+
 import { nanoid } from 'nanoid';
 import { Link, useLocation } from 'react-router-dom';
 import delay from "../utils/delay.ts";
-import LoaderLine from "../components/LoaderLine.tsx";
 import useLoadingContext from "../hooks/useLoadingContext.ts";
 
 
 const CategoryPage = () => {
-  const { isLoading, setLoading } = useLoadingContext();
+  const { setLoading } = useLoadingContext();
   const { subcategory, subSubcategory } = useParams();
   const { pathname } = useLocation();
 
@@ -41,6 +41,7 @@ const CategoryPage = () => {
     
       return (
           <NewProduct
+            key={prod._id}
             setIsBtnVisible={setBtnIsVisible} 
             imgSrc={imgSrc} 
             encodedQuery={encodedQuery}
@@ -109,14 +110,12 @@ const CategoryPage = () => {
           setError(null);
           setSubSubcategories(result.subSubcategories);
           setProducts(result.subSubcategories);
-          console.log(result.message);
           return;
         }
         
         setError(null);
         setSubSubcategories([]);
         setProducts(result.products);
-        console.log(result.message);
       };
   
       fetchProd();
@@ -124,6 +123,7 @@ const CategoryPage = () => {
       setError((err as Error).message);
       setProducts([]);
       setSubSubcategories([]);
+
     } finally {
       const awaitDelay = async () => {
         await delay(500);

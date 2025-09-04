@@ -52,6 +52,7 @@
   padding: .5em;
   border-radius: .5em;
   font-size: 1.15rem;
+  color: var(--txt-clr2);
 }
 
 .email-wrapper-flex,
@@ -109,6 +110,7 @@
   position: relative;
   vertical-align: middle;
   cursor: pointer;
+  color: white;
 }
 
 .checkbox-inp::after {
@@ -129,7 +131,7 @@
 }
 
 .error-message {
-  margin-top: 2em;
+  margin-top: 1em;
   color: var(--error);
   font-size: 1.2rem;
   text-align: center;
@@ -169,9 +171,11 @@
   background-color: var(--menu-bg-prim);
   font-size: clamp(1.15rem, 1.75vw, 1.65rem);
   text-align: justify;
+  color: white;
 
   & .close-menu-btn {
     position: absolute;
+    top: 0;
   }
 }
 

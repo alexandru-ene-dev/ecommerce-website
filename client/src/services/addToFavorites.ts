@@ -1,9 +1,11 @@
-import axios from 'axios';
+import api from '../api';
+import handleErrors from '../utils/handleErrors';
+
 
 const addToFavorites = async (userId: string, isFavorite: boolean, productId: string) => {
   try {
     const payload = { userId, isFavorite, productId };
-    const res = await axios.post(`http://localhost:8383/favorites`, payload);
+    const res = await api.post('/favorites', payload);
     const data = res.data;
     
     if (!data.success) {
@@ -18,17 +20,11 @@ const addToFavorites = async (userId: string, isFavorite: boolean, productId: st
       message: data.message,
       product: data.product,
     };
-  } catch (err) {
-    if (axios.isAxiosError(err)) {
-      return {
-        success: false,
-        message: err.message
-      }
-    }
 
+  } catch (err) {
     return {
       success: false,
-      message: `Unexpected error occurred: ${err}`
+      message: handleErrors(err)
     }
   }
 };

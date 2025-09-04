@@ -1,6 +1,7 @@
 .favorites-section {
   margin-top: 10rem;
   padding: 1em;
+  position: relative;
 }
 
 .fav-title-txt {
@@ -8,7 +9,6 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2em;
   gap: 1em;
   color: var(--txt-clr2);
 }
@@ -31,23 +31,12 @@
   font-size: 1.75rem;
 }
 
-.back-shopping-btn {
-  display: flex;
-  justify-content: center;
-  max-width: 15em;
-  margin-inline: auto;
-  margin-top: 2em;
-  padding: .5em 1em;
-  font-size: 1.1rem;
-  text-decoration: none;
-  text-align: center;
-}
-
 .fav-container {
   display: flex;
   flex-direction: column;
   gap: 1em;
   margin-inline: auto;
+  margin-bottom: 2em;
   max-width: 70rem;
 }
 
@@ -155,32 +144,66 @@
   max-width: 20rem;
 }
 
-.fav-hover_menu {
-  display: flex;
-  flex-direction: column;
+.favorites-menu {
+  position: relative;
+}
+
+.favorites-menu_content-wrapper {
   width: 100%;
   max-width: 30em;
-  right: 0;
   position: fixed;
-  top: 50px;
+  right: 0;
+  top: 40px;
   z-index: 4000;
   padding: 1em;
   background-color: var(--menu-bg-prim);
   cursor: auto;
+}
 
+.favorites-menu_content {
+  max-height: 25em;
+  overflow-y: auto;
+  
   & .favorites-title {
     color: white;
     font-size: 1.15rem;
     margin-bottom: .5em;
     margin-top: 0;
   }
+
+  & .favorites-icon {
+    font-size: 1.15rem;
+  }
+
+  & .new-fav-btn {
+    top: 0;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
+}
+
+.favorites-menu_content-wrapper:after {
+  display: none;
+  width: 10px;
+  height: 10px;
+  content: '';
+  position: absolute;
+  top: -19px;
+  right: 16px;
+  border: 10px solid transparent;
+  border-bottom: 10px solid var(--menu-bg-prim);
 }
 
 .fav-hover_prod {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
   gap: 1em;
+  position: relative;
   padding: .5em;
   border-bottom: 2px solid var(--border);
   cursor: auto;
@@ -194,12 +217,16 @@
   text-decoration: none;
 }
 
-.fav-hover_remove-btn:hover {
-  background-color: var(--theme-btn-hov);
+.cart-hover_btn {
+  display: flex;
+  justify-content: center;
+  margin-top: .5em;
+  font-size: 1rem;
+  text-decoration: none;
 }
 
-.fav-hover_prod:last-of-type {
-  border-bottom: 2px solid transparent;
+.fav-hover_remove-btn:hover {
+  background-color: var(--theme-btn-hov);
 }
 
 .fav-hover_img {
@@ -241,12 +268,27 @@
 }
 
 .fav-hover_menu-no-fav {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
   color: white;
 }
 
 .fav-hover_cart-ico {
   font-size: 1.15rem;
+}
+
+.price-info-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: .5em 0;
+  font-size: 1.2rem;
+  color: white;
+
+  & p {
+    margin: .25em;
+  }
 }
 
 

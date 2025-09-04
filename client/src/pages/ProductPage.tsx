@@ -8,6 +8,8 @@ import useCartContext from '../hooks/useCartContext.ts';
 import useFavoritesContext from "../hooks/useFavoritesContext.ts";
 import useHandleFavorites from "../hooks/useHandleFavorites.ts";
 import useHandleCart from "../hooks/useHandleCart.ts";
+import { addToRecentlyViewed } from "../utils/recentlyViewed.ts";
+import RecentlyViewedProducts from "../components/RecentlyViewed.tsx";
 
 
 export default function ProductPage(
@@ -33,7 +35,6 @@ export default function ProductPage(
   const imgSrc = new URL(`../assets/images/${productObj?.img}`, import.meta.url).href;
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
-  // const [ error, setError ] = useState<string | null>(null);
 
   const isFavorite = localFavorites && localFavorites.some(fav => fav._id === productObj?._id);
   const isOnCart = localCart && localCart.some((fav => fav._id === productObj?._id));  
@@ -119,6 +120,14 @@ export default function ProductPage(
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+
+  // add to recently viewed
+  useEffect(() => {
+    if (!productObj) return;
+
+    addToRecentlyViewed(productObj, 10);
+  }, [productObj]);
 
 
   return (
@@ -214,6 +223,8 @@ export default function ProductPage(
 
         </div>
       </section>
+
+      <RecentlyViewedProducts />
     </main>
   );
 };

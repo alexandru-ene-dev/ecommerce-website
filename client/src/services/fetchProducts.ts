@@ -1,8 +1,10 @@
-import axios from 'axios';
+import api from "../api";
+import handleErrors from "../utils/handleErrors";
+
 
 const fetchProducts = async (slug: string) => {
   try {
-    const res = await axios.get(`http://localhost:8383/api/categories/${slug}`);
+    const res = await api.get(`/api/categories/${slug}`);
     const data = res.data;
 
     if (!data.success) {
@@ -28,16 +30,9 @@ const fetchProducts = async (slug: string) => {
 
 
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      return {
-        success: false,
-        message: `Failed fetching products: ${err.message}`
-      }
-    }
-
     return {
       success: false,
-      message: `Unexpected error occurred: ${err}`
+      message: handleErrors(err)
     }
   }
 };

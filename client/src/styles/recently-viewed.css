@@ -1,0 +1,25 @@
+.recently-viewed {
+  margin-top: 5rem;
+  padding: 0 1em 1em;
+}
+
+.recent-product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  row-gap: .5em;
+  column-gap: 1em;
+  margin-top: 3em;
+}
+
+.recent-product-card {
+  position: relative;
+}
+
+.recent-product-card img {
+  width: auto;
+  height: auto;
+}
+
+.recent-product-card a {
+  text-decoration: none;
+}
