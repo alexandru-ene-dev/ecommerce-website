@@ -4,12 +4,12 @@ import handleErrors from "../utils/handleErrors";
 
 const initializeAuth = async () => {
   try {
-    const res = await api.get('/api/auth/me');
+    const res = await api.post('/api/auth/me');
     const user = res.data.user;
 
     return {
       success: true,
-      message: 'You are already logged in',
+      message: 'You are logged in',
       user
     }
 
