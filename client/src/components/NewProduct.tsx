@@ -30,8 +30,8 @@ const NewProduct = (
   const { setLoading } = useLoadingContext();
   const { localCart, setLocalCart } = useCartContext();
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
-  const isFavorite = localFavorites && localFavorites.some(fav => fav.id === item.id);
 
+  const isFavorite = localFavorites && localFavorites.some(fav => fav.id === item.id);
   const isOnCart = localCart && localCart.some(prod => prod._id === item._id);
   const { handleFavorites } = useHandleFavorites(setLocalFavorites);
   const { handleCart } = useHandleCart(setLocalCart);

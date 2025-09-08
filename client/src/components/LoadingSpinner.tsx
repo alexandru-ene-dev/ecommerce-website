@@ -1,9 +1,5 @@
-import type { Dispatch, SetStateAction  } from 'react';
 
-const LoadingSpinner  = (
-  { isLoading, setLoading }:
-  { isLoading: boolean, setLoading: Dispatch<SetStateAction<boolean>>}
-) => {
+const LoadingSpinner  = ({ isLoading }: { isLoading: boolean }) => {
 
   return (
     <div data-open={isLoading? "true": "false"} className="loader-modal">

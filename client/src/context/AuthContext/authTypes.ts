@@ -6,10 +6,10 @@ export type UserType = {
   firstName: string,
   lastName: string,
   email: string,
-  favorites: [],
-  cart: []
-  avatar: string,
-  theme: Theme
+  favorites?: [],
+  cart?: []
+  avatar?: string,
+  theme?: Theme
 };
 
 export type AuthContextType = {

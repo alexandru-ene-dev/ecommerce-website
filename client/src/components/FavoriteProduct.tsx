@@ -1,6 +1,5 @@
 import { type NewProductType } from "./types";
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import useLoadingContext from "../hooks/useLoadingContext";
 import delay from "../utils/delay";
 
@@ -14,17 +13,17 @@ type FavType = {
   fav: NewProductType
 }
 
+
 const FavoriteProduct = ({ fav }: FavType) => {
   const imgSrc = new URL(`../assets/images/${fav.img}`, import.meta.url).href;
   const { setLoading } = useLoadingContext();
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
+  
   const { handleCart } = useHandleCart(setLocalCart);
-
   const { handleFavorites } = useHandleFavorites(setLocalFavorites);
   const isOnCart = localCart && localCart.some(prod => prod._id === fav._id);
   const isFavorite = localFavorites && localFavorites.some(prod => prod._id === fav._id);
-  const [ error, setError ] = useState<string | null>(null);
 
 
   return (

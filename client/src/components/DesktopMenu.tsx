@@ -6,6 +6,7 @@ import { type MouseEvent, useState } from "react";
 const DesktopMenu = () => {
   const [ activeIndex, setActiveIndex ] = useState<number | null>(null);
 
+
   const handleMouseEnter = (index: number) => {
     setActiveIndex(index);
   };
@@ -34,24 +35,26 @@ const DesktopMenu = () => {
         <a className="desktop-nav_link" href="#">{cat.title}</a>
         
         {isActive && (
-        <div className="desktop-nav_link-card">
-          <div className="link-card-wrapper">
-            <ul className="desktop-nav_sub-list">
-              {cat.subcategories.map((sub, index) => (
-                <li key={index} className="subcategory-item">
-                  <Link
-                    onClick={handleSublinkClick} 
-                    className="sublink" 
-                    to={`/categories/${sub.slug}`}
-                  >
-                    {sub.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          <img src={imgSrc} alt={cat.alt} />
-          </div>
-        </div>)}
+          <div className="desktop-nav_link-card">
+            <div className="link-card-wrapper">
+              <ul className="desktop-nav_sub-list">
+                {cat.subcategories.map((sub, index) => (
+                  <li key={index} className="subcategory-item">
+                    <Link
+                      onClick={handleSublinkClick} 
+                      className="sublink" 
+                      to={`/categories/${sub.slug}`}
+                    >
+                      {sub.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <img src={imgSrc} alt={cat.alt} />
+            </div>
+          </div>)
+        }
       </li>
     );
   });

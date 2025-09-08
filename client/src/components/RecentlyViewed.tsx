@@ -17,7 +17,7 @@ const RecentlyViewedProducts = () => {
 
   useEffect(() => {
     if (isMobile) {
-      const viewed = getRecentlyViewed(5);
+      const viewed = getRecentlyViewed(6);
       setHistory(viewed);
     } else {
       const viewed = getRecentlyViewed(8);

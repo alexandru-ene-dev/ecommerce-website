@@ -13,6 +13,18 @@
   .favorites-menu_content-wrapper:after {
     display: block;
   }
+
+  .prod-flex {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 1em;
+    padding: 1em;
+  }
+
+  .prod-price-wrapper {
+    margin-top: 0;
+  }
 }
 
 @media (min-width: 700px) {
@@ -31,29 +43,6 @@
 }
 
 @media (min-width: 45em) {
-  .footer-links-panel-mobile {
-    display: none;
-  }
-
-  .footer-links-panel-desktop {
-    display: flex;
-    justify-content: center;
-    gap: 5em;
-    margin-top: 0em;
-    
-    & h2 {
-      font-size: 1.5rem;
-    }
-
-    & a {
-      font-size: clamp(1rem, 1vw, 1.25rem);
-    }
-  }
-
-  .social-par {
-    font-size: 1.5rem;
-  }
-
   .intersect-img-flex {
     display: flex;
   }
@@ -104,7 +93,6 @@
   }
 
   .desktop-nav_link {
-    font-size: clamp(1.15rem, 1vw, 1.5rem);
     color: var(--clr-prim);
   }
 
@@ -129,7 +117,7 @@
     display: flex;
     justify-content: center;
     height: 25em;
-    position: fixed;
+    position: absolute;
     left: 0;
     right: 0;
     z-index: 3000;
@@ -138,7 +126,7 @@
     padding-block: 3em;
     background-color: var(--desktop-nav-bg);
     opacity: 1;
-    transition: 300ms;
+    transition: all 300ms;
   }
 
   .link-card-wrapper {
@@ -179,16 +167,7 @@
     flex-direction: row;
     justify-content: space-evenly;
     gap: 3em;
-    margin-bottom: 1em;
-  }
-
-  .footer-links-panel-desktop {
-    gap: clamp(3em, 5vw, 7em);
-    margin-top: 2em;
-
-    & h2 {
-      margin-top: 0em;
-    }
+    margin-top: 4em;
   }
 
   .header-btns {
@@ -197,14 +176,6 @@
 
   .header-btn-icon {
     font-size: 1.75rem;
-  }
-
-  .mobile-menu {
-    display: none;
-  }
-
-  .desktop-menu {
-    display: flex;
   }
 
   .modal {
@@ -218,10 +189,6 @@
   .favorites-section {
     margin-top: 12rem;
   }
-
-  /* .login-wrapper {
-    top: 5em;
-  } */
 
   .create-account-section {
     margin-top: 13rem;
@@ -238,13 +205,6 @@
   .product-wrapper {
     margin-top: 13.5rem;
     padding: 0;
-  }
-
-  .prod-flex {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-    padding: 1em;
   }
 
   .prod-price-wrapper {
@@ -271,10 +231,6 @@
   .intersect-img-flex,
   .intersect-price-btn-flex {
     width: 50%;
-  }
-
-  .social-wrapper {
-    margin-top: 2em;
   }
 
   .category-page-main {
@@ -341,6 +297,18 @@
 
   .clear-wrap {
     max-width: 70em;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: space-around;
+    gap: 5em;
+  }
+
+  .footer-links_btn::marker {
+    display: none;
+    height: 0;
+    width: 0;
   }
 }
 

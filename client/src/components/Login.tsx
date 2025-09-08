@@ -146,6 +146,7 @@ const Login = forwardRef<HTMLDivElement, LoginPropsType>((
       className="account-btn-wrapper"
       onClick={() => {
         handleMenus('login');
+        setShowAccount(false);
       }}
       onMouseEnter={() => {
         if (!activeMenu || activeMenu === 'mobileMenu') {
@@ -323,7 +324,7 @@ const Login = forwardRef<HTMLDivElement, LoginPropsType>((
             </div>
           }
 
-          <LoadingSpinner isLoading={isLoading} setLoading={setLoading} />
+          <LoadingSpinner isLoading={isLoading} />
         </div>
       }
 

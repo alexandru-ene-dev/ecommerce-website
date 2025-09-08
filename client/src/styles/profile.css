@@ -99,7 +99,6 @@ button.new-card-btn.rmv-avatar-btn {
 
 .profile-picture h2 {
   color: var(--txt-clr2);
-  /* margin-top: .65em; */
 }
 
 .password-section {
@@ -107,7 +106,6 @@ button.new-card-btn.rmv-avatar-btn {
 }
 
 .profile-info h2 {
-  /* margin-top: 0; */
   color: var(--txt-clr2);
 }
 

@@ -244,7 +244,7 @@ const Profile = () => {
       </div>
 
       <div className="profile-column">
-        <LoadingSpinner isLoading={isLoading} setLoading={setLoading} />
+        <LoadingSpinner isLoading={isLoading} />
 
         <div className="profile-info">
           {isEditingName ? (

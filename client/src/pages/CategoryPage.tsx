@@ -8,12 +8,22 @@ import { nanoid } from 'nanoid';
 import { Link, useLocation } from 'react-router-dom';
 import delay from "../utils/delay.ts";
 import useLoadingContext from "../hooks/useLoadingContext.ts";
+import { useSearchParams } from "react-router-dom";
 
 
 const CategoryPage = () => {
   const { setLoading } = useLoadingContext();
   const { subcategory, subSubcategory } = useParams();
   const { pathname } = useLocation();
+  const [ products, setProducts ] = useState<NewProductType[]>([]);
+
+  const [ _, setBtnIsVisible ] = useState(true);
+  const [ error, setError ] = useState<string | null>(null);
+  const [ searchParams ] = useSearchParams();
+  const sale = searchParams.get('sale');
+
+  const filters: Record<string, any> = {};
+  if (sale) filters.sale = sale;
 
   const title = subSubcategory?
     subSubcategory
@@ -26,39 +36,64 @@ const CategoryPage = () => {
       .split(' ')
       .map(letter => letter[0].toUpperCase() + letter.slice(1))
       .join(' ').replace('And', 'and');
+      
+      
+  useEffect(() => {
+    try {
+      const slug = 
+        subSubcategory ? 
+        `${subcategory}/${subSubcategory}` : 
+        (subcategory === 'matrix'? 'collections' : subcategory);
+  
+      if (!slug) return;
+      
+      const fetchProd = async () => {
+        setLoading(true);
 
-  const [ products, setProducts ] = useState<NewProductType[]>([]);
-  const [ subSubcategories, setSubSubcategories ] = useState<NewProductType[]>([]);
-  const [ isBtnVisible, setBtnIsVisible ] = useState(true);
-  const [ error, setError ] = useState<string | null>(null);
+        const result = await fetchProducts(slug, Object.keys(filters).length ? filters : undefined);
+        
+        if (!result || !result.success) {
+          setError(result.message);
+          setProducts([]);
+          return;
+        }
+        
+        setError(null);
+        setProducts(result.products);
+      };
+  
+      fetchProd();
+    } catch (err) {
+      setError((err as Error).message);
+      setProducts([]);
+
+    } finally {
+      const awaitDelay = async () => {
+        await delay(500);
+        setLoading(false);
+      };
+
+      awaitDelay();
+    }
+  }, [subcategory, subSubcategory]);
 
 
-  const isProductFromSubSub = subSubcategories.length? true : false;
-  const subSubElements = isProductFromSubSub &&
-    subSubcategories.map(prod => {
-      const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
-      const encodedQuery = prod.title.replaceAll(' ', '-');
-    
-      return (
-          <NewProduct
-            key={prod._id}
-            setIsBtnVisible={setBtnIsVisible} 
-            imgSrc={imgSrc} 
-            encodedQuery={encodedQuery}
-            item={prod} 
-          />
-      );
-    });
+  if (!products[0]?.content) return;
+  const isSubcategoryPage = products[0]?.content?.length > 0 && !subSubcategory;
+  const isProductPage = !!(products.length > 0 && subSubcategory) || !products[0]?.content?.length;
 
 
-  const isSubcategoryPage = products.length > 0 && products[0]?.content?.length;
   const subcategoryElements = isSubcategoryPage &&
-    products[0].content?.map((item: any) => {
+    products[0]?.content?.map((item: any) => {
       const subslug = item?.name.toLowerCase().replaceAll(' ', '-');
       const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
 
       return (
-        <Link to={`${pathname}/${subslug}`} key={nanoid()} className="prod-category">
+        <Link 
+          key={nanoid()} 
+          className="prod-category"
+          to={`${pathname}/${subslug}`}
+        >
           <h2 className="prod-category_subtitle">{item.name}</h2>
 
           <div className="img-description-flex">
@@ -72,69 +107,23 @@ const CategoryPage = () => {
       );
     });
   
-  
-  const productElements = products.map(prod => {
+
+  const productElements = isProductPage && products.map(prod => {
     const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
+    const slug = prod.title.replaceAll(' ', '-')
     
     return (
-      <div key={prod.id}>
         <NewProduct
+          key={prod._id}
           setIsBtnVisible={setBtnIsVisible} 
           imgSrc={imgSrc} 
-          encodedQuery={null}
+          encodedQuery={slug}
           item={prod} 
-          />
-      </div>
+        />
     );
   });
   
   
-  useEffect(() => {
-    try {
-      const slug = subSubcategory? `${subcategory}/${subSubcategory}` : subcategory;
-  
-      if (!slug) return;
-      
-      const fetchProd = async () => {
-        setLoading(true);
-        const result = await fetchProducts(slug);
-        
-        if (!result || !result.success) {
-          setError(result.message);
-          setProducts([]);
-          setSubSubcategories([]);
-          return;
-        }
-  
-        if (result.subSubcategories) {
-          setError(null);
-          setSubSubcategories(result.subSubcategories);
-          setProducts(result.subSubcategories);
-          return;
-        }
-        
-        setError(null);
-        setSubSubcategories([]);
-        setProducts(result.products);
-      };
-  
-      fetchProd();
-    } catch (err) {
-      setError((err as Error).message);
-      setProducts([]);
-      setSubSubcategories([]);
-
-    } finally {
-      const awaitDelay = async () => {
-        await delay(500);
-        setLoading(false);
-      };
-
-      awaitDelay();
-    }
-  }, [subcategory, subSubcategory]);
-
-
   return (
     <main className="category-page-main">
       <h1 className="category-page-title">{title}</h1>
@@ -142,11 +131,11 @@ const CategoryPage = () => {
       {error && <div className="category-page-err">{error}</div>}
 
       <div className={
-        isProductFromSubSub? "category-page-sub-prod new-section-grid-wrapper" : (isSubcategoryPage? "category-page-subcategories" : "category-page-products")
+        isSubcategoryPage ? "category-page-subcategories" : "new-section-grid-wrapper"
       }>
-        {isProductFromSubSub? 
-          <div className="new-section-grid">{subSubElements}</div> : 
-          (isSubcategoryPage? subcategoryElements : productElements)
+        {isSubcategoryPage ?
+          subcategoryElements :
+          <div className="new-section-grid">{productElements}</div>
         }
       </div>
     </main>

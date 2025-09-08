@@ -2,17 +2,18 @@ import { type ChangeEvent, type FormEvent, useState, useEffect, useRef } from "r
 import type { Dispatch, SetStateAction } from "react";
 import { useInputContext } from "../hooks/useInputContext";
 import { devLog } from "../utils/devLog";
+import FooterLinks from "./FooterLinks";
+import SocialLinks from "./SocialLinks";
+
 
 const Footer = (
   {
     isBtnVisible,
-    setIsBtnVisible,
     stickyBtnHeight,
     setStickyBtnHeight
   }:
   {
     isBtnVisible: boolean,
-    setIsBtnVisible: Dispatch<SetStateAction<boolean>>,
     stickyBtnHeight: number,
     setStickyBtnHeight:  Dispatch<SetStateAction<number>>
   }
@@ -21,6 +22,7 @@ const Footer = (
   const [ isFeedbackShown, setFeedback ] = useState<boolean>(false);
   const [ emailAddress, setEmailAddress] = useState<string>('');
   const copyrightRef = useRef<HTMLParagraphElement>(null);
+
 
   const subscribe = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -54,6 +56,7 @@ const Footer = (
 
     return () => clearTimeout(timeout);
   }, [isFeedbackShown]);
+
 
   return (
     <footer className="footer">
@@ -95,111 +98,8 @@ const Footer = (
       </div>
 
       <div className="links-social-wrapper">
-        <section className="footer-links-panel-mobile">
-          <details className="footer-links-details">
-            <summary className="footer-links-summary">Customer Service</summary>
-            <nav>
-              <ul className="footer-links-list">
-                <li><a href="#">Request a Return</a></li>
-                <li><a href="#">Returns Information</a></li>
-                <li><a href="#">Delivery Information</a></li>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Contact Us</a></li>
-              </ul>
-            </nav>
-          </details>
-
-          <details className="footer-links-details">
-            <summary className="footer-links-summary">Privacy & Legal</summary>
-            <nav>
-              <ul className="footer-links-list">
-                <li><a href="#">Terms & Conditions</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Cookies</a></li>
-                <li><a href="#">Terms of Use</a></li>
-              </ul>
-            </nav>
-          </details>
-
-          <details className="footer-links-details">
-            <summary className="footer-links-summary">Company</summary>
-            <nav>
-              <ul className="footer-links-list">
-                <li><a href="#">Careers</a></li>
-                <li><a href="#">About Us</a></li>
-              </ul>
-            </nav>
-          </details>
-        </section>
-
-        <section className="footer-links-panel-desktop">
-          <div>
-            <h2>Customer Service</h2>
-            <nav>
-              <ul className="footer-links-list">
-                {/* <li><a href="#">Request a Return</a></li> */}
-                <li><a href="#">Returns Information</a></li>
-                <li><a href="#">Delivery Information</a></li>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Contact Us</a></li>
-              </ul>
-            </nav>
-          </div>
-
-          <div>
-            <h2>Privacy & Legal</h2>
-            <nav>
-              <ul className="footer-links-list">
-                <li><a href="#">Terms & Conditions</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Cookies</a></li>
-                <li><a href="#">Terms of Use</a></li>
-              </ul>
-            </nav>
-          </div>
-
-          <div>
-            <h2>Company</h2>
-            <nav>
-            <ul className="footer-links-list">
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">About Us</a></li>
-            </ul>
-          </nav>
-          </div>
-        </section>
-
-        <section className="social-wrapper">
-          <h2 className="social-par">Our Social Network</h2>
-
-          <ul className="social-list">
-            <li className="social-item">
-              <a className="social-link" href="https://www.facebook.com/">
-                <img className="social-icon" src="/social-media/facebook.png" alt="facebook icon" />
-              </a>
-            </li>
-            <li className="social-item">
-              <a className="social-link" href="https://www.instagram.com/">
-                <img className="social-icon" src="/social-media/instagram.png" alt="instagram icon" />
-              </a>
-            </li>
-            <li className="social-item">
-              <a className="social-link" href="https://www.youtube.com/">
-                <img className="social-icon" src="/social-media/youtube.png" alt="youtube icon" />
-              </a>
-            </li>
-            <li className="social-item">
-            <a className="social-link" href="https://x.com/">
-                <img className="social-icon" src="/social-media/twitter.png" alt="twitter icon" />
-              </a>
-            </li>
-            <li className="social-item">
-              <a className="social-link" href="https://pinterest.com/">
-                <img className="social-icon" src="/social-media/pinterest.png" alt="pinterest icon" />
-              </a>
-            </li>
-          </ul> 
-        </section>
+        <FooterLinks />
+        <SocialLinks />
       </div>
 
       <p ref={copyrightRef} className="copyrights">

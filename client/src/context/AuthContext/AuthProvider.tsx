@@ -3,6 +3,7 @@ import { useReducer } from 'react';
 import authReducer from './authReducer.ts';
 import type { AuthStateType, AuthChildrenType } from './authTypes.ts'
 
+
 const initialState: AuthStateType = {
   user: null,
   isLoggedIn: false
