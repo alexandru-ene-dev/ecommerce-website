@@ -47,6 +47,8 @@ export const loginController = async (
     const token = generateToken(payload);
 
     return res
+      .setHeader('Access-Control-Allow-Origin', 'https://progressio-ecommerce-website.vercel.app')
+      .setHeader('Access-Control-Allow-Credentials', 'true')
       .cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
