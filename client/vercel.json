@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://ecommerce-website-03pf.onrender.com/api/:path*"
+    }
   ]
 }
