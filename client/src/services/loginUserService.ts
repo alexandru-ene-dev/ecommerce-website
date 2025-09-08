@@ -11,7 +11,7 @@ type Response =
 const loginUserService = async (email: string, password: string): Promise<Response> => {
   try {
     const payload = { email, password };
-    const res = await api.post('/api/login', payload);
+    const res = await api.post('/login', payload);
     const user = res.data.user;
 
     if (res.data.success === false) {
