@@ -1,4 +1,4 @@
-import { useState, type MouseEvent, type ChangeEvent, type FormEvent, useContext } from 'react';
+import { useState, type MouseEvent, type ChangeEvent, type FormEvent } from 'react';
 import registerUser from '../services/registerUserService.ts';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner.tsx';
@@ -8,8 +8,8 @@ import axios from 'axios';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
 import ValidationItem from '../components/ValidationItem.tsx';
 import useCartContext from '../hooks/useCartContext.ts';
-import { FavoritesContext } from '../context/FavoritesContext.tsx';
 import { useAvatar } from '../context/AuthContext/AvatarContext.tsx';
+import useFavoritesContext from '../hooks/useFavoritesContext.ts';
 
 
 const Register = () => {
@@ -43,10 +43,7 @@ const Register = () => {
   const isPasswordValid = Object.values(validations).every(Boolean);
 
   const { setLocalCart } = useCartContext();
-  const favContext = useContext(FavoritesContext);
-  if (!favContext) return;
-  const { setLocalFavorites } = favContext;
-
+  const { setLocalFavorites } = useFavoritesContext();
   const { setAvatar } = useAvatar();
 
 

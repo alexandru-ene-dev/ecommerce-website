@@ -42,8 +42,8 @@ app.use('/users', uploadAvatarRoute);
 app.use('/editName', editNameRoute);
 app.use('/profile', loginMiddleware, profileRoute);
 app.use('/api/auth/me', loginMiddleware, authRoute);
-
 app.use('/api/categories', fetchProductsRoute);
+
 app.use('/cart', addToCartRoute);
 app.use('/', homeRoute);
 app.use('/api/register', registerRoute);

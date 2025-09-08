@@ -27,13 +27,12 @@ const Header = () => {
   const { dispatch } = useInputContext();
   const { state } = useAuthContext();
 
-  // const hamburgerBtnRef = useRef<HTMLButtonElement>(null);
   const { setLoading } = useLoadingContext();
   const [ showAccount, setShowAccount ] = useState(false);
   const [ visibleMobileMenu, setVisibleMobileMenu ] = useState(false);
   const { dispatch: menuDispatch } = useMenuContext();
-
   const { state: themeState } = useInputContext();
+  
   const isMobile = useIsMobile();
   const [ isFavoritesHovered, setIsFavoritesHovered ] = useState(false);
   const [ visibleLoginMenu, setVisibleLoginMenu ] = useState(false);

@@ -29,8 +29,6 @@ const deals = [
     alt: 'latest video games deal',
     active: false,
     url: '/categories/games-20-off',
-    // subCategory: 'video-games',
-    // sale: 20
   },
 
   {
@@ -40,7 +38,6 @@ const deals = [
     alt: 'future technology deal',
     active: false,
     url: '/categories/buy-1-get-2',
-    // subCategory: 'operating-systems'
   }
 ];
 

@@ -4,6 +4,7 @@ import { useContext } from "react";
 
 export const useInputContext = () => {
   const context = useContext(Context);
+
   if (!context) {
     devLog(
       'error',
@@ -12,5 +13,6 @@ export const useInputContext = () => {
     );
     throw new Error(`useInputContext must be used inside a <Provider />`);
   }
+  
   return context;
 };

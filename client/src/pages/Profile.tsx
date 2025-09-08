@@ -1,14 +1,14 @@
 import { useState, type ChangeEvent } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import axios from 'axios';
 import delay from '../utils/delay';
 import { useAvatar } from '../context/AuthContext/AvatarContext';
-
 import { uploadAvatar } from '../services/uploadAvatarService';
+
 import { handleRemoveAvatar } from '../services/removeAvatarService';
 import { changePasswordService } from '../services/changePasswordService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ValidationItem from '../components/ValidationItem';
+import editNameService from '../services/editNameService';
 
 
 type Status = {
@@ -105,14 +105,17 @@ const Profile = () => {
     }
 
     try {
-      const payload = { _id: state.user?._id.toString(), firstName, lastName };
-      const res = await axios.put('http://localhost:8383/editName', payload);
-      const data = res.data;
+      // const payload = { _id: state.user?._id.toString(), firstName, lastName };
+      // const res = await axios.put('http://localhost:8383/editName', payload);
+      // const data = res.data;
 
-      if (data.success === false) {
+      if (!state?.user?._id) return;
+      const res = await editNameService(state?.user?._id.toString(), firstName, lastName);
+
+      if (res.success === false) {
         await delay(500);
         setLoading(false);
-        setStatus({ status: 'error', message: data.message });
+        setStatus({ status: 'error', message: res.message });
         await delay(2000);
         setStatus({ status: null, message: ' ' });
         return;
@@ -121,7 +124,7 @@ const Profile = () => {
       await delay(500);
       setLoading(false);
       dispatch({ type: 'EDIT_NAME', payload: { firstName, lastName } });
-      setStatus({ status: 'success', message: data.message });
+      setStatus({ status: 'success', message: res.message });
       setIsEditingName(false);
 
       await delay(2000);

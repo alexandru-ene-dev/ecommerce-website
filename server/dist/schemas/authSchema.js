@@ -7,7 +7,7 @@ export const RegisterUserInputsSchema = z.object({
     confirmPass: z.string()
 }).refine(data => data.password === data.confirmPass, {
     message: 'Passwords do not match',
-    path: ["confirmPath"]
+    path: ["confirmPass"]
 });
 export const LoginSchema = z.object({
     email: z.email({ message: 'Invalid credentials' }),
