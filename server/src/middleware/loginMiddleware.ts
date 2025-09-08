@@ -59,10 +59,11 @@ const loginMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
       next();
     });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: 'Internal error occurred during authentication'
+      message: `Internal error occurred during authentication: ${err}`
     });
   }
 };

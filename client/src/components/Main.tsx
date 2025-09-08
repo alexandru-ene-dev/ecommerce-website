@@ -65,6 +65,7 @@ const Main = (
     )
   });
 
+  
   const changeSlide = (e: MouseEvent<HTMLButtonElement>): void => {
     const target = e.currentTarget as HTMLButtonElement;
     const container = dealSlideRef.current;

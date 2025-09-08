@@ -8,9 +8,9 @@ const allowedOrigins = [
 export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // ✅ allow request
+      callback(null, true); // allow request
     } else {
-      callback(new Error('Not allowed by CORS')); // ❌ reject
+      callback(new Error('Not allowed by CORS')); // reject
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
