@@ -1,10 +1,12 @@
 import { salesText } from '../utils/salesText.ts';
 import { useRef, useEffect } from 'react';
 
+
 const StickySaleText = () => {
   const salesTextOuterRef = useRef<HTMLDivElement>(null);
   const saleTextWrapper = useRef<HTMLDivElement>(null);
   const saleIndexRef = useRef<number>(1);
+
   const slideWidthRef = useRef<number>(0);
   const totalSlidesRef = useRef<number>(0);
   const isSaleTransitioning = useRef(false);

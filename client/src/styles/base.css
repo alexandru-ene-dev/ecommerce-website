@@ -5,7 +5,6 @@
   box-sizing: border-box;
   color-scheme: light dark;
 
-  /* color palette */
   --bg: hsl(0, 0%, 6%);
   --bg-sec: hsl(0, 0%, 11%);
   --menu-subtitle-clr: hsl(0, 0%, 100%);
@@ -63,19 +62,11 @@
 }
 
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  display: inline-block;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  white-space: nowrap;
-  direction: ltr;
-  font-feature-settings: "liga";
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 body {

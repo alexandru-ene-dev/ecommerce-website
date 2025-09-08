@@ -39,7 +39,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-decoration: none;
   text-transform: uppercase;
-  font-size: clamp(1rem, 2vw, 2.25rem);
+  font-size: clamp(1rem, 2vw, 2.15rem);
   font-weight: 800;
 }
 
@@ -243,5 +243,3 @@
   border: 10px solid transparent;
   border-bottom: 10px solid var(--menu-bg-prim);
 }
-
-/* ------------------------------------ */

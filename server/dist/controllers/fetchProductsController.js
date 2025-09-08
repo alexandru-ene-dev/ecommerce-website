@@ -2,29 +2,39 @@ import { ProductModel } from '../models/ProductSchema.js';
 const fetchProductsController = async (req, res) => {
     try {
         const { subcategory, subSubcategory } = req.params;
+        const { sale, subSubcategory: subSub } = req.query;
+        console.log('route hit');
+        console.log('PARAM:', req.params);
+        console.log('QUERY:', req.query);
         if (!subcategory) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing subcategory from request'
             });
         }
-        if (subSubcategory) {
-            const subSubcategories = await ProductModel.find({ subcategory, subSubcategory });
-            if (!subSubcategories) {
-                return res.status(200).json({
-                    success: false,
-                    message: 'No products found',
-                });
-            }
+        if (subcategory === 'collections') {
+            const products = await ProductModel.find({ collections: { $exists: true } });
             return res.status(200).json({
                 success: true,
                 message: 'Fetching complete',
-                subSubcategories
+                products
             });
         }
-        const products = await ProductModel.find({ subcategory });
+        // base MongoDB filter
+        const filter = { subcategory };
+        if (subSubcategory) {
+            filter.subSubcategory = subSubcategory;
+        }
+        // optional filters from query
+        if (sale) {
+            filter.sale = { $gte: Number(sale) };
+        }
+        if (subSub) {
+            filter.subSub = subSub;
+        }
+        const products = await ProductModel.find(filter);
         if (!products.length) {
-            return res.status(200).json({
+            return res.status(404).json({
                 success: false,
                 message: 'No products found',
             });

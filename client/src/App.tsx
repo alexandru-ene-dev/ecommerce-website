@@ -182,9 +182,9 @@ function App() {
       </Routes>
 
       <BackToTop />
+
       <Footer 
         isBtnVisible={isBtnVisible} 
-        setIsBtnVisible={setIsBtnVisible} 
         stickyBtnHeight={stickyBtnHeight} 
         setStickyBtnHeight={setStickyBtnHeight}  
       />

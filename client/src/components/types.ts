@@ -1,36 +1,10 @@
-import type { Dispatch, SetStateAction, MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 
 export type HeaderType = {
   showMenu: (e: MouseEvent) => void, 
   closeModal: () => void,
-  visibleMenu: boolean,
-  // toggleLoginMenu: () => void,
+  visibleMenu: boolean
 }
-
-// export type MobileHeaderType = {
-//   visibleMenu: boolean,
-//   showMenu: (e: MouseEvent) => void, 
-//   visibleHeader: boolean,
-//   submitSearch: (e: MouseEvent<HTMLFormElement>) => void,
-//   toggleLoginMenu: () => void,
-//   toggleThemeMenu: (e: MouseEvent) => void,
-//   visibleThemeMenu: boolean,
-//   changeTheme: (e: MouseEvent) => void,
-//   searchInput: string,
-//   setSearchInput: Dispatch<SetStateAction<string>>,
-//   closeModal: () => void,
-// };
-
-// export type DesktopHeaderType = {
-//   visibleHeader: boolean,
-//   submitSearch: (e: MouseEvent<HTMLFormElement>) => void,
-//   toggleLoginMenu: () => void,
-//   toggleThemeMenu: (e: MouseEvent) => void,
-//   visibleThemeMenu: boolean,
-//   changeTheme: (e: MouseEvent) => void,
-//   searchInput: string,
-//   setSearchInput: Dispatch<SetStateAction<string>>
-// };
 
 export type ThemeSwitcherType = {
   themeIcon: string,
@@ -51,5 +25,6 @@ export type NewProductType = {
   category: string,
   subcategory: string,
   content?: string[],
-  link: string
+  link: string,
+  quantity: number
 }

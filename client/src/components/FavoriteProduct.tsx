@@ -14,6 +14,7 @@ type FavType = {
   fav: NewProductType
 }
 
+
 const FavoriteProduct = ({ fav }: FavType) => {
   const imgSrc = new URL(`../assets/images/${fav.img}`, import.meta.url).href;
   const { setLoading } = useLoadingContext();

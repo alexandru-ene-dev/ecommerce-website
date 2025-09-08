@@ -34,6 +34,7 @@ export const categories: Category[] = [
     src: 'laptops.jpeg',
     alt: 'Laptops, tablets and phones'
   },
+
   {
     title: 'Software',
     subcategories: [
@@ -44,6 +45,7 @@ export const categories: Category[] = [
     src: 'software.jpg',
     alt: 'Software'
   },
+
   {
     title: 'Gaming',
     subcategories: [
@@ -54,6 +56,7 @@ export const categories: Category[] = [
     src: 'gaming.jpeg',
     alt: 'Gaming'
   },
+
   {
     title: 'Electronics',
     subcategories: [
@@ -65,6 +68,7 @@ export const categories: Category[] = [
     src: 'electronics.jpg',
     alt: 'Electronics'
   },
+
   {
     title: 'Fashion',
     subcategories: [
@@ -79,6 +83,18 @@ export const categories: Category[] = [
     src: 'fashion.jpg',
     alt: 'Men fashion'
   },
+
+  {
+    title: 'Collections',
+    subcategories: [
+      { name: 'The Matrix', slug: 'matrix' },
+      { name: 'Star Wars', slug: 'star-wars' },
+      { name: 'Cyberpunk 2077', slug: 'cyberpunk-2077' }
+    ],
+    src: 'collections.jpg',
+    alt: 'Movie and game-themed merchandise'
+  },
+
   {
     title: 'Offers',
     subcategories: [
@@ -89,6 +105,7 @@ export const categories: Category[] = [
     src: 'offers.jpg',
     alt: 'Cheap offers'
   },
+
   {
     title: 'Newsletter',
     subcategories: [

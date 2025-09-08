@@ -59,7 +59,7 @@ button[data-dir="next"] {
   width: 100%;
   flex-shrink: 0;
   color: var(--sale-txt-clr);
-  font-size: clamp(.85rem, 1vw, 1rem);
+  font-size: .85rem;
 
   &:hover,
   &:focus {
@@ -213,7 +213,6 @@ button[data-dir="next"] {
 
 .new-section {
   margin-top: 4rem;
-  padding-inline: clamp(.5em, 2vw, 1em);
 }
 
 .section_title {
@@ -424,13 +423,12 @@ button[data-dir="next"] {
   width: 100%;
   position: relative;
   isolation: isolate;
-  padding: .35em 0;
-  padding-inline: clamp(.5em, 2vw, 1em);
+  padding: .6em clamp(.35em, 1vw, 1em);
   border: none;
   border-radius: .5em;
   background-color: var(--btn-bg);
   color: var(--btn-clr);
-  font-size: clamp(.75rem, 1vw, 1rem);
+  font-size: clamp(.8rem, 1vw, 1rem);
   font-weight: 500;
   overflow: hidden;
 

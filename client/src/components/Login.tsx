@@ -146,6 +146,7 @@ const Login = forwardRef<HTMLDivElement, LoginPropsType>((
       className="account-btn-wrapper"
       onClick={() => {
         handleMenus('login');
+        setShowAccount(false);
       }}
       onMouseEnter={() => {
         if (!activeMenu || activeMenu === 'mobileMenu') {

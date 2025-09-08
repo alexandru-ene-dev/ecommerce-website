@@ -43,13 +43,13 @@
 .prod-price-wrapper {
   max-width: 25em;
   margin-inline: auto;
+  margin-top: 2em;
 }
 
 .prod-price-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2em;
 }
 
 .prod-sale-price-flex {
@@ -132,7 +132,6 @@
 
 .delivery-date,
 .delivery-fee-span {
-  width: clamp(calc(150px - .5em), 15vw, 170px);
   font-weight: 750;
   text-wrap: nowrap;
 }

@@ -159,7 +159,7 @@ export default function ProductPage(
             </p>
             <p className="delivery-fee">
               <span className="delivery-fee-txt">Delivery Fee:</span> 
-              <span className="delivery-fee-span">starting from $20</span>
+              <span className="delivery-fee-span">starting from $10</span>
             </p>
 
             <div ref={intersectionWrapperRef} className="intersection-wrapper">

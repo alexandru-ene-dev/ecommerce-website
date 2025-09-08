@@ -4,9 +4,9 @@ import {
   type Dispatch
 } from 'react';
 
+import { type DealsType } from '../utils/deals.ts';
 import Deal from './Deal.tsx';
-import { type DealProps } from './Deal'; 
-import images from '../assets/images/images.json';
+import deals from '../utils/deals.ts';
 import { Link } from 'react-router-dom';
 import { getHomeNewProducts } from '../services/getHomeNewProducts.ts';
 
@@ -22,15 +22,34 @@ const Main = (
   { setIsBtnVisible }:
   { setIsBtnVisible: Dispatch<SetStateAction<boolean>> }
 ) => {
-  const { setLoading } = useLoadingContext();
-
+  const { isLoading, setLoading } = useLoadingContext();
   const [ haveNewProducts, setHaveNewProducts ] = useState(false);
   const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
   const joinUsImg = new URL('../assets/images/join-us.jpg', import.meta.url).href;
-
   const dealSlideRef = useRef<HTMLUListElement>(null);
-  const dealElements = images.map(({ text, src, alt, active, id }: DealProps) => {
+
+
+  const newProductElements = newProducts.map(item => {
+    const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
+    const encodedQuery = item.title.replaceAll(' ', '-');
+    
+    return (
+      <NewProduct
+        key={item.id}
+        setIsBtnVisible={setIsBtnVisible}
+        item={item} 
+        imgSrc={imgSrc} 
+        encodedQuery={encodedQuery} 
+      />
+    );
+  });
+
+
+  const dealElements = deals.map((
+    { subSubcategory, text, src, alt, active, id, url, sale }: DealsType
+  ) => {
     const imageUrl = new URL(`../assets/images/${src}`, import.meta.url).href;
+
     return (
       <Deal
         key={id}
@@ -39,6 +58,9 @@ const Main = (
         alt={alt}
         active={active} 
         id={id}
+        url={url}
+        subSubcategory={subSubcategory}
+        sale={sale}
       />
     )
   });
@@ -121,19 +143,7 @@ const Main = (
 
         <div className="new-section-grid-wrapper">
           <div className="new-section-grid">
-            {newProducts.map(item => {
-              const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
-              const encodedQuery = item.title.replaceAll(' ', '-');
-              return (
-                <NewProduct
-                  key={item.id}
-                  setIsBtnVisible={setIsBtnVisible}
-                  item={item} 
-                  imgSrc={imgSrc} 
-                  encodedQuery={encodedQuery} 
-                />
-              )
-            })}
+            {newProductElements}
           </div>
         </div>
       </div>}
@@ -143,6 +153,7 @@ const Main = (
           <button data-direction="left" onClick={changeSlide} className="controller left-controller">
             <span className="controller-icon">&#8678;</span>
           </button>
+
           <button data-direction="right" onClick={changeSlide}className="controller right-controller">
             <span className="controller-icon">&#8680;</span>
           </button>
