@@ -12,7 +12,6 @@ export const loginController = async (
   const result = LoginSchema.safeParse(req.body);
 
   if (!result.success) {
-    // const errorMessage = result.error.issues.map(err => err.message);
     return res.status(400).json({ 
       success: false, 
       message: 'Invalid credentials'
@@ -51,7 +50,7 @@ export const loginController = async (
       .cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 24 * 60 * 60 * 1000
       })
       .status(200)
