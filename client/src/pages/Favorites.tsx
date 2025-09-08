@@ -75,7 +75,7 @@ const Favorites = () => {
 
         {isDeleteFavoritesMode? 
           (<div className="clear-confirmation">
-            <LoadingSpinner isLoading={isLoading} setLoading={setLoading} />
+            <LoadingSpinner isLoading={isLoading} />
             <p>Are you sure you want to remove all your favorite products? This action cannot be undone.</p>
 
             <div>

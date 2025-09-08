@@ -86,7 +86,7 @@ const Cart = () => {
 
         {isDeleteCartMode? 
           (<div className="clear-confirmation">
-            <LoadingSpinner isLoading={isLoading} setLoading={setLoading} />
+            <LoadingSpinner isLoading={isLoading} />
             <p>Are you sure you want to remove all the products from your cart? This action cannot be undone.</p>
 
             <div>

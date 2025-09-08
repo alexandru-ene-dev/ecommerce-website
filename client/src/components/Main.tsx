@@ -22,7 +22,7 @@ const Main = (
   { setIsBtnVisible }:
   { setIsBtnVisible: Dispatch<SetStateAction<boolean>> }
 ) => {
-  const { isLoading, setLoading } = useLoadingContext();
+  const { setLoading } = useLoadingContext();
   const [ haveNewProducts, setHaveNewProducts ] = useState(false);
   const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
   const joinUsImg = new URL('../assets/images/join-us.jpg', import.meta.url).href;

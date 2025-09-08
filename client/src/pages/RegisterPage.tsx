@@ -9,7 +9,6 @@ import { useAuthContext } from '../hooks/useAuthContext.ts';
 import ValidationItem from '../components/ValidationItem.tsx';
 import useCartContext from '../hooks/useCartContext.ts';
 import { FavoritesContext } from '../context/FavoritesContext.tsx';
-
 import { useAvatar } from '../context/AuthContext/AvatarContext.tsx';
 
 
@@ -290,10 +289,7 @@ const Register = () => {
         </div>
       </div>
 
-      <LoadingSpinner 
-        isLoading={isLoading} 
-        setLoading={setLoading} 
-      />
+      <LoadingSpinner isLoading={isLoading} />
     </section>
   );
 }

@@ -17,8 +17,7 @@ const CategoryPage = () => {
   const { pathname } = useLocation();
   const [ products, setProducts ] = useState<NewProductType[]>([]);
 
-  const [ subSubcategories, setSubSubcategories ] = useState<NewProductType[]>([]);
-  const [ isBtnVisible, setBtnIsVisible ] = useState(true);
+  const [ _, setBtnIsVisible ] = useState(true);
   const [ error, setError ] = useState<string | null>(null);
   const [ searchParams ] = useSearchParams();
   const sale = searchParams.get('sale');
@@ -56,12 +55,10 @@ const CategoryPage = () => {
         if (!result || !result.success) {
           setError(result.message);
           setProducts([]);
-          setSubSubcategories([]);
           return;
         }
         
         setError(null);
-        setSubSubcategories([]);
         setProducts(result.products);
       };
   
@@ -69,7 +66,6 @@ const CategoryPage = () => {
     } catch (err) {
       setError((err as Error).message);
       setProducts([]);
-      setSubSubcategories([]);
 
     } finally {
       const awaitDelay = async () => {
@@ -97,7 +93,6 @@ const CategoryPage = () => {
           key={nanoid()} 
           className="prod-category"
           to={`${pathname}/${subslug}`}
-          onClick={() => setSubSubcategories([])} 
         >
           <h2 className="prod-category_subtitle">{item.name}</h2>
 

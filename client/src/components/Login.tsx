@@ -324,7 +324,7 @@ const Login = forwardRef<HTMLDivElement, LoginPropsType>((
             </div>
           }
 
-          <LoadingSpinner isLoading={isLoading} setLoading={setLoading} />
+          <LoadingSpinner isLoading={isLoading} />
         </div>
       }
 

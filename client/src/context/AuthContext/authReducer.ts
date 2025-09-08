@@ -1,12 +1,13 @@
 import type { AuthStateType, AuthActionsType } from "./authTypes";
 
-const authReducer = (state: AuthStateType, action: AuthActionsType ) => {
+const authReducer = (state: AuthStateType, action: AuthActionsType ): AuthStateType => {
   switch(action.type) {
     case 'LOGIN':
       return { ...state, isLoggedIn: true, user: action.payload };
     case 'LOGOUT':
       return { ...state, isLoggedIn: false, user: null };
     case 'EDIT_NAME':
+      if (!state.user) return state;
       return {
         ...state, user: {
           ...state.user,
