@@ -8,6 +8,7 @@ import { useAuthContext } from '../hooks/useAuthContext.ts';
 import { Link } from 'react-router-dom';
 import ThemeSwitcher from './ThemeSwitcher.tsx';
 import useLoadingContext from '../hooks/useLoadingContext.ts';
+import type { Theme, ThemeIcon } from '../context/types.ts';
 
 import delay from '../utils/delay.ts';
 import useIsMobile from '../hooks/useIsMobile.ts';
@@ -60,39 +61,24 @@ const Header = () => {
     const target = e.currentTarget as HTMLElement;
     if (!target) return;
 
-    if (target.dataset.theme === 'os') {
-      document.body.classList.remove('light-mode');
-      document.body.classList.remove('dark-mode');
+    const theme = target.dataset.theme as Theme;
 
-      dispatch({ type: 'TOGGLE_THEME', theme: 'os-default', themeIcon: 'contrast' });
-      if (state.user) {
-        changeThemeService(state.user._id, 'os-default');
-        return;
-      }
-      localStorage.setItem('theme', 'os_default');
+    document.body.classList.remove('light-mode');
+    document.body.classList.remove('dark-mode');
+    document.body.classList.add(theme);
 
-    } else if (target.dataset.theme === 'light') {
-      document.body.classList.remove('dark-mode');
-      document.body.classList.add('light-mode');
+    dispatch({ 
+      type: 'TOGGLE_THEME', 
+      theme: theme, 
+      themeIcon: (theme === 'os-default'? 'contrast' : theme.replace('-', '_')) as ThemeIcon
+    });
 
-      dispatch({ type: 'TOGGLE_THEME', theme: 'light-mode', themeIcon: 'light_mode' });
-      if (state.user) {
-        changeThemeService(state.user._id, 'light-mode');
-        return;
-      }
-      localStorage.setItem('theme', 'light-mode');
-
-    } else {
-      document.body.classList.remove('light-mode');
-      document.body.classList.add('dark-mode');
-
-      dispatch({ type: 'TOGGLE_THEME', theme: 'dark-mode', themeIcon: 'dark_mode' });
-      if (state.user) {
-        changeThemeService(state.user._id, 'dark-mode');
-        return;
-      }
-      localStorage.setItem('theme', 'dark-mode');
+    if (state.user) {
+      changeThemeService(state.user._id, theme);
+      return;
     }
+    
+    localStorage.setItem('theme', theme);
   };
 
 

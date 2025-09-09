@@ -20,6 +20,8 @@ import { getCart } from '../utils/cartStorage';
 import { getLocalFavorites } from '../utils/localFavorites';
 import useFavoritesContext from '../hooks/useFavoritesContext';
 import { forwardRef } from 'react';
+import { useInputContext } from '../hooks/useInputContext';
+import { type Theme, type ThemeIcon } from '../context/types';
 
 
 type LoginPropsType = {
@@ -59,6 +61,7 @@ const Login = forwardRef<HTMLDivElement, LoginPropsType>((
   const nameInitial = state.user?.firstName.slice(0, 1).toUpperCase();
   const { setLocalCart } = useCartContext();
   const { setLocalFavorites } = useFavoritesContext();
+  const { dispatch: themeDispatch } = useInputContext();
 
 
   const togglePass = (e: MouseEvent) => {
@@ -126,6 +129,14 @@ const Login = forwardRef<HTMLDivElement, LoginPropsType>((
       setVisibleLoginMenu(false);
       handleMenus('');
       navigate('/');
+
+      
+      const localTheme = localStorage.getItem('theme') as Theme;
+      themeDispatch({ 
+        type: 'TOGGLE_THEME', 
+        theme: localTheme, 
+        themeIcon: (localTheme === 'os-default'? 'contrast' : localTheme.replace('-', '_')) as ThemeIcon
+      });
 
       const cart = getCart();
       setLocalCart(cart);

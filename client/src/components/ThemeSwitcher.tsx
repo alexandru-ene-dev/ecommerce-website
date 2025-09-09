@@ -26,21 +26,21 @@ const ThemeSwitcher = forwardRef<HTMLDivElement, ThemeSwitcherType>((
         <div className="theme-list_wrapper">
           <ul className="theme-list">
             <li className="theme-item">
-              <button data-theme="os" onClick={changeTheme} className="theme-btn">
+              <button data-theme="os-default" onClick={changeTheme} className="theme-btn">
                 <span className="material-symbols-outlined theme-icon">contrast</span>
                 <span>OS</span>
               </button>
             </li>
 
             <li className="theme-item">
-              <button data-theme="light" onClick={changeTheme} className="theme-btn">
+              <button data-theme="light-mode" onClick={changeTheme} className="theme-btn">
                 <span className="material-symbols-outlined theme-icon">light_mode</span>
                 <span>Light</span>
               </button>
             </li>
 
             <li className="theme-item">
-              <button data-theme="dark" onClick={changeTheme} className="theme-btn">
+              <button data-theme="dark-mode" onClick={changeTheme} className="theme-btn">
                 <span className="material-symbols-outlined theme-icon">dark_mode</span>
                 <span>Dark</span>
               </button>
