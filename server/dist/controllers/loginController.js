@@ -5,7 +5,6 @@ import generateToken from '../utils/jwt.js';
 export const loginController = async (req, res) => {
     const result = LoginSchema.safeParse(req.body);
     if (!result.success) {
-        // const errorMessage = result.error.issues.map(err => err.message);
         return res.status(400).json({
             success: false,
             message: 'Invalid credentials'
@@ -38,7 +37,7 @@ export const loginController = async (req, res) => {
         return res
             .cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
             sameSite: 'strict',
             maxAge: 24 * 60 * 60 * 1000
         })
