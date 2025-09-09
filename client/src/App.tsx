@@ -118,6 +118,8 @@ function App() {
     };
     
     auth();
+
+    console.log(state);
   }, [state.isLoggedIn]);
 
 
