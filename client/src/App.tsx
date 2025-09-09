@@ -60,8 +60,13 @@ function App() {
         theme: theme, 
         themeIcon: (theme === 'os-default'? 'contrast' : theme.replace('-', '_')) as ThemeIcon
       });
-      
+
     } else {
+      document.body.classList.remove('dark-mode');
+      document.body.classList.remove('os-default');
+      document.body.classList.remove('light-mode');
+      document.body.classList.add(theme);
+      
       themeDispatch({ 
         type: 'TOGGLE_THEME', 
         theme: 'os-default', 
