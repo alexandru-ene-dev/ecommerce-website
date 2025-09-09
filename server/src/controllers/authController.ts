@@ -22,11 +22,12 @@ export const authController = async (req: Request, res: Response) => {
       });
     }
   
-    return res.json({
+    return res.status(200).json({
       success: true,
       message: 'User found, authentication was successful',
       user: foundUser
     });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
