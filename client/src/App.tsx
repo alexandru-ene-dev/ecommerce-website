@@ -60,6 +60,13 @@ function App() {
         theme: theme, 
         themeIcon: (theme === 'os-default'? 'contrast' : theme.replace('-', '_')) as ThemeIcon
       });
+      
+    } else {
+      themeDispatch({ 
+        type: 'TOGGLE_THEME', 
+        theme: 'os-default', 
+        themeIcon: 'contrast'
+      });
     }
   }, [state.isLoggedIn, state?.user?.theme]);
 
