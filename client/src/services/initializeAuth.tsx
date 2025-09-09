@@ -4,7 +4,7 @@ import handleErrors from "../utils/handleErrors";
 
 const initializeAuth = async () => {
   try {
-    const res = await api.get('/auth/me');
+    const res = await api.get('/api/auth/me');
     const user = res.data.user;
 
     return {
