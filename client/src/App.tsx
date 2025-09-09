@@ -26,6 +26,7 @@ import useCartContext from './hooks/useCartContext.ts';
 import { getAvatarService } from './services/getAvatarService.tsx';
 import { useAvatar } from './context/AuthContext/AvatarContext.tsx';
 import useFavoritesContext from './hooks/useFavoritesContext.ts';
+import type { Theme, ThemeIcon } from './context/types.ts';
 
 import './styles/index.css';
 import { Route, Routes } from 'react-router-dom';
@@ -46,7 +47,7 @@ function App() {
 
 
   useEffect(() => {
-    const theme = state?.user?.theme || localStorage.getItem('theme');
+    const theme = (state?.user?.theme || localStorage.getItem('theme')) as Theme;
 
     if (theme !== null) {
       document.body.classList.remove('dark-mode');
@@ -54,17 +55,11 @@ function App() {
       document.body.classList.remove('light-mode');
       document.body.classList.add(theme);
 
-      switch (theme) {
-        case 'dark-mode': 
-          themeDispatch({ type: 'TOGGLE_THEME', theme: 'dark-mode', themeIcon: 'dark_mode' });
-          break;
-        case 'light-mode':
-          themeDispatch({ type: 'TOGGLE_THEME', theme: 'light-mode', themeIcon: 'light_mode' });
-          break;
-        case 'os-default-mode':
-          themeDispatch({ type: 'TOGGLE_THEME', theme: 'os-default', themeIcon: 'contrast' });
-          break;
-      }
+      themeDispatch({ 
+        type: 'TOGGLE_THEME', 
+        theme: theme, 
+        themeIcon: (theme === 'os-default'? 'contrast' : theme.replace('-', '_')) as ThemeIcon
+      });
     }
   }, [state.isLoggedIn, state?.user?.theme]);
 
@@ -118,8 +113,6 @@ function App() {
     };
     
     auth();
-
-    console.log(state);
   }, [state.isLoggedIn]);
 
 

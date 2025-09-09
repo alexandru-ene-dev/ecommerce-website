@@ -9,7 +9,7 @@ export type StateType = {
   themeIcon: ThemeIcon
 }
 
-type ThemeIcon = 'light_mode' | 'dark_mode' | 'contrast';
+export type ThemeIcon = 'light_mode' | 'dark_mode' | 'contrast';
 
 export type Action =
   | { type: 'SET_SEARCH_INPUT'; payload: string }
