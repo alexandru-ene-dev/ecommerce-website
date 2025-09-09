@@ -14,6 +14,9 @@ const initializeAuth = async () => {
     }
 
   } catch(err) {
+    const res: any = (err as any).response;
+    console.log(res.data.message);
+    
     return {
       success: false,
       message: handleErrors(err)
