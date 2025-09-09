@@ -63,6 +63,7 @@ const Header = () => {
 
     const theme = target.dataset.theme as Theme;
 
+    document.body.classList.remove('os-default');
     document.body.classList.remove('light-mode');
     document.body.classList.remove('dark-mode');
     document.body.classList.add(theme);
