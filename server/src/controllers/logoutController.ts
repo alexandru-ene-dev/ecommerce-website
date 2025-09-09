@@ -5,13 +5,14 @@ const logoutController = (req: Request, res: Response) => {
     res.clearCookie('token', {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict'
+      sameSite: 'none'
     });
 
     res.status(200).json({
       success: true,
       message: 'You have been logged out'
     });
+
   } catch (err) {
     res.status(500).json({
       success: false,
