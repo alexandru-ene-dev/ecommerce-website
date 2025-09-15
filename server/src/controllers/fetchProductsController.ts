@@ -7,15 +7,21 @@ const fetchProductsController = async (req: Request, res: Response) => {
     const { subcategory, subSubcategory } = req.params;
     const { sale, subSubcategory: subSub } = req.query;
 
-    console.log('route hit');
-    console.log('PARAM:', req.params);
-    console.log('QUERY:', req.query);
-
-
     if (!subcategory) {
       return res.status(400).json({
         success: false,
         message: 'Missing subcategory from request'
+      });
+    }
+
+
+    if (subcategory === 'all') {
+      const products = await ProductModel.find({});
+
+      return res.status(200).json({
+        success: true,
+        message: 'Fetching all products complete',
+        products
       });
     }
 

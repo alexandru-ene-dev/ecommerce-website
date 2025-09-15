@@ -32,6 +32,8 @@ import './styles/index.css';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import initializeAuth from './services/initializeAuth.tsx';
+import SearchPage from './pages/SearchPage.tsx';
+import ScrollToHash from './components/ScrollToHash.tsx';
 
 
 function App() {
@@ -139,34 +141,32 @@ function App() {
         const avatar = await getAvatarService(state.user._id);
 
         if (avatar.success === false) {
-          console.error(avatar?.message);
           return;
         }
 
         setAvatar(`data:image/png;base64,${avatar.avatar}`);
       } catch (err) {
-        console.error(err);
+        return;
       }
     };
 
     getAvatar();
-  }, [state.isLoggedIn]);
+  }, [state.isLoggedIn, state?.user?._id]);
   
 
   return (
     <>
+      <ScrollTop />
+      <ScrollToHash />
       <LoaderLine />
       <Header />
-      <ScrollTop />
       <HandlePadding 
         setStickyBtnHeight={setStickyBtnHeight}
         setIsBtnVisible={setIsBtnVisible}
       />
       
       <Routes>
-        <Route path='/' element={
-          <Homepage setIsBtnVisible={setIsBtnVisible} />
-        }/>
+        <Route path='/' element={<Homepage />} />
         <Route path='/register' element={<Register />} />
         <Route path='/favorites' element={<Favorites />} />
 
@@ -176,13 +176,12 @@ function App() {
         
         <Route path='/products/:name' element={
           <ProductPage 
-            isBtnVisible={isBtnVisible} 
             setIsBtnVisible={setIsBtnVisible} 
-            stickyBtnHeight={stickyBtnHeight} 
             setStickyBtnHeight={setStickyBtnHeight}  
           />
         }/>
 
+        <Route path='/search' element={<SearchPage />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/categories/:subcategory/:subSubcategory?' element={<CategoryPage />} />
         <Route path='*' element={<NotFound />} />

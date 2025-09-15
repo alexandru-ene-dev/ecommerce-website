@@ -19,6 +19,7 @@ import editNameRoute from './routes/editNameRoute.js';
 import uploadAvatarRoute from './routes/uploadAvatarRoute.js';
 import changePasswordRoute from './routes/changePasswordRoute.js';
 import changeThemeRoute from './routes/changeThemeRoute.js';
+import syncRoute from './routes/syncRoute.js';
 dotenv.config();
 const app = express();
 // middleware
@@ -41,6 +42,7 @@ app.use('/products', productsRoute);
 app.use('/favorites', favoritesRoute);
 app.use('/account/change-password', changePasswordRoute);
 app.use('/account/theme', changeThemeRoute);
+app.use('/api/sync', syncRoute);
 // connect to database & run the server
 (async () => {
     try {

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import FavoriteProduct from '../components/FavoriteProduct';
 import useFavoritesContext from '../hooks/useFavoritesContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { clearLocalFavorites } from '../utils/localFavorites';
 
 import clearUserFavorites from '../services/clearUserFavorites';
@@ -53,6 +53,13 @@ const Favorites = () => {
   };
 
 
+  useEffect(() => {
+    if (localFavorites.length <= 0) {
+      setDeleteFavoritesMode(false);
+    }
+  }, [localFavorites.length]);
+
+
   return (
     <section className="favorites-section">
       {status && <p className="clear-status">{status}</p>}
@@ -73,7 +80,7 @@ const Favorites = () => {
           }</p>
         </div>
 
-        {isDeleteFavoritesMode? 
+        {isDeleteFavoritesMode?
           (<div className="clear-confirmation">
             <LoadingSpinner isLoading={isLoading} />
             <p>Are you sure you want to remove all your favorite products? This action cannot be undone.</p>
@@ -106,6 +113,8 @@ const Favorites = () => {
 
       {localFavorites.length?  
         <div className="fav-container">
+          {isLoading && <LoadingSpinner isLoading={isLoading}/>}
+
           {localFavorites && localFavorites.map(fav => {
             return <FavoriteProduct key={fav.id} fav={fav} />
           })}

@@ -58,10 +58,10 @@ const RecentlyViewedProducts = () => {
               </button>
               
               <Link to={`/products/${slug}`}>
-                <img className="new-card-img" src={imgSrc} alt={product.title} />
-              </Link>
-
-              <Link to={`/products/${slug}`}> 
+                <div className="recent-img-wrapper">
+                  <img className="new-card-img" src={imgSrc} alt={product.title} />
+                </div>
+            
                 <p className="new-card-title">{product.title}</p>
               </Link>
             </div>

@@ -1,0 +1,19 @@
+.search-page {
+  margin-top: 11rem;
+  padding: 1em;
+  color: var(--clr-prim);
+}
+
+.search-page p {
+  text-align: center;
+}
+
+.search-page h1 {
+  font-size: 1.75rem;
+  text-transform: none;
+}
+
+.no-search-pic-wrapper {
+  border-radius: 50%;
+  background-color: #38A39B;
+}

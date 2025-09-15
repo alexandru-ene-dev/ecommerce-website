@@ -38,10 +38,11 @@
 .fav-container {
   display: flex;
   flex-direction: column;
+  max-width: 50rem;
   gap: 1em;
   margin-inline: auto;
   margin-bottom: 2em;
-  max-width: 70rem;
+  transform: translateX(0);
 }
 
 .fav-btns-wrap {
@@ -49,14 +50,16 @@
 }
 
 .fav-prod {
-  max-width: 70rem;
-  padding: 1em;
+  max-width: 50rem;
+  padding: clamp(.5em, 1vw, 1em);
   border-radius: 10px;
   background-color: var(--new-card-bg);
+  transform: translateX(0);
 
   & .sale-price-wrapper {
     justify-content: space-between;
     column-gap: 1em;
+    margin-bottom: 0;
   }
 
   & .new-card-sale-limit {
@@ -72,11 +75,11 @@
   }
   
   & .new-price {
-    font-size: 1.5rem;
+    font-size: 1.15rem;
   }
   
   & .old-price {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
   }
   
   & .sale-txt,
@@ -92,8 +95,22 @@
   }
 
   .prod-title {
+    display: -webkit-box;
+    height: 45px;
+    margin-top: 0;
+    margin-bottom: 1em;
+    text-overflow: ellipsis;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
     text-align: initial;
+    overflow: hidden;
   }
+}
+
+.fav-prod .button-wrapper {
+  width: 100%;
+  max-width: 10em;
+  margin-top: 1em;
 }
 
 .prod-title-link {
@@ -111,19 +128,18 @@
 
 .fav-prod-inner {
   display: flex;
-  flex-wrap: wrap;
+  position: relative;
   justify-content: space-around;
-  column-gap: 2em;
-  row-gap: 1em;
+  gap: 1em;
 }
 
 .fav-prod-img-wrap {
+  position: relative;
   border-radius: 10px;
-  overflow: hidden;
 }
 
 .fav-prod-img {
-  max-width: 20rem;
+  max-width: 7rem;
   width: 100%;
   height: 100%;
   border-radius: inherit;
@@ -207,9 +223,14 @@
   align-items: center;
   gap: .6em;
   position: relative;
-  padding: .5em;
   border-bottom: 2px solid var(--border);
   cursor: auto;
+  transform: translateX(0);
+}
+
+.fav-hover_prod .loader {
+  height: 35px;
+  width: 35px;
 }
 
 .fav-hover_btn {
@@ -252,6 +273,10 @@
 }
 
 .fav-hover_prod-price {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: center;
   font-size: 1rem;
   color: white;
 }
@@ -294,6 +319,24 @@
   }
 }
 
+.remove-fav-btn {
+  justify-content: center;
+  max-width: 30px;
+  max-height: 30px;
+  position: absolute;
+  top: -35px;
+  right: -17px;
+  z-index: 1;
+  padding: .25em;
+  border-radius: 50%;
+
+  & .prod-fav-icon {font-size: 1.15rem;}
+}
+
+.sale-price-wrapper .flex {
+  display: flex;
+  flex-wrap: wrap;
+}
 
 
 

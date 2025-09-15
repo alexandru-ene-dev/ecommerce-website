@@ -5,6 +5,14 @@ import User from '../models/UserSchema.js';
 import generateToken from '../utils/jwt.js';
 
 
+type CookieOptions = {
+  httpOnly: boolean,
+  secure: true,
+  sameSite: 'strict' | 'none' | 'lax'
+  maxAge?: number
+};
+
+
 export const loginController = async (
   req: Request<{}, {}, LoginUserInput>, 
   res: Response
@@ -19,6 +27,8 @@ export const loginController = async (
   }
 
   const { email, password } = result.data;
+
+  const { keepMeLogged } = req.body;
 
   try {
     // check email
@@ -46,13 +56,18 @@ export const loginController = async (
     }
     const token = generateToken(payload);
 
+    const cookieOptions: CookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    };
+
+    if (keepMeLogged) {
+      cookieOptions.maxAge = 7 * 24 * 60 * 60 * 1000 //  7 days in ms
+    }
+
     return res
-      .cookie('token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        maxAge: 24 * 60 * 60 * 1000
-      })
+      .cookie('token', token, cookieOptions)
       .status(200)
       .json({
         success: true,

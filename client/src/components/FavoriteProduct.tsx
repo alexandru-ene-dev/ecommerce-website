@@ -7,6 +7,7 @@ import useCartContext from "../hooks/useCartContext";
 import useFavoritesContext from "../hooks/useFavoritesContext";
 import useHandleCart from "../hooks/useHandleCart";
 import useHandleFavorites from "../hooks/useHandleFavorites";
+import LoadingSpinner from "./LoadingSpinner";
 
 
 type FavType = {
@@ -20,28 +21,40 @@ const FavoriteProduct = ({ fav }: FavType) => {
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
   
-  const { handleCart } = useHandleCart(setLocalCart);
-  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
+  const { handleCart, loadingButton } = useHandleCart(setLocalCart);
+  const { handleFavorites, loadingButton: favLoadingButton } = useHandleFavorites(setLocalFavorites);
   const isOnCart = localCart && localCart.some(prod => prod._id === fav._id);
   const isFavorite = localFavorites && localFavorites.some(prod => prod._id === fav._id);
 
 
   return (
     <div className="fav-prod">
+      {favLoadingButton && <LoadingSpinner isLoading={favLoadingButton} />}
+
       <div className="fav-prod-inner">
-          <Link 
-            onClick={async () => {
-              setLoading(true);
-              await delay(700);
-              setLoading(false);
-            }}
-            className="prod-title-link"
-            to={`../${fav.link}/${fav.title.replaceAll(' ', '-')}`}
-          >
-            <div className="fav-prod-img-wrap">
-              <img className="fav-prod-img" src={imgSrc} alt={fav.alt} />
-            </div>
-          </Link>
+        <button 
+          onClick={() => handleFavorites(fav, isFavorite)}
+          className="new-card-btn prod-fav-btn remove-fav-btn"
+        >
+          <span className="material-symbols-outlined prod-fav-icon">
+            close
+          </span>
+        </button>
+
+
+        <Link 
+          onClick={async () => {
+            setLoading(true);
+            await delay(700);
+            setLoading(false);
+          }}
+          className="prod-title-link"
+          to={`../${fav.link}/${fav.title.replaceAll(' ', '-')}`}
+        >
+          <div className="fav-prod-img-wrap">
+            <img className="fav-prod-img" src={imgSrc} alt={fav.alt} />
+          </div>
+        </Link>
 
         <div className="price-cart-wrap">
           <Link
@@ -61,27 +74,27 @@ const FavoriteProduct = ({ fav }: FavType) => {
               <span className="sale-txt">{fav.sale}% off</span>
               <span className="limit-txt">Limited Time</span>
             </p>
+
             <p className="new-card-price">
               <span className="old-price">${fav.oldPrice}</span>
               <span className="new-price">${fav.price}</span>
             </p>
+
+            <div className="button-wrapper">
+              <LoadingSpinner isLoading={loadingButton} />
+
+              <button 
+                onClick={() => handleCart(fav, isOnCart)} 
+                className="add-cart-btn new-card-btn"
+              >
+                <span className="material-symbols-outlined new-cart-icon">
+                  {isOnCart? "remove_shopping_cart" : "add_shopping_cart"}
+                </span>
+                <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
+              </button>
+            </div>
           </div>
 
-          <div className="fav-btns-wrap">
-            <button onClick={() => handleCart(fav, isOnCart)} className="add-cart-btn new-card-btn">
-              <span className="material-symbols-outlined new-cart-icon">
-                shopping_cart
-              </span>
-              <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
-            </button>
-
-            <button onClick={() => handleFavorites(fav, isFavorite)}className="new-card-btn prod-fav-btn">
-              <span className="material-symbols-outlined prod-fav-icon">
-                delete
-              </span>
-              <span>Remove from Favorites</span>
-            </button>
-          </div>
         </div>
       </div>
     </div>

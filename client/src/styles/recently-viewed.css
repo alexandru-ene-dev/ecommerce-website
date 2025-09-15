@@ -5,7 +5,8 @@
 
 .recent-product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, 100px);
+  justify-content: center;
   row-gap: .5em;
   column-gap: 1em;
   margin-top: 3em;
@@ -15,9 +16,20 @@
   position: relative;
 }
 
+.recent-img-wrapper {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background-color: var(--bg-sec);
+  overflow: hidden;
+}
+
 .recent-product-card img {
-  width: auto;
-  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .recent-product-card a {

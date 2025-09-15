@@ -101,12 +101,12 @@ button.new-card-btn.rmv-avatar-btn {
   color: var(--txt-clr2);
 }
 
-.password-section {
-  margin-top: 2em;
-}
-
 .profile-info h2 {
   color: var(--txt-clr2);
+}
+
+.profile-column .new-card-btn {
+  margin-top: 1em;
 }
 
 .profile-input:first-child {
@@ -126,9 +126,10 @@ button.new-card-btn.rmv-avatar-btn {
   margin-bottom: 1em;
 }
 
-.profile-info button {
-  justify-content: center;
-  margin-top: 1em;
+.edit-menu {
+  padding: 1em;
+  background-color: var(--menu-bg-prim);
+  border-radius: 10px;
 }
 
 .edit-status {
@@ -143,7 +144,7 @@ button.new-card-btn.rmv-avatar-btn {
 }
 
 .edit-status.error {
-  color: var(--red);
+  color: var(--error);
   opacity: 1;
 }
 
@@ -172,7 +173,93 @@ button.new-card-btn.rmv-avatar-btn {
   margin-top: 1em;
 }
 
-.password-change-form p {
+.password-change-form li {
+  color: white;
+}
+
+.password-change-form {
+  margin-top: 1em;
+  padding: 1em;
+  background-color: var(--menu-bg-prim);
+  border-radius: 10px;
+}
+
+.profile-section.not-logged-in {
+  display: block;
+  max-width: 38rem;
+  margin-inline: auto;
+}
+
+.profile-section .login-wrapper {
+  & input,
+  & input::placeholder {
+    color: var(--inp-holder);
+  }
+
+  & .keep-logged-checkbox {
+    width: auto;
+    color: var(--clr-deal);
+  }
+}
+
+.profile-section .login-wrapper {
+  width: 100%;
+  position: static; 
+  z-index: 0;
+  padding: clamp(1em, 2vw, 3em);
+  background-color: var(--register);
   color: var(--txt-clr2);
+  
+  & .close-login-btn {
+    display: none;
+  }
+}
+
+.profile-section .section_title {
+  margin-bottom: 2em;
+}
+
+.sync-menu {
+  position: relative;
+  margin-top: 1em;
+  padding: 1em;
+  border-radius: 10px;
+  background-color: var(--menu-bg-prim);
+  color: white;
+}
+
+.sync-menu h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.sync-menu label {
+  display: flex;
+  gap: 1em;
+  color: white;
+  cursor: pointer;
+}
+
+.sync-menu input {
+  cursor: pointer;
+}
+
+.sync-menu input {
+  width: auto;
+}
+
+.sync-confirm {
+  position: absolute;
+  inset: 0;
+  padding: 1em;
+  background-color: var(--menu-bg-prim);
+}
+
+.sync-confirm p:first-child {
+  margin-top: 0;
+}
+
+.avatar-wrapper {
+  transform: translateX(0);
 }
                     

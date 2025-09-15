@@ -8,8 +8,10 @@ import useCartContext from '../hooks/useCartContext.ts';
 import useFavoritesContext from "../hooks/useFavoritesContext.ts";
 import useHandleFavorites from "../hooks/useHandleFavorites.ts";
 import useHandleCart from "../hooks/useHandleCart.ts";
+
 import { addToRecentlyViewed } from "../utils/recentlyViewed.ts";
 import RecentlyViewedProducts from "../components/RecentlyViewed.tsx";
+import LoadingSpinner from "../components/LoadingSpinner.tsx";
 
 
 export default function ProductPage(
@@ -18,9 +20,7 @@ export default function ProductPage(
     setStickyBtnHeight
   }:
   {
-    isBtnVisible: boolean,
     setIsBtnVisible: Dispatch<SetStateAction<boolean>>,
-    stickyBtnHeight: number,
     setStickyBtnHeight:  Dispatch<SetStateAction<number>>
   }
 ) {
@@ -38,8 +38,8 @@ export default function ProductPage(
 
   const isFavorite = localFavorites && localFavorites.some(fav => fav._id === productObj?._id);
   const isOnCart = localCart && localCart.some((fav => fav._id === productObj?._id));  
-  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
-  const { handleCart } = useHandleCart(setLocalCart);
+  const { handleFavorites, loadingButton } = useHandleFavorites(setLocalFavorites);
+  const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
 
 
   // fetch product
@@ -133,7 +133,8 @@ export default function ProductPage(
   return (
     <main>
       <section className="product-wrapper">
-        <h1 className="prod-title">{productObj?.title || 'Not found'}</h1>
+        <h1 className="prod-title">{productObj?.title}</h1>
+
         <div className="prod-flex">
           <div className="prod-img-wrapper">
             <img className="prod-img" src={imgSrc} alt={productObj?.alt} />
@@ -162,69 +163,82 @@ export default function ProductPage(
               <span className="delivery-fee-span">starting from $10</span>
             </p>
 
-            <div ref={intersectionWrapperRef} className="intersection-wrapper">
-              <div className="intersect-img-flex">
-                <img className="intersect-img" src={imgSrc} alt={productObj?.alt} />
-                <p>{productObj?.title}</p>
-              </div>
+            <div className="button-wrapper">
+              {cartLoadingButton && <LoadingSpinner isLoading={cartLoadingButton} />}
 
-              <div className="intersect-price-btn-flex">
-                <div className="intersect-price">
-                  <div className="prod-sale-price-flex">
-                    <p className="prod-old-price old-price">${productObj?.oldPrice}</p>
-                    <span className="sale-txt">{productObj?.sale}%</span>
-                  </div>
-
-                  <p className="prod-new-price new-price">${productObj?.price}</p>
-                </div>
-
-                <button 
-                  onClick={() => {
-                    if (productObj) handleCart(productObj, isOnCart);
-                  }} 
-                  className="new-card-btn copy-btn"
-                >
-                  <span className="material-symbols-outlined new-cart-icon">
-                    shopping_cart
-                  </span>
-                  <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
-                </button>
-              </div>
+              <button 
+                onClick={() => {
+                  if (productObj) handleCart(productObj, isOnCart);
+                }} 
+                ref={addCartBtnRef} 
+                className="add-cart-btn new-card-btn"
+              >
+                <span className="material-symbols-outlined new-cart-icon">
+                  shopping_cart
+                </span>
+                <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
+              </button>
             </div>
 
-            <button 
-              onClick={() => {
-                if (productObj) handleCart(productObj, isOnCart);
-              }} 
-              ref={addCartBtnRef} 
-              className="add-cart-btn new-card-btn"
-            >
-              <span className="material-symbols-outlined new-cart-icon">
-                shopping_cart
-              </span>
-              <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
-            </button>
+            <div className="button-wrapper">
+              {loadingButton && <LoadingSpinner isLoading={loadingButton} />}
 
-            <button 
-              onClick={() => {
-                if (productObj) handleFavorites(productObj, isFavorite);
-              }} 
-              className="new-card-btn prod-fav-btn"
-            >
-              <span 
-                data-favorite={isFavorite? "true" : "false"}
-                className="material-symbols-outlined prod-fav-icon"
+              <button 
+                onClick={() => {
+                  if (productObj) handleFavorites(productObj, isFavorite);
+                }} 
+                className="new-card-btn prod-fav-btn"
               >
-                favorite
-              </span>
-              <span>{isFavorite? 'Added to Favorites' : 'Add to Favorites'}</span>
-            </button>
+                <span 
+                  data-favorite={isFavorite? "true" : "false"}
+                  className="material-symbols-outlined prod-fav-icon"
+                >
+                  favorite
+                </span>
+                <span>{isFavorite? 'Added to Favorites' : 'Add to Favorites'}</span>
+              </button>
+            </div>
           </div>
 
         </div>
-      </section>
+        
+        <RecentlyViewedProducts />
 
-      <RecentlyViewedProducts />
+        <div ref={intersectionWrapperRef} className="intersection-wrapper">
+          <div className="intersect-img-flex">
+            <img className="intersect-img" src={imgSrc} alt={productObj?.alt} />
+            <p>{productObj?.title}</p>
+          </div>
+
+          <div className="intersect-price-btn-flex">
+            <div className="intersect-price">
+              <div className="prod-sale-price-flex">
+                <p className="prod-old-price old-price">${productObj?.oldPrice}</p>
+                <span className="sale-txt">{productObj?.sale}%</span>
+              </div>
+
+              <p className="prod-new-price new-price">${productObj?.price}</p>
+            </div>
+
+            <div className="button-wrapper">
+              <LoadingSpinner isLoading={cartLoadingButton} />
+
+              <button 
+                onClick={() => {
+                  if (productObj) handleCart(productObj, isOnCart);
+                }} 
+                className="new-card-btn copy-btn"
+              >
+                <span className="material-symbols-outlined new-cart-icon">
+                  shopping_cart
+                </span>
+                <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
     </main>
   );
 };

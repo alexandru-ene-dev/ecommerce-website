@@ -28,7 +28,7 @@
   --sublink-hov: hsl(0, 0%, 65%);
   --clr-new-title: hsl(0, 0%, 88%);
   --clr-title: hsl(0, 0%, 88%);
-  --clr-deal: hsl(0, 0%, 88%);
+  --clr-deal: hsl(0, 0%, 100%);
   --inp-text: hsl(0, 0%, 88%);
   --inp-holder: hsl(0, 0%, 60%);
   --inp-log-holder: hsl(0, 0%, 60%);
@@ -47,7 +47,7 @@
   --register: hsl(0, 0%, 10%);
   --copyright-clr: hsl(0, 0%, 40%);
   --error: hsl(0, 100%, 45%);
-  --red: hsl(0, 100%, 40%);
+  --red: hsl(0, 100%, 45%);
   --sale-txt-bg: hsl(0, 0%, 20%);
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 80%);
@@ -109,6 +109,34 @@ img {
   font-style: italic;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.not-found {
+  margin-top: 12rem;
+  padding: 1em;
+}
+
+.not-found-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em 5em;
+}
+
+.not-found h1 {
+  max-width: 25em;
+  text-transform: initial;
+  font-size: 1.75rem;
+}
+
+.not-found-img-wrap {
+  max-width: 20em;
+}
+
+.not-found img {
+  width: 100%;
+  object-fit: cover;
 }
 
 /* --------------------------------------------- */

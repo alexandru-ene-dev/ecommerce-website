@@ -8,7 +8,8 @@ export type UserDataType = {
   email: string,
   password: string, 
   confirmPass: string,
-  acceptTerms: boolean
+  acceptTerms: boolean,
+  keepMeLogged?: boolean
 }
 
 export type ValidationResult = {
@@ -68,14 +69,15 @@ export const validateInputs = (
   }
 }
 
-const registerUser = async (
+const registerUserService = async (
   {
     firstName,
     lastName,
     email,
     password,
     confirmPass,
-    acceptTerms
+    acceptTerms,
+    keepMeLogged
   }: UserDataType
 ): Promise<ValidationResult> => {
 
@@ -94,7 +96,14 @@ const registerUser = async (
 
   // proceed signing up user
   try {
-    const payload = { firstName, lastName, email, password, confirmPass };
+    const payload = { 
+      firstName, 
+      lastName, 
+      email, 
+      password, 
+      confirmPass, 
+      keepMeLogged 
+    };
     const res = await api.post('/api/register', payload);
     const data = res.data;
 
@@ -112,4 +121,4 @@ const registerUser = async (
   }
 };
 
-export default registerUser;
+export default registerUserService;

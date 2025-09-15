@@ -11,6 +11,14 @@ const DesktopMenu = () => {
     setActiveIndex(index);
   };
 
+  const handleMouseClick = (index: number) => {
+    if (activeIndex === index) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(index);
+    }
+  };
+
   const handleMouseOut = () => {
     setActiveIndex(null);
   };
@@ -28,7 +36,8 @@ const DesktopMenu = () => {
       <li 
         onMouseEnter={() => handleMouseEnter(i)}
         onMouseLeave={handleMouseOut}
-        onFocus={() => handleMouseEnter(i)}
+        // onFocus={() => handleMouseEnter(i)}
+        onClick={() => handleMouseClick(i)}
         key={i} 
         className="desktop-nav_item"
       >
@@ -53,8 +62,8 @@ const DesktopMenu = () => {
 
               <img src={imgSrc} alt={cat.alt} />
             </div>
-          </div>)
-        }
+          </div>
+        )}
       </li>
     );
   });

@@ -15,4 +15,10 @@ export const ProductSchema = new mongoose.Schema({
     content: { type: Array, required: false },
     collections: { type: [String], required: false }
 });
+// ProductSchema.index({
+//   title: "text",
+//   category: "text",
+//   subcategory: "text",
+//   subSubcategory: "text"
+// });
 export const ProductModel = mongoose.model('Product', ProductSchema);

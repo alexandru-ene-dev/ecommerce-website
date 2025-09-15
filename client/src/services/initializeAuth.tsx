@@ -13,10 +13,7 @@ const initializeAuth = async () => {
       user
     }
 
-  } catch(err) {
-    const res: any = (err as any).response;
-    console.log(res.data.message);
-    
+  } catch(err) {    
     return {
       success: false,
       message: handleErrors(err)

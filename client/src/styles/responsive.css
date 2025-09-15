@@ -16,7 +16,7 @@
 
   .prod-flex {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: flex-start;
     gap: 1em;
     padding: 1em;
@@ -187,7 +187,7 @@
   }
 
   .favorites-section {
-    margin-top: 12rem;
+    margin-top: 11rem;
   }
 
   .create-account-section {
@@ -204,7 +204,7 @@
 
   .product-wrapper {
     margin-top: 13.5rem;
-    padding: 0;
+    /* padding: 0; */
   }
 
   .prod-price-wrapper {
@@ -309,6 +309,19 @@
     display: none;
     height: 0;
     width: 0;
+  }
+
+  .product-wrapper .recently-viewed,
+  .product-wrapper .prod-flex {
+    padding: 0;
+  }
+
+  .recently-viewed .section_title {
+    text-align: left;
+  }
+  
+  .recent-product-list {
+    justify-content: initial;
   }
 }
 

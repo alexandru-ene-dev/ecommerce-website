@@ -21,7 +21,7 @@
     --cat-hov: hsl(146, 30%, 78%);
     --clr-new-title: hsl(146, 100%, 25%);
     --clr-title: hsl(0, 0%, 0%);
-    --clr-deal: hsl(0, 0%, 88%);
+    --clr-deal: hsl(0, 0%, 100%);
     --inp-text: hsl(0, 0%, 100%);
     --inp-log-holder: hsl(146, 30%, 90%);
     --inp-holder: hsl(146, 30%, 45%);
@@ -45,7 +45,8 @@
     --txt-hov: hsl(0, 0%, 80%);
     --txt-clr2: hsl(146, 100%, 25%);
     --txt-hov2: hsl(146, 100%, 35%);
-    --error: hsl(0, 100%, 35%);
+    --error: hsl(0, 87%, 85%);
+    --red: hsl(0, 90%, 40%);
     --sale-txt-bg: hsl(146, 100%, 25%);
     --sale-txt-clr: hsl(0, 0%, 100%);
     --sale-txt-hov: hsl(0, 0%, 90%);
@@ -103,6 +104,7 @@ body.dark-mode {
   --txt-clr2: hsl(0, 0%, 88%);
   --txt-hov2: hsl(0, 0%, 80%);
   --error: hsl(0, 100%, 45%);
+  --red: hsl(0, 100%, 45%);
   --sale-txt-bg: hsl(0, 0%, 20%);
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 80%);
@@ -133,7 +135,7 @@ body.light-mode {
   --cat-hov: hsl(146, 30%, 78%);
   --clr-new-title: hsl(146, 100%, 25%);
   --clr-title: hsl(0, 0%, 0%);
-  --clr-deal: hsl(0, 0%, 88%);
+  --clr-deal: hsl(0, 0%, 100%);
   --inp-text: hsl(0, 0%, 100%);
   --inp-log-holder: hsl(146, 30%, 90%);
   --inp-holder: hsl(146, 30%, 45%);
@@ -156,7 +158,8 @@ body.light-mode {
   --txt-hov: hsl(0, 0%, 100%);
   --txt-clr2: hsl(146, 100%, 25%);
   --txt-hov2: hsl(146, 100%, 35%);
-  --error: hsl(0, 100%, 35%);
+  --error: hsl(0, 87%, 85%);
+  --red: hsl(0, 90%, 40%);
   --sale-txt-bg: hsl(146, 100%, 25%);
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 90%);
