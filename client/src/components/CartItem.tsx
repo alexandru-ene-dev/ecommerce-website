@@ -8,6 +8,8 @@ import useHandleCart from "../hooks/useHandleCart";
 import useHandleFavorites from "../hooks/useHandleFavorites";
 import { Link } from 'react-router-dom';
 import QuantitySelector from "./QuantitySelector";
+import LoadingSpinner from "./LoadingSpinner";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 
 type CartItemProps = {
@@ -29,7 +31,11 @@ const CartItem = (
   const isInCart = localCart && localCart.some(p => p._id === prod._id);
   const navigate = useNavigate();
   const { handleFavorites } = useHandleFavorites(setLocalFavorites);
-  const { handleCart } = useHandleCart(setLocalCart);
+  const { handleCart, loadingButton } = useHandleCart(setLocalCart);
+
+  const newSaleForUsers = prod.sale + 5;
+  const newPriceForUsers = (prod.oldPrice - (newSaleForUsers / 100 * prod.oldPrice)).toFixed(2);
+  const { state } = useAuthContext();
 
 
   useEffect(() => {
@@ -68,27 +74,27 @@ const CartItem = (
 
   return (
     <div key={prod._id} className="cart-product">
-      <div>
-        <div
-          onClick={() => navigate(`/products/${slug}`)} 
-          className="cart-img-wrapper"
-        >
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              handleFavorites(prod, isFavorite);
-            }} 
-            className="add-fav-btn new-fav-btn">
-            <span 
-              data-favorite={isFavorite? "true" : "false"}
-              className="material-symbols-outlined new-fav-icon"
-            >
-              favorite
-            </span>
-          </button>
+      {loadingButton && <LoadingSpinner isLoading={loadingButton} />}
 
-          <img className="cart-img" src={imgSrc} alt={prod.alt} />
-        </div>
+      <div
+        onClick={() => navigate(`/products/${slug}`)} 
+        className="cart-img-wrapper"
+      >
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            handleFavorites(prod, isFavorite);
+          }} 
+          className="add-fav-btn new-fav-btn">
+          <span 
+            data-favorite={isFavorite? "true" : "false"}
+            className="material-symbols-outlined new-fav-icon"
+          >
+            favorite
+          </span>
+        </button>
+
+        <img className="cart-img" src={imgSrc} alt={prod.alt} />
       </div>
 
       <div className="price-cart-wrap">
@@ -98,12 +104,23 @@ const CartItem = (
 
         <div className="sale-price-wrapper">
           <p className="new-card-sale-limit">
-            <span className="sale-txt">{prod.sale}% off</span>
+            <span className="sale-txt">
+              {state.isLoggedIn? newSaleForUsers : prod.sale }% off
+            </span>
             <span className="limit-txt">Limited Time</span>
           </p>
+
           <p className="new-card-price">
-            <span className="old-price">${prod.oldPrice * (prod.quantity || 1)}</span>
-            <span className="new-price">${prod.price * (prod.quantity || 1)}</span>
+            <span className="old-price">
+              ${(prod.oldPrice * (prod.quantity || 1)).toFixed(2)}
+            </span>
+
+            <span className="new-price">
+              ${state.isLoggedIn ? 
+                ((Number(newPriceForUsers) * (prod.quantity || 1))).toFixed(2) : 
+                ((prod.price * (prod.quantity || 1))).toFixed(2)
+              }
+            </span>
           </p>
         </div>
 

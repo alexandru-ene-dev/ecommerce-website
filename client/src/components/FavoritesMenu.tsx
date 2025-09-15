@@ -1,11 +1,13 @@
-import { type Dispatch, type SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 import useFavoritesContext from '../hooks/useFavoritesContext';
 import useHandleFavorites from '../hooks/useHandleFavorites';
-
 import useHandleCart from '../hooks/useHandleCart';
+import { useAuthContext } from '../hooks/useAuthContext';
+
 import useCartContext from '../hooks/useCartContext';
 import { Link } from 'react-router-dom';
 import { forwardRef } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 
 type FavoritesPropsType = {
@@ -27,8 +29,10 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
 
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
-  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
-  const { handleCart } = useHandleCart(setLocalCart);
+  const { handleFavorites, loadingButton } = useHandleFavorites(setLocalFavorites);
+  const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
+  const [ activeLoadingIndex, setActiveLoadingIndex ] = useState<number | null>(null);
+  const { state } = useAuthContext();
 
 
   return (
@@ -59,14 +63,22 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
             </h1>
 
 
-            {localFavorites && localFavorites.map((prod) => {
+            {localFavorites && localFavorites.map((prod, i) => {
               const isFavorite = localFavorites && localFavorites.some(p => p._id === prod._id);
               const isInCart = localCart && localCart.some(p => p._id === prod._id);
               const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
               const slug = prod.title.replaceAll(' ', '-');
               
+              const isProdLoading = activeLoadingIndex === i;
+              const newSaleForUsers = prod.sale + 5;
+              const newPriceForUsers = (prod.oldPrice - (newSaleForUsers / 100 * prod.oldPrice)).toFixed(2);
+              
               return (
                 <div key={prod._id} className="fav-hover_prod">
+                  {isProdLoading &&
+                    <LoadingSpinner isLoading={loadingButton || cartLoadingButton} 
+                  />}
+
                   <Link onClick={() => setIsFavoritesHovered(false)} to={`/products/${slug}`}>
                     <img className="fav-hover_img" src={imgSrc} />
                   </Link>
@@ -79,11 +91,20 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
                     {prod.title}
                   </Link>
 
-                  <p className="fav-hover_prod-price">${prod.price}</p>
+                  <p className="fav-hover_prod-price">
+                    <span className="old-price">{prod.oldPrice.toFixed(2)}</span>
+                    <span>
+                      ${state.isLoggedIn ? 
+                        ((Number(newPriceForUsers) * (prod.quantity || 1))).toFixed(2) : 
+                        ((prod.price * (prod.quantity || 1))).toFixed(2)
+                      }
+                    </span>
+                  </p>
 
                   <button 
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
+                      setActiveLoadingIndex(i);
                       handleFavorites(prod, isFavorite);
                     }} 
                     className="fav-hover_remove-btn"
@@ -93,7 +114,8 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
 
                   <button 
                     onClick={(e) => {
-                      e.stopPropagation(); 
+                      e.stopPropagation();
+                      setActiveLoadingIndex(i); 
                       handleCart(prod, isInCart);
                     }}
                     className="fav-hover_remove-btn"
@@ -109,7 +131,6 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
 
             {localFavorites && localFavorites.length === 0 && 
               <div className="fav-hover_menu-no-fav">
-                <span className="material-symbols-outlined fav-hover_fav-icon">favorite</span> 
                 <span>You didn't save any favorites yet...</span>
               </div>
             }

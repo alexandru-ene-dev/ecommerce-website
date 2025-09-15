@@ -14,16 +14,21 @@
   padding: 1.15em;
   background-color: var(--menu-bg-prim);
   transition: opacity 200ms;
+  color: var(--clr-deal);
 
-  & button,
+  /* & button,
   & a {
     font-size: .9rem;
-  }
+  } */
 
   & .new-card-btn {
     max-width: 25em;
     margin-inline: auto;
   }
+}
+
+.login-wrapper input {
+  color: var(--inp-text);
 }
 
 .login-wrapper::after {
@@ -42,7 +47,6 @@
   margin-top: 0;
   text-align: center;
   font-size: 1.15rem;
-  color: white;
 }
 
 .login-btn {
@@ -55,6 +59,7 @@
   background-color: var(--btn-bg);
   font-weight: 700;
   color: var(--btn-clr);
+  font-size: 1rem;
 }
 
 .login-form,
@@ -105,7 +110,6 @@
 
 .keep-logged-label {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
   gap: 1em;
   cursor: pointer;
@@ -148,7 +152,8 @@ input.keep-logged-checkbox {
   position: sticky;
   left: calc(100% - 2em);
   background: none;
-  font-size: .9rem;
+  /* font-size: .9rem; */
+  color: var(--clr-deal);
 }
 
 .sign-in-btn {
@@ -170,7 +175,6 @@ input.keep-logged-checkbox {
 
 .create-account-par {
   margin-bottom: 1em;
-  color: var(--account-par);
   text-align: justify;
 }
 
@@ -187,17 +191,24 @@ input.keep-logged-checkbox {
   flex-wrap: wrap;
   justify-content: space-between;
   column-gap: 1em;
-  color: white;
 
   & input {
     color: inherit;
   }
 }
 
+.forgot-pass-wrap a {
+  text-decoration: none;
+}
+
+.forgot-pass-wrap a:hover,
+.forgot-pass-wrap a:focus {
+  text-decoration: underline;
+}
+
 .logout-confirm-par {
   margin-top: 0;
   text-align: center;
-  color: white;
 }
 
 .logout-confirm-modal {

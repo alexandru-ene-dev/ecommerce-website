@@ -1,11 +1,13 @@
 import { type Dispatch, type SetStateAction, useState, useEffect } from 'react';
 import useFavoritesContext from '../hooks/useFavoritesContext';
 import useHandleFavorites from '../hooks/useHandleFavorites';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 import useHandleCart from '../hooks/useHandleCart';
 import useCartContext from '../hooks/useCartContext';
 import { Link } from 'react-router-dom';
 import { forwardRef } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 
 type CartPropsType = {
@@ -27,9 +29,13 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
 
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
-  const { handleFavorites } = useHandleFavorites(setLocalFavorites);
-  const { handleCart } = useHandleCart(setLocalCart);
+  const { handleFavorites, loadingButton } = useHandleFavorites(setLocalFavorites);
+  const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
+  
   const [ totalPrice, setTotalPrice ] = useState(0);
+  const [ activeLoadingIndex, setActiveLoadingIndex ] = useState<number | null>(null);
+  const { state } = useAuthContext();
+
 
 
   useEffect(() => {
@@ -76,14 +82,22 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
             </h1>
 
 
-            {localCart && localCart.map((prod) => {
+            {localCart && localCart.map((prod, i) => {
               const isFavorite = localFavorites && localFavorites.some(p => p._id === prod._id);
               const isInCart = localCart && localCart.some(p => p._id === prod._id);
               const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
               const slug = prod.title.replaceAll(' ', '-');
               
+              const isProdLoading = activeLoadingIndex === i;
+              const newSaleForUsers = prod.sale + 5;
+              const newPriceForUsers = (prod.oldPrice - (newSaleForUsers / 100 * prod.oldPrice)).toFixed(2);
+              
               return (
                 <div key={prod._id} className="fav-hover_prod">
+                  {isProdLoading &&
+                    <LoadingSpinner isLoading={loadingButton || cartLoadingButton} />
+                  }
+
                   <Link onClick={() => setIsCartHovered(false)} to={`/products/${slug}`}>
                     <img className="fav-hover_img" src={imgSrc} />
                   </Link>
@@ -92,11 +106,22 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
                     {prod.title}
                   </Link>
 
-                  <p className="fav-hover_prod-price">${prod.price}</p>
+                  <p className="fav-hover_prod-price">
+                    <span className="old-price">{prod.oldPrice.toFixed(2)}</span>
+                    <span>
+                      ${state.isLoggedIn ? 
+                        ((Number(newPriceForUsers) * (prod.quantity || 1))).toFixed(2) : 
+                        ((prod.price * (prod.quantity || 1))).toFixed(2)
+                      }
+                    </span>
+                  </p>
 
 
                   <button 
-                    onClick={() => handleCart(prod, isInCart)}
+                    onClick={() => {
+                      setActiveLoadingIndex(i);
+                      handleCart(prod, isInCart);
+                    }}
                     className="fav-hover_remove-btn"
                   >
                     <span className="material-symbols-outlined fav-hover_cart-ico">
@@ -105,7 +130,10 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
                   </button>
 
                   <button 
-                    onClick={() => handleFavorites(prod, isFavorite)} 
+                    onClick={() => {
+                      setActiveLoadingIndex(i);
+                      handleFavorites(prod, isFavorite);
+                    }} 
                     className="add-fav-btn new-fav-btn fav-hover_remove-btn"
                   >
                     <span 
@@ -122,7 +150,6 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
 
             {localCart && localCart.length === 0 && 
               <div className="fav-hover_menu-no-fav">
-                <span className="material-symbols-outlined fav-hover_fav-icon">shopping_cart</span>
                 Your cart is empty...
               </div>
             }
@@ -131,8 +158,10 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
           <div className="go-cart-wrap">
             {totalPrice > 0 && 
               <div className="price-info-wrapper">
-                <p>Total price ({localCart.length} {localCart.length > 1? 'products' : 'product'})</p>
-                <p>${totalPrice}</p>
+                <p>
+                  Total price ({localCart.length} {localCart.length > 1? 'products' : 'product'})
+                </p>
+                <p>${totalPrice.toFixed(2)}</p>
               </div>
             }
 

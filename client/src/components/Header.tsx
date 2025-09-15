@@ -200,7 +200,7 @@ const Header = () => {
           }
 
           <Link onClick={handleReload} to="/" className="logo">
-            Pr
+            Pro
               <span className="material-symbols-outlined cog-icon">settings</span>
             gressio
           </Link>

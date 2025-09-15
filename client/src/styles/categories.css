@@ -1,9 +1,12 @@
 .category-page-main {
   margin-top: 11rem;
+  padding: 1em;
 }
 
 .category-page-title {
+  max-width: 25em;
   margin-top: 0;
+  margin-inline: auto; 
   color: var(--clr-new-title);
   text-align: center;
   font-size: 1.75rem;
@@ -86,4 +89,19 @@
   justify-content: center;
   gap: clamp(1em, 2vw, 2em);
   width: 100%;
+}
+
+.empty-category-par {
+  max-width: 20em;
+  margin-inline: auto;
+  color: var(--txt-clr2);
+  font-size: 1.5rem;
+}
+
+.empty-category-par a {
+  color: inherit;
+}
+
+.not-found-product-img {
+  border-radius: 50%;
 }

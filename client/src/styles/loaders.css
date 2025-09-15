@@ -108,6 +108,7 @@
   inset: 0;
   z-index: 2500;
   isolation: isolate;
+  border-radius: inherit;
   background-color: hsl(0 0% 0% / 0);
   backdrop-filter: blur(0px);
   scale: 0;

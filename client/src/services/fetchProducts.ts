@@ -16,16 +16,6 @@ const fetchProducts = async (slug: string, filters?: Record<string, any>) => {
       }
     }
 
-    // if ('subSubcategories' in data) {
-    //   return {
-    //     success: true,
-    //     message: 'Subcategories fetched',
-    //     subSubcategories: data.subSubcategories
-    //   };
-    // }
-
-    console.log(data);
-
     return {
       success: true,
       message: 'Products fetched',

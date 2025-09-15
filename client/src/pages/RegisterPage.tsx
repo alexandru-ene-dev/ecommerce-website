@@ -1,5 +1,5 @@
 import { useState, type MouseEvent, type ChangeEvent, type FormEvent } from 'react';
-import registerUser from '../services/registerUserService.ts';
+import registerUserService from '../services/registerUserService.ts';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner.tsx';
 import delay from '../utils/delay.ts';
@@ -24,7 +24,8 @@ const Register = () => {
   const [ acceptTerms, setAcceptTerms ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ isLoading, setLoading ] = useState(false);
-
+  
+  const [ keepMeLogged, setKeepMeLogged ] = useState(false);
   const [ error, setError ] = useState<string | null>(null);
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
@@ -72,7 +73,8 @@ const Register = () => {
         email, 
         password, 
         confirmPass,
-        acceptTerms
+        acceptTerms,
+        keepMeLogged
       };
 
       if (!isFirstNameValid || !isLastNameValid) {
@@ -90,7 +92,7 @@ const Register = () => {
         return;
       }
 
-      const registration = await registerUser(userData);
+      const registration = await registerUserService(userData);
   
       if (!registration.success && registration.message) {
         setLoading(false);
@@ -238,12 +240,7 @@ const Register = () => {
 
         <label className="checkbox-label">
           <input
-            onChange={() => {
-              setAcceptTerms(prev => {
-                const f = !prev;
-                return f;
-              })}
-            }
+            onChange={() => setAcceptTerms(prev => !prev)}
             className="checkbox-inp" 
             type="checkbox"
             checked={acceptTerms? true : false}
@@ -256,8 +253,18 @@ const Register = () => {
           <p>Optional: I subscribe to Progressio Newsletter</p>
         </label>
 
+        <label className="checkbox-label">
+          <input 
+            type="checkbox" 
+            className="checkbox-inp"
+            onChange={() => setKeepMeLogged(prev => !prev)}
+            checked={keepMeLogged? true: false} 
+          />
+          <p>Keep me logged in</p>
+        </label>
+
         {error && <div className="error-message">{error}</div>}
-        <button className="create-account-btn">Create account</button>
+        <button className="create-account-btn">Create Account</button>
       </form>
 
       <div data-open={isModalOpen? "true" : "false"} className="success-register_modal">

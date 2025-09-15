@@ -16,6 +16,7 @@ export const registerController = async (req, res) => {
                 message: 'User already exists'
             });
         }
+        const { keepMeLogged } = req.body;
         // create new user
         const newUser = await User.create({
             firstName,
@@ -29,17 +30,20 @@ export const registerController = async (req, res) => {
             email: newUser.email
         };
         const token = generateToken(payload);
-        res
-            .cookie('token', token, {
+        const cookieOptions = {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        })
+            secure: true,
+            sameSite: 'none',
+        };
+        if (keepMeLogged) {
+            cookieOptions.maxAge = 7 * 24 * 60 * 60 * 1000; //  7 days in ms
+        }
+        res
+            .cookie('token', token, cookieOptions)
             .status(201)
             .json({
             success: true,
-            message: `Successfully created a new account`,
+            message: 'Successfully created a new account',
             user: {
                 id: newUser._id,
                 email: newUser.email,

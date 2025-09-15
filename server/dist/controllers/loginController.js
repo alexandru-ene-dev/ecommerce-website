@@ -11,6 +11,7 @@ export const loginController = async (req, res) => {
         });
     }
     const { email, password } = result.data;
+    const { keepMeLogged } = req.body;
     try {
         // check email
         const user = await User.findOne({ email });
@@ -34,13 +35,16 @@ export const loginController = async (req, res) => {
             email: user.email
         };
         const token = generateToken(payload);
-        return res
-            .cookie('token', token, {
+        const cookieOptions = {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            maxAge: 24 * 60 * 60 * 1000
-        })
+        };
+        if (keepMeLogged) {
+            cookieOptions.maxAge = 7 * 24 * 60 * 60 * 1000; //  7 days in ms
+        }
+        return res
+            .cookie('token', token, cookieOptions)
             .status(200)
             .json({
             success: true,

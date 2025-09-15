@@ -4,6 +4,14 @@ import User from '../models/UserSchema.js';
 import generateToken from '../utils/jwt.js';
 
 
+type CookieOptions = {
+  httpOnly: boolean,
+  secure: true,
+  sameSite: 'strict' | 'none' | 'lax'
+  maxAge?: number
+};
+
+
 export const registerController = async (
   req: Request<{}, {}, RegisterUserInput>, 
   res: Response
@@ -25,6 +33,7 @@ export const registerController = async (
       });
     }
 
+    const { keepMeLogged } = req.body;
 
     // create new user
     const newUser = await User.create({
@@ -40,19 +49,25 @@ export const registerController = async (
       id: newUser._id.toString(),
       email: newUser.email
     };
+
     const token = generateToken(payload);
 
+    const cookieOptions: CookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    };
+
+    if (keepMeLogged) {
+      cookieOptions.maxAge = 7 * 24 * 60 * 60 * 1000 //  7 days in ms
+    }
+
     res
-      .cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000
-      })
+      .cookie('token', token, cookieOptions)
       .status(201)
       .json({ 
         success: true, 
-        message: `Successfully created a new account`,
+        message: 'Successfully created a new account',
         user: {
           id: newUser._id,
           email: newUser.email,

@@ -5,7 +5,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 import delay from '../utils/delay';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { clearLocalCart } from '../utils/cartStorage';
 import OrderSummary from '../components/OrderSummary';
 import CartItem from '../components/CartItem';
@@ -64,6 +64,13 @@ const Cart = () => {
   };
 
 
+  useEffect(() => {
+    if (localCart.length <= 0) {
+      setDeleteCartMode(false);
+    }
+  }, [localCart.length]);
+
+
   return (
     <section className="favorites-section">
       {status && <p className="clear-status">{status}</p>}
@@ -87,6 +94,7 @@ const Cart = () => {
         {isDeleteCartMode? 
           (<div className="clear-confirmation">
             <LoadingSpinner isLoading={isLoading} />
+
             <p>Are you sure you want to remove all the products from your cart? This action cannot be undone.</p>
 
             <div>
@@ -117,6 +125,8 @@ const Cart = () => {
 
       {localCart.length?
         <div className="cart-grid">
+          {isLoading && <LoadingSpinner isLoading={isLoading} />}
+          
           <div className="cart-products-wrapper">
             {cartProductElements}
           </div>

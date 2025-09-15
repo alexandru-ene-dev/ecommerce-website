@@ -107,6 +107,13 @@
 
 .search-wrapper {
   width: min(100%, 40em);
+  transform: translateX(0);
+  overflow: hidden;
+}
+
+.search-wrapper .loader-modal[data-open="true"] {
+  border-radius: 10px;
+  backdrop-filter: blur(0);
 }
 
 .search-form {

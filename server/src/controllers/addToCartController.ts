@@ -4,7 +4,6 @@ import UserModel from '../models/UserSchema.js';
 
 
 export const addToCartController = async (req: Request, res: Response) => {
-  console.log('Route hit');
   try {
     const productId = req.body.productId;
     const userId = req.body.userId;

@@ -1,7 +1,6 @@
 import { ProductModel } from '../models/ProductSchema.js';
 import UserModel from '../models/UserSchema.js';
 export const addToCartController = async (req, res) => {
-    console.log('Route hit');
     try {
         const productId = req.body.productId;
         const userId = req.body.userId;

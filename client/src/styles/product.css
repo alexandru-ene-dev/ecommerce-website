@@ -1,12 +1,8 @@
 .product-wrapper {
-  max-width: 1800px;
+  max-width: 1100px;
   margin-top: 12rem;
   margin-inline: auto;
-  padding-inline: clamp(.75em, 2vw, 2em);
-
-  & .add-cart-btn {
-    margin-top: 2em;
-  }
+  padding-inline: clamp(1em, 2vw, 2em);
 
   & .new-cart-icon,
   & .prod-fav-icon {
@@ -15,7 +11,8 @@
 }
 
 .prod-title {
-  max-width: 25em;
+  height: 50px;
+  max-width: 30em;
   margin-bottom: 2em;
   margin-inline: auto;
   font-size: clamp(1.15rem, 1.45vw, 1.45rem);
@@ -30,13 +27,20 @@
 .prod-img-wrapper {
   display: flex;
   justify-content: center;
+  width: 100%;
+  max-width: 25em;
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background-color: var(--bg-sec);
   border-radius: 10px;
 }
 
 .prod-img {
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
-  max-width: 25em;
-  aspect-ratio: 9 / 12;
+  height: 100%;
   border-radius: inherit;
 }
 
@@ -47,6 +51,7 @@
 }
 
 .prod-price-inner {
+  height: 45px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -229,4 +234,32 @@
 
 .copy-btn .new-cart-icon {
   font-size: clamp(1rem, 1.5vw, 1.15rem);
+}
+
+.button-wrapper {
+  transform: translateX(0);
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.button-wrapper .loader {
+  height: 25px;
+  width: 25px;
+}
+
+.add-cart-btn {
+  height: 35px;
+}
+
+.join-extra-sale {
+  display: block;
+  position: absolute;
+  top: -5px;
+  left: -20px;
+  z-index: 1;
+  background-color: var(--red);
+  color: var(--clr-deal);
+  border-radius: 10px;
+  padding: .5em;
+  transform: rotateZ(-25deg);
 }

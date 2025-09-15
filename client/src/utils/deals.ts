@@ -1,9 +1,8 @@
 export type DealsType = {
   text: string,
+  id: number,
   src: string,
   alt: string,
-  active: boolean,
-  id: number,
   url: string,
   sale?: number,
   subcategory?: string,
@@ -24,11 +23,12 @@ const deals = [
 
   {
     id: 2,
-    text: '20% off on latest video games!',
+    text: 'From 20% off on latest video games!',
     src: 'games.jpg',
     alt: 'latest video games deal',
     active: false,
-    url: '/categories/games-20-off',
+    url: '/categories/video-games',
+    sale: 20
   },
 
   {

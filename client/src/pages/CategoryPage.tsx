@@ -9,6 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 import delay from "../utils/delay.ts";
 import useLoadingContext from "../hooks/useLoadingContext.ts";
 import { useSearchParams } from "react-router-dom";
+import NoProductsPic from '../assets/images/no-products.jpg';
 
 
 const CategoryPage = () => {
@@ -17,13 +18,13 @@ const CategoryPage = () => {
   const { pathname } = useLocation();
   const [ products, setProducts ] = useState<NewProductType[]>([]);
 
-  const [ _, setBtnIsVisible ] = useState(true);
   const [ error, setError ] = useState<string | null>(null);
   const [ searchParams ] = useSearchParams();
   const sale = searchParams.get('sale');
 
   const filters: Record<string, any> = {};
   if (sale) filters.sale = sale;
+
 
   const title = subSubcategory?
     subSubcategory
@@ -75,12 +76,14 @@ const CategoryPage = () => {
 
       awaitDelay();
     }
-  }, [subcategory, subSubcategory]);
+  }, [subcategory, subSubcategory, searchParams]);
 
 
-  if (!products[0]?.content) return;
-  const isSubcategoryPage = products[0]?.content?.length > 0 && !subSubcategory;
-  const isProductPage = !!(products.length > 0 && subSubcategory) || !products[0]?.content?.length;
+  let isSubcategoryPage: boolean = false;
+  if (products[0]?.content) {
+    isSubcategoryPage = products[0]?.content?.length > 0 && !subSubcategory;
+  }
+  // const isProductPage = !!(products.length > 0 && subSubcategory) || !products[0]?.content?.length;
 
 
   const subcategoryElements = isSubcategoryPage &&
@@ -106,24 +109,63 @@ const CategoryPage = () => {
         </Link>
       );
     });
-  
 
-  const productElements = isProductPage && products.map(prod => {
+
+  const productElements = products.map(prod => {
     const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
     const slug = prod.title.replaceAll(' ', '-')
     
     return (
-        <NewProduct
-          key={prod._id}
-          setIsBtnVisible={setBtnIsVisible} 
-          imgSrc={imgSrc} 
-          encodedQuery={slug}
-          item={prod} 
-        />
+      <NewProduct
+        key={prod._id}
+        imgSrc={imgSrc} 
+        encodedQuery={slug}
+        item={prod} 
+      />
     );
   });
-  
-  
+
+
+  if (subcategory === 'all') {
+    return (
+      <div data-all="true" className="new-section-grid-wrapper">
+        <div className="new-section-grid">
+          {productElements}
+        </div>
+      </div>
+    );
+  }
+
+
+  if (!products.length) {
+    return (
+      <main className="category-page-main">
+        <div className="not-found-flex">
+          <div className="not-found-img-wrap">
+            <img className="not-found-product-img" src={NoProductsPic} />
+          </div>
+
+          <div>
+            <h1 className="category-page-title">
+              Sorry, we couldn't find any products here... 
+            </h1>
+
+            <p className="empty-category-par">
+              It looks like this category is empty at the moment. We're working on filling it up!
+            </p>
+
+            <p className="empty-category-par">
+              Until we fill it up, why not check out our <Link to='/#new'>new arrivals</Link>?
+            </p>
+          </div>
+        </div>
+
+        <Link to="/" className="back-shopping-btn new-card-btn">Back to Main Page</Link>
+      </main>
+    );
+  }
+
+
   return (
     <main className="category-page-main">
       <h1 className="category-page-title">{title}</h1>
