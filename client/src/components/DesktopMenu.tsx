@@ -1,11 +1,18 @@
 import { categories } from "../utils/categories";
 import { Link } from 'react-router-dom';
-import { type MouseEvent, useState } from "react";
+import { type Dispatch, type MouseEvent, type SetStateAction } from "react";
 
 
-const DesktopMenu = () => {
-  const [ activeIndex, setActiveIndex ] = useState<number | null>(null);
-
+const DesktopMenu = (
+  {
+    activeIndex,
+    setActiveIndex
+  }:
+  {
+    activeIndex: number | null,
+    setActiveIndex: Dispatch<SetStateAction<number | null>>
+  }
+) => {
 
   const handleMouseEnter = (index: number) => {
     setActiveIndex(index);
@@ -36,7 +43,6 @@ const DesktopMenu = () => {
       <li 
         onMouseEnter={() => handleMouseEnter(i)}
         onMouseLeave={handleMouseOut}
-        // onFocus={() => handleMouseEnter(i)}
         onClick={() => handleMouseClick(i)}
         key={i} 
         className="desktop-nav_item"

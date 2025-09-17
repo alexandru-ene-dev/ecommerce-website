@@ -1,70 +1,7 @@
 
 /* --------- LIGHT & DARK THEME --------- */
 
-@media (prefers-color-scheme: light) {
-  body {
-    --bg: hsl(146, 30%, 86%);
-    --bg-sec: hsl(146, 30%, 75%);
-    --menu-subtitle-clr: hsl(0, 0%, 100%);
-    --menu-bg-prim: hsl(146, 30%, 65%);
-    --menu-bg-sec: hsl(146, 30%, 55%);
-    --menu-link-clr: hsl(0, 0%, 95%);
-    --menu-link-hov: hsl(146, 100%, 25%);
-    --desktop-nav-bg: hsl(146, 30%, 75%);
-    --sublink: hsl(0, 0%, 0%);
-    --sublink-hov: hsl(146, 100%, 33%);
-    --clr-prim: hsl(146, 100%, 25%);
-    --clr-prim2: hsl(146, 100%, 25%);
-    --border: hsl(146, 100%, 25%);
-    --border-hov: hsl(0, 0%, 100%);
-    --icon-hov: hsl(0, 0%, 100%);
-    --cat-hov: hsl(146, 30%, 78%);
-    --clr-new-title: hsl(146, 100%, 25%);
-    --clr-title: hsl(0, 0%, 0%);
-    --clr-deal: hsl(0, 0%, 100%);
-    --inp-text: hsl(0, 0%, 100%);
-    --inp-log-holder: hsl(146, 30%, 90%);
-    --inp-holder: hsl(146, 30%, 45%);
-    --inp-brd-hov: hsl(0, 0%, 100%);
-    --search-btn-foc: hsl(146, 100%, 25%);
-    --search-btn-clr: hsl(0, 0%, 88%);
-    --form-foc: hsl(146, 30%, 77%);
-    --btn-bg: hsl(146, 100%, 25%);
-    --btn-clr: hsl(0, 0%, 88%);
-    --btn-bg-hov: hsl(146, 100%, 30%);
-    --footer-bg: hsl(146, 30%, 83%);
-    --foot-link-clr: hsl(0, 0%, 0%);
-    --foot-link-hov: hsl(146, 100%, 35%);
-    --foot-marker: hsl(146, 100%, 25%);
-    --theme-btn-bg: hsl(146, 30%, 65%);
-    --theme-btn-clr: hsl(0, 0%, 100%);
-    --theme-btn-hov: hsl(146, 100%, 30%);
-    --copyright-clr: hsl(0, 0%, 65%);
-    --register: hsl(146, 30%, 81%);
-    --txt-clr: hsl(0, 0%, 70%);
-    --txt-hov: hsl(0, 0%, 80%);
-    --txt-clr2: hsl(146, 100%, 25%);
-    --txt-hov2: hsl(146, 100%, 35%);
-    --error: hsl(0, 87%, 85%);
-    --red: hsl(0, 90%, 40%);
-    --sale-txt-bg: hsl(146, 100%, 25%);
-    --sale-txt-clr: hsl(0, 0%, 100%);
-    --sale-txt-hov: hsl(0, 0%, 90%);
-    --new-card-bg: hsl(146, 30%, 82%);
-    --loader-clr: hsl(146, 100%, 100%);
-    --account-icon-bg: hsl(146, 100%, 25%);
-    --account-par: hsl(0, 0%, 95%);
-
-    background-color: var(--bg);
-
-    .social-icon {
-      filter: brightness(0%);
-    }
-  }
-}
-
-
-body.dark-mode {
+html.dark-mode {
   --bg: hsl(0, 0%, 6%);
   --bg-sec: hsl(0, 0%, 11%);
   --menu-subtitle-clr: hsl(0, 0%, 100%);
@@ -116,7 +53,7 @@ body.dark-mode {
 }
 
 
-body.light-mode {
+html.light-mode {
   --bg: hsl(146, 30%, 86%);
   --bg-sec: hsl(146, 30%, 75%);
   --menu-subtitle-clr: hsl(0, 0%, 100%);
@@ -168,9 +105,7 @@ body.light-mode {
   --account-icon-bg: hsl(146, 100%, 25%);
   --account-par: hsl(0, 0%, 95%);
 
-  background-color: var(--bg);
-
-  .social-icon {
+  & .social-icon {
     filter: brightness(0%);
   }
 }

@@ -21,14 +21,14 @@
   width: 17px;
   height: 2px;
   background-color: var(--clr-prim);
-  transition: 300ms;
+  transition: all 300ms;
 }
 
 .hamburger-btn[data-closed-icon="true"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 300ms;
+  transition: all 300ms;
 
   & .hamburger {
     justify-content: center;
@@ -84,7 +84,7 @@
   bottom: 0;
   z-index: 1000;
   background-color: var(--menu-bg-prim);
-  transition: 300ms;
+  transition: all 300ms;
 }
 
 .mobile-menu[data-visible="false"] {
@@ -99,7 +99,7 @@
   width: 100%;
   height: 100%;
   position: relative;
-  transition: 300ms;
+  transition: all 300ms;
   overflow: auto;
 }
 
@@ -141,7 +141,7 @@
   bottom: 36px;
   background-color: var(--menu-bg-prim);
   transform: translateX(-100%);
-  transition: 300ms;
+  transition: all 300ms;
 }
 
 .subcategory-view.open {
@@ -194,7 +194,7 @@
   bottom: 7px;
   left: 16px;
   background-color: var(--menu-link-clr);
-  transition: 500ms;
+  transition: all 500ms;
 }
 
 .subcategory-name:hover::after {

@@ -34,7 +34,7 @@ const footerLinksList: footerLinksListType[] = [
     title: 'Company',
     links: [
       { name: 'Careers', url: '/careers' },
-      { name: 'About Us', url: '/about-us' }
+      { name: 'About Us', url: '/about' }
     ]
   }
 ];

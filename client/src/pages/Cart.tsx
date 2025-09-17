@@ -3,12 +3,14 @@ import useCartContext from "../hooks/useCartContext";
 import clearUserCart from '../services/clearUserCart';
 import { useAuthContext } from '../hooks/useAuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import CartFavoritesFeedback from '../components/CartFavoritesFeedback';
 
 import delay from '../utils/delay';
 import { useState, useEffect } from 'react';
 import { clearLocalCart } from '../utils/cartStorage';
 import OrderSummary from '../components/OrderSummary';
 import CartItem from '../components/CartItem';
+import { type ActiveFeedback } from './Homepage';
 
 
 const Cart = () => {
@@ -16,12 +18,18 @@ const Cart = () => {
   const [ isDeleteCartMode, setDeleteCartMode ] = useState(false);
   const { state } = useAuthContext();
   const [ status, setStatus ] = useState('');
-  const [ isLoading, setLoading ] = useState(false);
 
+  const [ isLoading, setLoading ] = useState(false);
+  const [ isLoadingCart, setIsLoadingCart ] = useState(true);
+  const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
+  const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
+  
 
   const cartProductElements = localCart && localCart.map(prod => {
     return (
       <CartItem
+        setFeedbackArray={setFeedbackArray}
+        setActiveFeedback={setActiveFeedback}
         key={prod._id} 
         prod={prod}
       />
@@ -65,14 +73,47 @@ const Cart = () => {
 
 
   useEffect(() => {
-    if (localCart.length <= 0) {
-      setDeleteCartMode(false);
+    const handleModes = async () => {
+      if (localCart.length <= 0) {
+        setDeleteCartMode(false);
+      }
+
+      if (localCart.length > 0) {
+        await delay(500);
+        setIsLoadingCart(false);
+      }
     }
+
+    handleModes();
   }, [localCart.length]);
+
+
+  if (isLoadingCart) {
+    return (
+      <section className="favorites-section loading">
+        <h1 className="category-page-title">Loading Cart...</h1>
+        <LoadingSpinner isLoading={isLoadingCart} />
+      </section>
+    );
+  }
 
 
   return (
     <section className="favorites-section">
+      { feedbackArray.length > 0 &&
+        <ul className="cart-favorites-feedback">
+          {feedbackArray.map((feedback, i) => {
+            return ( 
+              <CartFavoritesFeedback
+                key={i}
+                value={feedback.value} 
+                action={feedback.action}
+              />
+            );
+          })}
+        </ul>
+      }
+
       {status && <p className="clear-status">{status}</p>}
 
       <div className={!localCart.length? "clear-wrap no-favorites" : "clear-wrap"}>

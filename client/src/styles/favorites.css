@@ -89,8 +89,7 @@
   
   & .new-cart-icon,
   & .prod-fav-icon,
-  & .prod-title,
-  & button {
+  & .prod-title {
     font-size: 1rem;
   }
 
@@ -275,7 +274,6 @@
 .fav-hover_prod-price {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   justify-content: center;
   font-size: 1rem;
   color: white;
@@ -337,6 +335,22 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.favorites-section.loading {
+  transform: translateX(0);
+}
+
+
+.favorites-section.loading .loader-modal[data-open="true"] {
+  margin-top: 6em;
+  backdrop-filter: blur(0px);
+  background-color: hsl(0 0% 0% / 0);
+}
+
+.favorites-section.loading .loader,
+.favorites-section .loader:after {
+  color: var(--clr-prim);
+} 
 
 
 

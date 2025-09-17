@@ -8,6 +8,9 @@ import useCartContext from '../hooks/useCartContext';
 import { Link } from 'react-router-dom';
 import { forwardRef } from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import { type ActiveFeedback } from '../pages/Homepage';
+import CartFavoritesFeedback from './CartFavoritesFeedback';
+import delay from '../utils/delay';
 
 
 type FavoritesPropsType = {
@@ -31,8 +34,11 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
   const { localCart, setLocalCart } = useCartContext();
   const { handleFavorites, loadingButton } = useHandleFavorites(setLocalFavorites);
   const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
+  
   const [ activeLoadingIndex, setActiveLoadingIndex ] = useState<number | null>(null);
   const { state } = useAuthContext();
+  const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
+  const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
 
 
   return (
@@ -45,6 +51,20 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
         handleMenus('favorites');
       }}
     >
+      { feedbackArray.length > 0 &&
+        <ul className="cart-favorites-feedback">
+          {feedbackArray.map((feedback, i) => {
+            return ( 
+              <CartFavoritesFeedback
+                key={i}
+                value={feedback.value} 
+                action={feedback.action}
+              />
+            );
+          })}
+        </ul>
+      } 
+
       <button className="fav-btn header-btn">
         <span className="material-symbols-outlined header-btn-icon">
           favorite
@@ -105,7 +125,21 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
                     onClick={async (e) => {
                       e.stopPropagation();
                       setActiveLoadingIndex(i);
-                      handleFavorites(prod, isFavorite);
+                      handleFavorites(prod, isFavorite).then(() => {
+                        setActiveFeedback({ value: 'Favorites', action: isFavorite? 'remove' : 'add' });
+                        setFeedbackArray(prev => {
+                          const newArr = [ 
+                            { value: 'Favorites', action: isFavorite? 'remove' : 'add' } as ActiveFeedback,
+                            ...prev
+                          ];
+                          return newArr; 
+                        });
+                      });
+                      
+                      await delay(2000);
+                      setFeedbackArray((prev: any) => {
+                        return prev.slice(0, -1); 
+                      });
                     }} 
                     className="fav-hover_remove-btn"
                   >
@@ -113,10 +147,24 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
                   </button>
 
                   <button 
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
                       setActiveLoadingIndex(i); 
-                      handleCart(prod, isInCart);
+                      handleCart(prod, isInCart).then(() => {
+                        setActiveFeedback({ value: 'Cart', action: isInCart? 'remove' : 'add' });
+                        setFeedbackArray(prev => {
+                          const newArr = [
+                            { value: 'Cart', action: isInCart? 'remove' : 'add' } as ActiveFeedback, 
+                            ...prev 
+                          ];
+                          return newArr; 
+                        });
+                      });
+
+                      await delay(2000);
+                      setFeedbackArray((prev: any) => {
+                        return prev.slice(0, -1); 
+                      });;
                     }}
                     className="fav-hover_remove-btn"
                   >

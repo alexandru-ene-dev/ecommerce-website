@@ -21,13 +21,13 @@ const useHandleCart = (setLocalCart: Dispatch<SetStateAction<NewProductType[]>>)
           const result = await addToCartService(userId, isOnCart, item._id);
 
           if (!result.success) {
-            await delay(300);
+            await delay(500);
             setLoadingButton(false);
             setError(result.message);
             return;
           }
 
-          await delay(300);
+          await delay(500);
           setLoadingButton(false);
           setLocalCart(prev => 
             isOnCart?
@@ -37,7 +37,7 @@ const useHandleCart = (setLocalCart: Dispatch<SetStateAction<NewProductType[]>>)
           return;
         }
 
-        await delay(300);
+        await delay(500);
         setLoadingButton(false);
         if (isOnCart) {
           removeFromCart(item._id);
@@ -54,7 +54,7 @@ const useHandleCart = (setLocalCart: Dispatch<SetStateAction<NewProductType[]>>)
         }
         
       } catch (err) {
-        await delay(300);
+        await delay(500);
         setLoadingButton(false);
         setError((err as Error).message);
       }

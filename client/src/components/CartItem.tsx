@@ -1,8 +1,10 @@
 import useCartContext from "../hooks/useCartContext";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 import type { NewProductType } from "./types";
 import useFavoritesContext from "../hooks/useFavoritesContext";
 import { useNavigate } from "react-router-dom";
+import { type ActiveFeedback } from "../pages/Homepage";
+import delay from "../utils/delay";
 
 import useHandleCart from "../hooks/useHandleCart";
 import useHandleFavorites from "../hooks/useHandleFavorites";
@@ -13,12 +15,18 @@ import { useAuthContext } from "../hooks/useAuthContext";
 
 
 type CartItemProps = {
+  setFeedbackArray: Dispatch<SetStateAction<ActiveFeedback[] | []>>,
+  setActiveFeedback: Dispatch<SetStateAction<ActiveFeedback | null>>,
   prod: NewProductType
 };
 
 
 const CartItem = (
-  { prod }: CartItemProps
+  { 
+    prod,
+    setFeedbackArray,
+    setActiveFeedback
+  }: CartItemProps
 ) => {
 
   const { localCart, setLocalCart } = useCartContext();
@@ -81,9 +89,23 @@ const CartItem = (
         className="cart-img-wrapper"
       >
         <button 
-          onClick={(e) => {
+          onClick={async (e) => {
             e.stopPropagation();
-            handleFavorites(prod, isFavorite);
+            handleFavorites(prod, isFavorite).then(() => {
+              setActiveFeedback({ value: 'Favorites', action: isFavorite? 'remove' : 'add' });
+              setFeedbackArray(prev => {
+                const newArr = [ 
+                  { value: 'Favorites', action: isFavorite? 'remove' : 'add' } as ActiveFeedback,
+                  ...prev
+                ];
+                return newArr; 
+              });
+            });
+            
+            await delay(2000);
+            setFeedbackArray((prev: any) => {
+              return prev.slice(0, -1); 
+            });
           }} 
           className="add-fav-btn new-fav-btn">
           <span 
@@ -134,7 +156,23 @@ const CartItem = (
           <div>
             <button
               className="new-card-btn cart-item-btn"
-              onClick={() => handleCart(prod, isInCart)}
+              onClick={async () => {
+                handleCart(prod, isInCart).then(() => {
+                  setActiveFeedback({ value: 'Cart', action: isInCart? 'remove' : 'add' });
+                  setFeedbackArray(prev => {
+                    const newArr = [
+                      { value: 'Cart', action: isInCart? 'remove' : 'add' } as ActiveFeedback, 
+                      ...prev 
+                    ];
+                    return newArr; 
+                  });
+                });
+
+                await delay(2000);
+                setFeedbackArray((prev: any) => {
+                  return prev.slice(0, -1); 
+                });
+              }}
             >
               <span className="material-symbols-outlined">delete</span>
             </button>

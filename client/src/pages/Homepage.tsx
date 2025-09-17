@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getHomeNewProducts } from '../services/getHomeNewProducts.ts';
 import NewProduct from '../components/NewProduct.tsx';
 import { type NewProductType } from '../components/types.ts';
+import CartFavoritesFeedback from '../components/CartFavoritesFeedback.tsx';
 
 import HeroImage from '../assets/images/innovative-tech.jpg';
 import useLoadingContext from '../hooks/useLoadingContext.ts';
@@ -12,12 +13,21 @@ import Deals from '../components/Deals.tsx';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
 
 
+export type ActiveFeedback = {
+  value: 'Cart' | 'Favorites',
+  action: 'add' | 'remove'
+};
+
+
 const Homepage = () => {
   const { setLoading } = useLoadingContext();
   const [ haveNewProducts, setHaveNewProducts ] = useState(false);
   const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
   const joinUsImg = new URL('../assets/images/join-us.jpg', import.meta.url).href;
+
   const { state } = useAuthContext();
+  const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
+  const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
 
   const newProductElements = newProducts.map(item => {
     const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
@@ -25,6 +35,8 @@ const Homepage = () => {
     
     return (
       <NewProduct
+        setFeedbackArray={setFeedbackArray}
+        setActiveFeedback={setActiveFeedback}
         key={item.id}
         item={item} 
         imgSrc={imgSrc} 
@@ -32,6 +44,7 @@ const Homepage = () => {
       />
     );
   });
+
 
   useEffect(() => {
     const getProducts = async () => {
@@ -53,6 +66,20 @@ const Homepage = () => {
 
   return (
     <main>
+      { feedbackArray.length > 0 &&
+        <ul className="cart-favorites-feedback">
+          {feedbackArray.map((feedback, i) => {
+            return ( 
+              <CartFavoritesFeedback
+                key={i}
+                value={feedback.value} 
+                action={feedback.action}
+              />
+            );
+          })}
+        </ul>
+      }
+
       <div className="hero-wrapper">
         <img className="hero-img" src={HeroImage} alt="A highly tech background" />
         <h1 className="title">
