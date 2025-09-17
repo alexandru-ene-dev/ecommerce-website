@@ -13,13 +13,7 @@
   z-index: 3500;
   padding: 1.15em;
   background-color: var(--menu-bg-prim);
-  transition: opacity 200ms;
   color: var(--clr-deal);
-
-  /* & button,
-  & a {
-    font-size: .9rem;
-  } */
 
   & .new-card-btn {
     max-width: 25em;

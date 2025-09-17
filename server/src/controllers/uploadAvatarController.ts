@@ -30,8 +30,6 @@ const uploadAvatarController = async (req: Request, res: Response) => {
       avatar: user.avatar 
     });
   } catch (err) {
-    console.error(err);
-
     res.status(500).json({
       success: false,
       message: `Internal server error occurred: ${err}` 

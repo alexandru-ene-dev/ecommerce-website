@@ -323,6 +323,10 @@
   .recent-product-list {
     justify-content: initial;
   }
+
+  .loading-products {
+    margin-top: 12rem;
+  }
 }
 
 

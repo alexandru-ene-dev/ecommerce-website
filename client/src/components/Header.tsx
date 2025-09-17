@@ -39,6 +39,7 @@ const Header = () => {
   const [ visibleLoginMenu, setVisibleLoginMenu ] = useState(false);
   const [ isCartHovered, setIsCartHovered ] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [ activeIndex, setActiveIndex ] = useState<number | null>(null);
 
   const cartRef = useRef<HTMLDivElement>(null);
   const favoritesRef = useRef<HTMLDivElement>(null);
@@ -63,10 +64,13 @@ const Header = () => {
 
     const theme = target.dataset.theme as Theme;
 
-    document.body.classList.remove('os-default');
-    document.body.classList.remove('light-mode');
-    document.body.classList.remove('dark-mode');
-    document.body.classList.add(theme);
+    if (theme === 'os-default') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const newTheme = prefersDark ? 'dark-mode' : 'light-mode';
+      document.documentElement.className = newTheme;
+    } else {
+      document.documentElement.className = theme;
+    }
 
     dispatch({ 
       type: 'TOGGLE_THEME', 
@@ -103,7 +107,8 @@ const Header = () => {
           !visibleThemeMenu && 
           !isFavoritesHovered && 
           !isCartHovered &&
-          !visibleMobileMenu
+          !visibleMobileMenu &&
+          activeIndex === null
         )
       ) {
         setVisibleHeader(false);
@@ -182,6 +187,7 @@ const Header = () => {
     setThemeMenu(false);
     setVisibleMobileMenu(false);
     setActiveMenu(null);
+    closeModal();
   };
 
 
@@ -248,7 +254,12 @@ const Header = () => {
         {/* Mobile Search Bar */}
         {isMobile && <SearchBar />}
 
-        {!isMobile && <DesktopMenu />}
+        {!isMobile && 
+          <DesktopMenu
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+          />
+        }
       </nav>
 
       <StickySaleText />

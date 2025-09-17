@@ -3,7 +3,6 @@ export const changeThemeController = async (req, res) => {
     try {
         const userId = req.body.userId;
         const theme = req.body.theme;
-        console.log('Route hit');
         if (!userId) {
             return res.status(400).json({
                 success: false,

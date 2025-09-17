@@ -2,25 +2,29 @@ import { Link } from 'react-router-dom';
 import { type NewProductType } from './types';
 import { getProduct } from '../services/getProduct.ts';
 import useLoadingContext from '../hooks/useLoadingContext.ts';
-
 import delay from '../utils/delay.ts';
 import useCartContext from '../hooks/useCartContext.ts';
+
 import useFavoritesContext from '../hooks/useFavoritesContext.ts';
 import useHandleFavorites from '../hooks/useHandleFavorites.ts';
-
 import useHandleCart from '../hooks/useHandleCart.ts';
 import LoadingSpinner from './LoadingSpinner.tsx';
-import { useState } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
+import { type ActiveFeedback } from '../pages/Homepage.tsx';
 
 
 const NewProduct = (
   { 
+    setFeedbackArray,
+    setActiveFeedback,
     imgSrc,
     encodedQuery,
     item, 
   }:
   { 
+    setFeedbackArray?: Dispatch<SetStateAction<ActiveFeedback[] | []>>
+    setActiveFeedback?: Dispatch<SetStateAction<ActiveFeedback | null>>
     imgSrc: string, 
     encodedQuery: string, 
     item: NewProductType
@@ -31,12 +35,11 @@ const NewProduct = (
   const { setLoading } = useLoadingContext();
   const { localCart, setLocalCart } = useCartContext();
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
-  const [ buttonLoading, setButtonLoading ] = useState(false);
 
   const isFavorite = localFavorites && localFavorites.some(fav => fav.id === item.id);
   const isOnCart = localCart && localCart.some(prod => prod._id === item._id);
   const { handleFavorites } = useHandleFavorites(setLocalFavorites);
-  const { handleCart } = useHandleCart(setLocalCart);
+  const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
   const { state } = useAuthContext();
 
   const newSaleForUsers = item.sale + 5;
@@ -51,7 +54,27 @@ const NewProduct = (
         }
 
         <button 
-          onClick={() => handleFavorites(item, isFavorite)} 
+          onClick={async () => {
+            handleFavorites(item, isFavorite).then(() => {
+              if (setFeedbackArray && setActiveFeedback) {
+                setActiveFeedback({ value: 'Favorites', action: isFavorite? 'remove' : 'add' });
+                setFeedbackArray(prev => {
+                  const newArr = [ 
+                    { value: 'Favorites', action: isFavorite? 'remove' : 'add' } as ActiveFeedback,
+                    ...prev
+                  ];
+                  return newArr; 
+                });
+              }
+            });
+            
+            await delay(2000);
+            if (setFeedbackArray) {
+              setFeedbackArray((prev: any) => {
+                return prev.slice(0, -1); 
+              });
+            }
+          }} 
           className="add-fav-btn new-fav-btn">
           <span 
             data-favorite={isFavorite? "true" : "false"}
@@ -85,7 +108,10 @@ const NewProduct = (
             getProduct(encodedQuery);
             setLoading(false);
           }}
-          className="new-card-title">{item.title}</Link>
+          className="new-card-title"
+        >
+          {item.title}
+        </Link>
 
         <div className="sale-price-wrapper">
           <p className="new-card-sale-limit">
@@ -94,6 +120,7 @@ const NewProduct = (
             </span>
             <span className="limit-txt">Limited Time</span>
           </p>
+
           <p className="new-card-price">
             <span className="old-price">${item.oldPrice.toFixed(2)}</span>
             <span className="new-price">
@@ -103,14 +130,29 @@ const NewProduct = (
         </div>
 
         <div className="button-wrapper">
-          <LoadingSpinner isLoading={buttonLoading} />
+          <LoadingSpinner isLoading={cartLoadingButton} />
 
           <button 
             onClick={async () => {
-              setButtonLoading(true);
-              handleCart(item, isOnCart);
-              await delay(700);
-              setButtonLoading(false);
+              handleCart(item, isOnCart).then(() => {
+                if (setActiveFeedback && setFeedbackArray) {
+                  setActiveFeedback({ value: 'Cart', action: isOnCart? 'remove' : 'add' });
+                  setFeedbackArray(prev => {
+                    const newArr = [
+                      { value: 'Cart', action: isOnCart? 'remove' : 'add' } as ActiveFeedback, 
+                      ...prev 
+                    ];
+                    return newArr; 
+                  });
+                }
+              });
+
+              await delay(2000);
+              if (setFeedbackArray) {
+                setFeedbackArray((prev: any) => {
+                  return prev.slice(0, -1); 
+                });
+              }
             }} 
             className="add-cart-btn new-card-btn"
           >

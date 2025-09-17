@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import fetchProducts from '../services/fetchProducts.ts';
 import NewProduct from "../components/NewProduct.tsx";
 import { type NewProductType } from "../components/types.ts";
@@ -10,10 +10,12 @@ import delay from "../utils/delay.ts";
 import useLoadingContext from "../hooks/useLoadingContext.ts";
 import { useSearchParams } from "react-router-dom";
 import NoProductsPic from '../assets/images/no-products.jpg';
+import LoadingSpinner from "../components/LoadingSpinner.tsx";
 
 
 const CategoryPage = () => {
   const { setLoading } = useLoadingContext();
+  const [ isLoading, setIsLoading ] = useState(true);
   const { subcategory, subSubcategory } = useParams();
   const { pathname } = useLocation();
   const [ products, setProducts ] = useState<NewProductType[]>([]);
@@ -39,17 +41,19 @@ const CategoryPage = () => {
       .join(' ').replace('And', 'and');
       
       
-  useEffect(() => {
-    try {
-      const slug = 
-        subSubcategory ? 
-        `${subcategory}/${subSubcategory}` : 
-        (subcategory === 'matrix'? 'collections' : subcategory);
-  
-      if (!slug) return;
-      
-      const fetchProd = async () => {
-        setLoading(true);
+  useLayoutEffect(() => {
+    const fetchProd = async () => {
+      setProducts([]);
+      setLoading(true);
+      setIsLoading(true);
+
+      try {
+        const slug = 
+          subSubcategory ? 
+          `${subcategory}/${subSubcategory}` : 
+          (subcategory === 'matrix'? 'collections' : subcategory);
+    
+        if (!slug) return;
 
         const result = await fetchProducts(slug, Object.keys(filters).length ? filters : undefined);
         
@@ -61,21 +65,19 @@ const CategoryPage = () => {
         
         setError(null);
         setProducts(result.products);
-      };
-  
-      fetchProd();
-    } catch (err) {
-      setError((err as Error).message);
-      setProducts([]);
-
-    } finally {
-      const awaitDelay = async () => {
+    
+      } catch (err) {
+        setError((err as Error).message);
+        setProducts([]);
+        
+      } finally {
         await delay(500);
         setLoading(false);
-      };
-
-      awaitDelay();
+        setIsLoading(false);
+      }
     }
+
+    fetchProd();
   }, [subcategory, subSubcategory, searchParams]);
 
 
@@ -126,12 +128,11 @@ const CategoryPage = () => {
   });
 
 
-  if (subcategory === 'all') {
+  if (isLoading) {
     return (
-      <div data-all="true" className="new-section-grid-wrapper">
-        <div className="new-section-grid">
-          {productElements}
-        </div>
+      <div className="loading-products">
+        <h1 className="category-page-title">Loading...</h1>
+        <LoadingSpinner isLoading={isLoading}/>
       </div>
     );
   }
@@ -162,6 +163,20 @@ const CategoryPage = () => {
 
         <Link to="/" className="back-shopping-btn new-card-btn">Back to Main Page</Link>
       </main>
+    );
+  }
+
+
+  if (subcategory === 'all') {
+    return (
+      <div className="all-prod-section">
+        <h1 className="category-page-title">Everything Progressio has to offer</h1>
+        <div data-all="true" className="new-section-grid-wrapper">
+          <div className="new-section-grid">
+            {productElements}
+          </div>
+        </div>
+      </div>
     );
   }
 

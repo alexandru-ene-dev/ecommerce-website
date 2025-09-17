@@ -8,6 +8,8 @@ import clearUserFavorites from '../services/clearUserFavorites';
 import { useAuthContext } from '../hooks/useAuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import delay from '../utils/delay';
+import CartFavoritesFeedback from '../components/CartFavoritesFeedback';
+import { type ActiveFeedback } from './Homepage';
 
 
 const Favorites = () => {
@@ -15,7 +17,11 @@ const Favorites = () => {
   const [ isDeleteFavoritesMode, setDeleteFavoritesMode ] = useState(false);
   const { state } = useAuthContext();
   const [ status, setStatus ] = useState('');
+
   const [ isLoading, setLoading ] = useState(false);
+  const [ isLoadingFav, setIsLoadingFav ] = useState(true);
+  const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
+  const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
 
 
   const clearFavorites = async () => {
@@ -54,14 +60,47 @@ const Favorites = () => {
 
 
   useEffect(() => {
-    if (localFavorites.length <= 0) {
-      setDeleteFavoritesMode(false);
+    const handleModes = async () => {
+      if (localFavorites.length <= 0) {
+        setDeleteFavoritesMode(false);
+      }
+
+      if (localFavorites.length > 0) {
+        await delay(500);
+        setIsLoadingFav(false);
+      }
     }
+
+    handleModes();
   }, [localFavorites.length]);
+
+
+  if (isLoadingFav) {
+    return (
+      <section className="favorites-section loading">
+        <h1 className="category-page-title">Loading Favorites...</h1>
+        <LoadingSpinner isLoading={isLoadingFav} />
+      </section>
+    );
+  }
 
 
   return (
     <section className="favorites-section">
+      { feedbackArray.length > 0 &&
+        <ul className="cart-favorites-feedback">
+          {feedbackArray.map((feedback, i) => {
+            return ( 
+              <CartFavoritesFeedback
+                key={i}
+                value={feedback.value} 
+                action={feedback.action}
+              />
+            );
+          })}
+        </ul>
+      }
+
       {status && <p className="clear-status">{status}</p>}
 
       <div className={!localFavorites.length? "clear-wrap no-favorites" : "clear-wrap"}>
@@ -72,7 +111,7 @@ const Favorites = () => {
           </h1>
 
           <p className="favorites-par">{
-            localFavorites && localFavorites.length > 0?
+            localFavorites.length > 0?
               `You have ${localFavorites.length} favorite ${
                 localFavorites.length > 1? 'products' : 'product'
               }` : 
@@ -116,7 +155,14 @@ const Favorites = () => {
           {isLoading && <LoadingSpinner isLoading={isLoading}/>}
 
           {localFavorites && localFavorites.map(fav => {
-            return <FavoriteProduct key={fav.id} fav={fav} />
+            return (
+              <FavoriteProduct 
+                setFeedbackArray={setFeedbackArray}
+                setActiveFeedback={setActiveFeedback}
+                key={fav.id} 
+                fav={fav} 
+              />
+            )
           })}
         </div> : null
       }

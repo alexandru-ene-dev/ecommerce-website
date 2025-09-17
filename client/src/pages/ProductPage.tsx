@@ -8,10 +8,13 @@ import useCartContext from '../hooks/useCartContext.ts';
 import useFavoritesContext from "../hooks/useFavoritesContext.ts";
 import useHandleFavorites from "../hooks/useHandleFavorites.ts";
 import useHandleCart from "../hooks/useHandleCart.ts";
+import delay from '../utils/delay';
 
 import { addToRecentlyViewed } from "../utils/recentlyViewed.ts";
 import RecentlyViewedProducts from "../components/RecentlyViewed.tsx";
 import LoadingSpinner from "../components/LoadingSpinner.tsx";
+import CartFavoritesFeedback from '../components/CartFavoritesFeedback';
+import { type ActiveFeedback } from './Homepage';
 
 
 export default function ProductPage(
@@ -40,6 +43,8 @@ export default function ProductPage(
   const isOnCart = localCart && localCart.some((fav => fav._id === productObj?._id));  
   const { handleFavorites, loadingButton } = useHandleFavorites(setLocalFavorites);
   const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
+  const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
+  const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
 
 
   // fetch product
@@ -132,6 +137,19 @@ export default function ProductPage(
 
   return (
     <main>
+      { feedbackArray.length > 0 &&
+        <ul className="cart-favorites-feedback">
+          {feedbackArray.map((feedback, i) => {
+            return ( 
+              <CartFavoritesFeedback
+                key={i}
+                value={feedback.value} 
+                action={feedback.action}
+              />
+            );
+          })}
+        </ul>
+      }
       <section className="product-wrapper">
         <h1 className="prod-title">{productObj?.title}</h1>
 
@@ -167,8 +185,24 @@ export default function ProductPage(
               {cartLoadingButton && <LoadingSpinner isLoading={cartLoadingButton} />}
 
               <button 
-                onClick={() => {
-                  if (productObj) handleCart(productObj, isOnCart);
+                onClick={async () => {
+                  if (productObj) {
+                    handleCart(productObj, isOnCart).then(() => {
+                      setActiveFeedback({ value: 'Cart', action: isOnCart? 'remove' : 'add' });
+                      setFeedbackArray(prev => {
+                        const newArr = [
+                          { value: 'Cart', action: isOnCart? 'remove' : 'add' } as ActiveFeedback, 
+                          ...prev 
+                        ];
+                        return newArr; 
+                      });
+                    });
+
+                    await delay(2000);
+                    setFeedbackArray((prev: any) => {
+                      return prev.slice(0, -1); 
+                    });
+                  }
                 }} 
                 ref={addCartBtnRef} 
                 className="add-cart-btn new-card-btn"
@@ -184,8 +218,24 @@ export default function ProductPage(
               {loadingButton && <LoadingSpinner isLoading={loadingButton} />}
 
               <button 
-                onClick={() => {
-                  if (productObj) handleFavorites(productObj, isFavorite);
+                onClick={async () => {
+                  if (productObj) {
+                    handleFavorites(productObj, isFavorite).then(() => {
+                      setActiveFeedback({ value: 'Favorites', action: isFavorite? 'remove' : 'add' });
+                      setFeedbackArray(prev => {
+                        const newArr = [ 
+                          { value: 'Favorites', action: isFavorite? 'remove' : 'add' } as ActiveFeedback,
+                          ...prev
+                        ];
+                        return newArr; 
+                      });
+                    });
+            
+                    await delay(2000);
+                    setFeedbackArray((prev: any) => {
+                      return prev.slice(0, -1); 
+                    });
+                  }
                 }} 
                 className="new-card-btn prod-fav-btn"
               >
@@ -224,8 +274,24 @@ export default function ProductPage(
               <LoadingSpinner isLoading={cartLoadingButton} />
 
               <button 
-                onClick={() => {
-                  if (productObj) handleCart(productObj, isOnCart);
+                onClick={async () => {
+                  if (productObj) {
+                    handleCart(productObj, isOnCart).then(() => {
+                      setActiveFeedback({ value: 'Cart', action: isOnCart? 'remove' : 'add' });
+                      setFeedbackArray(prev => {
+                        const newArr = [
+                          { value: 'Cart', action: isOnCart? 'remove' : 'add' } as ActiveFeedback, 
+                          ...prev 
+                        ];
+                        return newArr; 
+                      });
+                    });
+
+                    await delay(2000);
+                    setFeedbackArray((prev: any) => {
+                      return prev.slice(0, -1); 
+                    });
+                  }
                 }} 
                 className="new-card-btn copy-btn"
               >

@@ -49,32 +49,29 @@ function App() {
 
 
   useEffect(() => {
-    const theme = (state?.user?.theme || localStorage.getItem('theme')) as Theme;
+    const theme = (state?.user?.theme || localStorage.getItem('theme') || 'os-default') as Theme;
 
-    if (theme !== null) {
-      document.body.classList.remove('dark-mode');
-      document.body.classList.remove('os-default');
-      document.body.classList.remove('light-mode');
-      document.body.classList.add(theme);
+    if (theme === 'os-default') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-      themeDispatch({ 
-        type: 'TOGGLE_THEME', 
-        theme: theme, 
-        themeIcon: (theme === 'os-default'? 'contrast' : theme.replace('-', '_')) as ThemeIcon
-      });
+      const applySystemTheme = () => {
+        const newTheme = prefersDark.matches ? 'dark-mode' : 'light-mode';
+        document.documentElement.className = newTheme;
+      };
 
+      applySystemTheme();
+
+      prefersDark.addEventListener('change', applySystemTheme);
+      return () => prefersDark.removeEventListener('change', applySystemTheme);
     } else {
-      document.body.classList.remove('dark-mode');
-      document.body.classList.remove('os-default');
-      document.body.classList.remove('light-mode');
-      document.body.classList.add(theme);
-      
-      themeDispatch({ 
-        type: 'TOGGLE_THEME', 
-        theme: 'os-default', 
-        themeIcon: 'contrast'
-      });
+      document.documentElement.className = theme;
     }
+
+    themeDispatch({ 
+      type: 'TOGGLE_THEME', 
+      theme: theme, 
+      themeIcon: (theme as Theme === 'os-default'? 'contrast' : theme.replace('-', '_')) as ThemeIcon
+    });
   }, [state.isLoggedIn, state?.user?.theme]);
 
 

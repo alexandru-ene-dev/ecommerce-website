@@ -199,7 +199,6 @@ button[data-dir="next"] {
   text-shadow: 0 10px 10px black;
   user-select: none;
   cursor: pointer;
-  transition: scale 500ms;
 }
 
 .join-par-sec {
@@ -269,7 +268,6 @@ button[data-dir="next"] {
   border-radius: 1em;
   background-color: var(--new-card-bg);
   aspect-ratio: 9 / 16;
-  transition: all 300ms;
 }
 
 .card-img-wrapper {
@@ -293,7 +291,6 @@ button[data-dir="next"] {
   top: 0;
   left: 0;
   border-radius: .5em;
-  /* object-fit: contain; */
   transition: scale 300ms;
   cursor: pointer;
 }

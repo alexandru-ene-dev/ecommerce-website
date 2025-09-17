@@ -23,7 +23,6 @@
   border-radius: 10px;
   background-color: var(--new-card-bg);
   text-decoration: none;
-  transition: background-color 300ms;
 }
 
 .prod-category:hover,
@@ -104,4 +103,30 @@
 
 .not-found-product-img {
   border-radius: 50%;
+}
+
+.loading-products {
+  height: 5rem;
+  margin-top: 11rem;
+  transform: translateX(0);
+}
+
+.loading-products .loader-modal[data-open="true"] {
+  backdrop-filter: blur(0px);
+  background-color: hsl(0 0% 0% / 0);
+  margin-top: 5em;
+}
+
+.loading-products .loader,
+.loading-products .loader:after {
+  color: var(--clr-prim);
+}
+
+.all-prod-section {
+  margin-top: 11rem;
+}
+
+.all-prod-section .new-section-grid-wrapper {
+  margin: 0;
+  margin-top: 3em;
 }

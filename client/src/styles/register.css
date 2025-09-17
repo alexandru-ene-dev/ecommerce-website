@@ -12,7 +12,6 @@
   padding: clamp(1em, 5vw, 4em);
   border-radius: 1em;
   background-color: var(--register);
-  transition: background-color 300ms;
 
   & label {
     font-size: 1.15rem;

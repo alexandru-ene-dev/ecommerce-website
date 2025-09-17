@@ -21,13 +21,13 @@ const useHandleFavorites = (setLocalFavorites: Dispatch<SetStateAction<NewProduc
         const result = await addToFavorites(userId, isFavorite, item._id);
 
         if (!result.success) {
-          await delay(300);
+          await delay(500);
           setLoadingButton(false);
           setError(result.message);
           return;
         }
 
-        await delay(300);
+        await delay(500);
         setLoadingButton(false);
         setLocalFavorites(prev =>
           isFavorite
@@ -36,7 +36,7 @@ const useHandleFavorites = (setLocalFavorites: Dispatch<SetStateAction<NewProduc
         );
 
       } else {
-        await delay(300);
+        await delay(500);
         setLoadingButton(false);
         if (isFavorite) {
           removeFavoriteLocally(item.id);
@@ -48,7 +48,7 @@ const useHandleFavorites = (setLocalFavorites: Dispatch<SetStateAction<NewProduc
       }
       
     } catch (err) {
-      await delay(300);
+      await delay(500);
       setLoadingButton(false);
       setError((err as Error).message);
     }

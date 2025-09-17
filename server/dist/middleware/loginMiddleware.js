@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.SECRET_KEY;
 if (!JWT_SECRET) {
-    console.error('FATAL ERROR: MISSING JWT SECRET KEY');
     process.exit(1);
 }
 const loginMiddleware = (req, res, next) => {
