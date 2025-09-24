@@ -6,7 +6,7 @@ const ScrollToHash = () => {
 
   useEffect(() => {
     if (location.hash) {
-      // Use timeout to wait for the DOM to mount
+      // timeout to wait for the DOM to mount
       const scrollToElement = () => {
         const el = document.getElementById(location.hash.substring(1));
         if (el) {
@@ -14,9 +14,9 @@ const ScrollToHash = () => {
         }
       };
 
-      // Try immediately, then again after short delay (for lazy content)
+      // Try immediately, then again after short delay
       scrollToElement();
-      const timeoutId = setTimeout(scrollToElement, 100); // tweak delay if needed
+      const timeoutId = setTimeout(scrollToElement, 100);
 
       return () => clearTimeout(timeoutId);
     }

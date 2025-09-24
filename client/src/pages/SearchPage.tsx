@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import type { NewProductType } from "../components/types";
 import NewProduct from "../components/NewProduct";
 import { Link } from 'react-router-dom';
-import noSearchPic from '../assets/images/no-search.png';
+import noSearchPic from '../images/no-search.png';
 
 
 export function useQuery() {
@@ -45,12 +45,12 @@ const SearchPage = () => {
 
 
   const resultProductElements = results.map(result => {
-    const imgSrc = new URL(`../assets/images/${result.img}`, import.meta.url).href;
+    // const imgSrc = new URL(`../assets/images/${result.img}`, import.meta.url).href;
     const encodedQuery = result.title.replaceAll(' ', '-');
 
     return <NewProduct
       key={result._id} 
-      imgSrc={imgSrc} 
+      // imgSrc={imgSrc} 
       encodedQuery={encodedQuery} 
       item={result}
     />

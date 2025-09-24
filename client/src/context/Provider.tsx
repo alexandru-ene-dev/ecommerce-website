@@ -5,8 +5,6 @@ import { reducer } from './reducer';
 
 
 const initialState: StateType = {
-  searchInput: '',
-  footerInput: '',
   theme: 'os-default',
   themeIcon: 'contrast'
 };

@@ -111,7 +111,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   padding-inline: 1em;
+  background: none;
+  border: none;
   color: var(--menu-link-clr);
   font-weight: 700;
   text-decoration: none;
@@ -132,7 +135,9 @@
 }
 
 .product-subcategory-list {
-  height: calc(100% - 55px - 100px);
+  height: 150px;
+  position: relative;
+  overflow: auto;
 }
 
 .subcategory-view {
@@ -159,7 +164,7 @@
 .back-menu-btn {
   height: 30px;
   background-color: var(--btn-bg);
-  color: white;
+  color: hsl(0, 0%, 100%);
   border: none;
 }
 

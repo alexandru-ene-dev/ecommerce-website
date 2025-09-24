@@ -1,6 +1,5 @@
 import { type ChangeEvent, type FormEvent, useState, useEffect, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { useInputContext } from "../hooks/useInputContext";
 import { devLog } from "../utils/devLog";
 import FooterLinks from "./FooterLinks";
 import SocialLinks from "./SocialLinks";
@@ -18,16 +17,25 @@ const Footer = (
     setStickyBtnHeight:  Dispatch<SetStateAction<number>>
   }
 ) => {
-  const { state, dispatch } = useInputContext();
+  const [ footerInput, setFooterInput ] = useState<string>('');
   const [ isFeedbackShown, setFeedback ] = useState<boolean>(false);
-  const [ emailAddress, setEmailAddress] = useState<string>('');
-  const copyrightRef = useRef<HTMLParagraphElement>(null);
+  const [ emailAddress, setEmailAddress ] = useState<string>('');
+  const copyrightRef = useRef<HTMLParagraphElement | null>(null);
+  const [ error, setError ] = useState<string | null>(null);
 
 
   const subscribe = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    setError(null);
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(footerInput);
+
+    if (!isEmailValid) {
+      setError('Invalid email address');
+      return;
+    }
+
     devLog('info', 'SUCCESS', 'You are now subscribed to our newsletter!');
-    setEmailAddress(state.footerInput);
+    setEmailAddress(footerInput);
     setFeedback(true);
   }
 
@@ -72,18 +80,21 @@ const Footer = (
           <div className="newsletter-right">
             <form onSubmit={subscribe} className="newsletter-form">
               <input
+                id="submit-email"
+                aria-label="Email address"
                 className="input footer-input"
                 type="email" 
-                onChange={(e: ChangeEvent<HTMLInputElement>) => dispatch({
-                  type: "SET_FOOTER_INPUT",
-                  payload: e.target.value
-                })} 
-                value={state.footerInput} 
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setFooterInput(e.target.value)}
+                value={footerInput} 
                 placeholder="Enter your email address"
               />
 
               <button className="subscribe-btn">Subscribe to Newsletter</button>
             </form>
+
+            {error &&
+              <div aria-live="assertive" className="edit-status error">{error}</div>
+            }
 
             <p className="newsletter-notice">
               By subscribing, you agree to receive marketing communications from PROGRESSIO and partners by email. You also consent to the use of your details in accordance with our Privacy Policy.

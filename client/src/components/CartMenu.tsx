@@ -3,14 +3,20 @@ import useFavoritesContext from '../hooks/useFavoritesContext';
 import useHandleFavorites from '../hooks/useHandleFavorites';
 import { useAuthContext } from '../hooks/useAuthContext';
 import delay from '../utils/delay';
-import { type ActiveFeedback } from '../pages/Homepage';
 
+import { type ActiveFeedback } from '../pages/Homepage';
 import useHandleCart from '../hooks/useHandleCart';
 import useCartContext from '../hooks/useCartContext';
 import { Link } from 'react-router-dom';
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
+
 import LoadingSpinner from './LoadingSpinner';
 import CartFavoritesFeedback from './CartFavoritesFeedback';
+import ShoppingCartIcon from '../images/icons/shopping-cart-icon.svg?component';
+import CancelIcon from '../images/icons/cancel-icon.svg?component';
+import FavoriteIcon from '../images/icons/favorite-icon.svg?component';
+import FavoriteFillIcon from '../images/icons/favorite-fill-icon.svg?component';
+import LazyProductImage from './LazyProductImage';
 
 
 type CartPropsType = {
@@ -34,13 +40,13 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
   const { localCart, setLocalCart } = useCartContext();
   const { handleFavorites, loadingButton } = useHandleFavorites(setLocalFavorites);
   const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   
   const [ totalPrice, setTotalPrice ] = useState(0);
   const [ activeLoadingIndex, setActiveLoadingIndex ] = useState<number | null>(null);
   const { state } = useAuthContext();
   const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
   const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
-
 
 
   useEffect(() => {
@@ -58,17 +64,20 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
     getTotalPrice();
   }, [localCart]);
 
+
+  const handleEscape = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      setIsCartHovered(false);
+      
+      const buttonElement = buttonRef.current;
+      if (!buttonElement) return;
+      buttonElement.focus();
+    }
+  };
+
   
   return (
-    <div
-      ref={ref} 
-      className="favorites-menu"
-      onClick={(e) => {
-        e.stopPropagation();
-        closeModal();
-        handleMenus('cart');
-      }}
-    >
+    <div ref={ref} className="menu">
       { feedbackArray.length > 0 &&
         <ul className="cart-favorites-feedback">
           {feedbackArray.map((feedback, i) => {
@@ -83,28 +92,50 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
         </ul>
       } 
 
-      <button className="fav-btn header-btn">
-        <span className="material-symbols-outlined header-btn-icon">
-          shopping_cart
-          {localCart && localCart?.length > 0 && 
-            <span className="fav-cart-count">{localCart?.length}</span>}
-        </span>
+      <button
+        ref={buttonRef} 
+        aria-label="Cart"
+        aria-controls="cart-menu"
+        aria-expanded={isCartHovered? 'true' : 'false'}
+        aria-haspopup="true" 
+        className="fav-btn header-btn"
+        onClick={(e) => {
+        e.stopPropagation();
+        closeModal();
+        handleMenus('cart');
+      }}
+      >
+        <ShoppingCartIcon className="header-btn" />
+        {localCart && localCart?.length > 0 && 
+          <span
+            aria-label={
+              `You have ${localCart.length} ${localFavorites.length > 1? 'products' : 'product'} in your cart`
+            }  
+            className="fav-cart-count"
+          >
+            {localCart?.length}
+          </span>
+        }
       </button>
 
 
       {isCartHovered &&
-        <div className="favorites-menu_content-wrapper"> 
-          <div onClick={(e) => e.stopPropagation()} className="favorites-menu_content">
-            <h1 className="favorites-title">
-              <span className="material-symbols-outlined favorites-icon">shopping_cart</span>
+        <div
+          onKeyDown={handleEscape} 
+          role="menu" 
+          id="cart-menu" 
+          className="menu-content-wrapper"
+        > 
+          <div onClick={(e) => e.stopPropagation()} className="menu-content">
+            <h2 className="section-title">
+              <ShoppingCartIcon />
               <span>Your Cart</span>
-            </h1>
+            </h2>
 
 
             {localCart && localCart.map((prod, i) => {
               const isFavorite = localFavorites && localFavorites.some(p => p._id === prod._id);
               const isInCart = localCart && localCart.some(p => p._id === prod._id);
-              const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
               const slug = prod.title.replaceAll(' ', '-');
               
               const isProdLoading = activeLoadingIndex === i;
@@ -112,20 +143,34 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
               const newPriceForUsers = (prod.oldPrice - (newSaleForUsers / 100 * prod.oldPrice)).toFixed(2);
               
               return (
-                <div key={prod._id} className="fav-hover_prod">
+                <div key={prod._id} className="menu-item">
                   {isProdLoading &&
                     <LoadingSpinner isLoading={loadingButton || cartLoadingButton} />
                   }
 
-                  <Link onClick={() => setIsCartHovered(false)} to={`/products/${slug}`}>
-                    <img className="fav-hover_img" src={imgSrc} />
+                  <Link
+                    role="menuitem" 
+                    aria-label={`View details for ${prod.title}`} 
+                    onClick={() => setIsCartHovered(false)} 
+                    to={`/products/${slug}`}
+                  >
+                    <LazyProductImage 
+                      className="menu-item-img"
+                      alt={prod.title}
+                      imageName={prod.img} 
+                    />
                   </Link>
 
-                  <Link onClick={() => setIsCartHovered(false)} to={`/products/${slug}`} className="fav-hover_prod-title">
+                  <Link 
+                    role="menuitem" 
+                    onClick={() => setIsCartHovered(false)} 
+                    to={`/products/${slug}`} 
+                    className="menu-item-title"
+                  >
                     {prod.title}
                   </Link>
 
-                  <p className="fav-hover_prod-price">
+                  <p className="menu-item-price">
                     <span className="old-price">{prod.oldPrice.toFixed(2)}</span>
                     <span>
                       ${state.isLoggedIn ? 
@@ -136,7 +181,9 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
                   </p>
 
 
-                  <button 
+                  <button
+                    role="menuitem"
+                    aria-label="Remove from cart" 
                     onClick={ async () => {
                       setActiveLoadingIndex(i);
                       handleCart(prod, isInCart).then(() => {
@@ -155,14 +202,14 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
                         return prev.slice(0, -1); 
                       });
                     }}
-                    className="fav-hover_remove-btn"
+                    className="menu-item-btn"
                   >
-                    <span className="material-symbols-outlined fav-hover_cart-ico">
-                      {isInCart? "remove_shopping_cart" : "add_shopping_cart"}
-                    </span>
+                    <CancelIcon />
                   </button>
 
-                  <button 
+                  <button
+                    role="menuitem"
+                    aria-label={isFavorite? 'Remove from favorites' : 'Add to favorites'}  
                     onClick={async () => {
                       setActiveLoadingIndex(i);
                       handleFavorites(prod, isFavorite).then(() => {
@@ -181,14 +228,10 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
                         return prev.slice(0, -1); 
                       });
                     }} 
-                    className="add-fav-btn new-fav-btn fav-hover_remove-btn"
+                    className="add-fav-btn new-fav-btn menu-item-btn"
                   >
-                    <span 
-                      data-favorite={isFavorite? "true" : "false"}
-                      className="material-symbols-outlined new-fav-icon"
-                    >
-                      favorite
-                    </span>
+                    <FavoriteFillIcon className={isFavorite? "favorite fill" : "favorite"} />
+                    <FavoriteIcon className="unfill" />
                   </button>
                 </div>
               );
@@ -196,7 +239,7 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
 
 
             {localCart && localCart.length === 0 && 
-              <div className="fav-hover_menu-no-fav">
+              <div className="menu-no-item">
                 Your cart is empty...
               </div>
             }
@@ -212,13 +255,14 @@ const CartMenu = forwardRef<HTMLDivElement, CartPropsType>((
               </div>
             }
 
-            <Link 
+            <Link
+              role="menuitem" 
               onClick={(e) => {
                 e.stopPropagation();
                 setIsCartHovered(false);
               }} 
               to="/cart" 
-              className="cart-hover_btn new-card-btn"
+              className="menu-btn new-card-btn"
             >
               Go to Cart
             </Link>

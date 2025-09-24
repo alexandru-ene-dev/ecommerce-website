@@ -1,37 +1,42 @@
 const socialLinks = [
   {
     name: 'Facebook',
-    img: '/social-media/facebook.png',
+    img: 'facebook.png',
     url: 'https://www.facebook.com/',
-    alt: 'facebook icon'
+    alt: 'facebook icon',
+    aria: 'Visit our Facebook page'
   },
 
   {
     name: 'Instagram',
-    img: '/social-media/instagram.png',
+    img: 'instagram.png',
     url: 'https://www.instagram.com/',
-    alt: 'instagram icon'
+    alt: 'instagram icon',
+    aria: 'Visit our Instagram page'
   },
 
   {
     name: 'Youtube',
-    img: '/social-media/youtube.png',
+    img: 'youtube.png',
     url: 'https://www.youtube.com/',
-    alt: 'youtube icon'
+    alt: 'youtube icon',
+    aria: 'Visit our Youtube channel'
   },
 
   {
     name: 'X',
-    img: '/social-media/twitter.png',
+    img: 'twitter.png',
     url: 'https://www.x.com/',
-    alt: 'x icon'
+    alt: 'x icon',
+    aria: 'Visit our X page'
   },
 
   {
     name: 'Pinterest',
-    img: '/social-media/pinterest.png',
+    img: 'pinterest.png',
     url: 'https://www.pinterest.com/',
-    alt: 'pinterest icon'
+    alt: 'pinterest icon',
+    aria: 'Visit our Pinterest page'
   }
 ];
 

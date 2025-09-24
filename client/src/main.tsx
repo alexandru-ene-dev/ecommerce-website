@@ -9,7 +9,6 @@ import { AuthProvider } from './context/AuthContext/AuthProvider.tsx';
 import { FavoritesProvider } from './context/FavoritesContext.tsx';
 import { LoadingProvider } from './context/LoadingContext/LoadingContext.tsx';
 import { CartProvider } from './context/CartContext.tsx';
-
 import { AvatarProvider } from './context/AuthContext/AvatarContext.tsx';
 
 

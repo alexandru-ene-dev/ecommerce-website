@@ -2,7 +2,7 @@ import api from "../api";
 import handleErrors from "../utils/handleErrors";
 
 
-export const getHomeNewProducts = async () => {
+const getHomeNewProducts = async () => {
   try {
     const res = await api.get('/');
     const data = res.data;
@@ -27,3 +27,5 @@ export const getHomeNewProducts = async () => {
     }
   }
 };
+
+export { getHomeNewProducts };

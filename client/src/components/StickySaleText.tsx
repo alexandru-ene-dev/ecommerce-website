@@ -1,5 +1,7 @@
 import { salesText } from '../utils/salesText.ts';
 import { useRef, useEffect } from 'react';
+import ChevronLeftIcon from '../images/icons/chevron-left-icon.svg?component';
+import ChevronRightIcon from '../images/icons/chevron-right-icon.svg?component';
 
 
 const StickySaleText = () => {
@@ -140,13 +142,19 @@ const StickySaleText = () => {
 
 
   return (
-    <div ref={salesTextOuterRef} className="sales-outer-wrapper">
+    <div 
+      role="region" 
+      aria-label="Sales promotions" 
+      ref={salesTextOuterRef} 
+      className="sales-outer-wrapper"
+    >
       <div className="sales-inner-wrapper">
-        <button onClick={handlePrev} data-dir="prev">
-          <span className="material-symbols-outlined">chevron_left</span>
+        <button aria-label="Previous" onClick={handlePrev} data-dir="prev">
+          <ChevronLeftIcon />
         </button>
-        <button onClick={handleNext} data-dir="next">
-          <span className="material-symbols-outlined">chevron_right</span>
+
+        <button aria-label="Next" onClick={handleNext} data-dir="next">
+          <ChevronRightIcon />
         </button>
       
         <div className="sales-width-wrapper">

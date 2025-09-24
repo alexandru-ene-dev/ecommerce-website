@@ -13,8 +13,6 @@ const getAvatarController = async (req: Request, res: Response) => {
       }); 
     }
 
-    // res.set('Content-Type', user.avatarMimeType || 'image/png');
-
     const base64Avatar = user.avatar.toString('base64');
 
     return res.status(200).json({

@@ -180,17 +180,17 @@
   scale: 1.35;
 }
 
-[alt="youtube icon"] {
+[data-name="Youtube"] {
   max-width: 35px;
   min-width: 35px;
 }
 
-[alt="pinterest icon"] {
+[data-name="Pinterest"] {
   max-width: 30px;
   min-width: 30px;
 }
 
-[alt="x icon"] {
+[data-name="X"] {
   max-width: 28px;
   min-width: 28px;
 }

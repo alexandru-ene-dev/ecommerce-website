@@ -27,9 +27,6 @@ export type AuthChildrenType = {
 }
 
 export type AuthActionsType = 
-  // type: 'LOGIN' | 'LOGOUT' | 'EDIT_NAME',
-  // payload: UserType | null | { firstName: string, lastName: string }
-
   | { type: 'LOGIN', payload: UserType }
   | { type: 'LOGOUT', payload: null }
   | { type: 'EDIT_NAME', payload: { firstName: string, lastName: string } };

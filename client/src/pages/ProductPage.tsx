@@ -1,7 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { getProduct } from "../services/getProduct";
+import RemoveFromCartIcon from '../images/icons/remove-shopping-cart-icon.svg?component';
+import AddToCartIcon from '../images/icons/add-shopping-cart-icon.svg?component';
+import FavoriteIcon from '../images/icons/favorite-icon.svg?component';
+import FavoriteFillIcon from '../images/icons/favorite-fill-icon.svg?component';
 import { type NewProductType } from "../components/types";
 
 import useCartContext from '../hooks/useCartContext.ts';
@@ -15,6 +18,8 @@ import RecentlyViewedProducts from "../components/RecentlyViewed.tsx";
 import LoadingSpinner from "../components/LoadingSpinner.tsx";
 import CartFavoritesFeedback from '../components/CartFavoritesFeedback';
 import { type ActiveFeedback } from './Homepage';
+import { useAuthContext } from "../hooks/useAuthContext.ts";
+import LazyProductImage from "../components/LazyProductImage.tsx";
 
 
 export default function ProductPage(
@@ -28,6 +33,7 @@ export default function ProductPage(
   }
 ) {
 
+  
   const { pathname } = useLocation();
   const { name } = useParams();
   const [ productObj, setProductObj ] = useState<NewProductType | null>(null);
@@ -35,22 +41,27 @@ export default function ProductPage(
   const addCartBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const intersectionWrapperRef = useRef<HTMLDivElement | null>(null);
-  const imgSrc = new URL(`../assets/images/${productObj?.img}`, import.meta.url).href;
   const { localFavorites, setLocalFavorites } = useFavoritesContext();
   const { localCart, setLocalCart } = useCartContext();
-
   const isFavorite = localFavorites && localFavorites.some(fav => fav._id === productObj?._id);
+
   const isOnCart = localCart && localCart.some((fav => fav._id === productObj?._id));  
   const { handleFavorites, loadingButton } = useHandleFavorites(setLocalFavorites);
   const { handleCart, loadingButton: cartLoadingButton } = useHandleCart(setLocalCart);
   const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
   const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
+  const { state } = useAuthContext();
+
+  const newSaleForUsers = (productObj?.sale ?? 0) + 5;
+  const newPriceForUsers = 
+    ((productObj?.oldPrice ?? 0) - (newSaleForUsers / 100 * (productObj?.oldPrice ?? 0))).toFixed(2);
 
 
   // fetch product
   useEffect(() => {
     try {
       const fetchProduct = async () => {
+        const { getProduct } = await import('../services/getProduct');
         const product = await getProduct((name as any));
         setProductObj(product);
       };
@@ -155,16 +166,28 @@ export default function ProductPage(
 
         <div className="prod-flex">
           <div className="prod-img-wrapper">
-            <img className="prod-img" src={imgSrc} alt={productObj?.alt} />
+            <LazyProductImage
+              className="prod-img"
+              alt={productObj?.alt}
+              imageName={productObj?.img}
+            />
           </div>
 
           <div className="prod-price-wrapper">
             <div className="prod-price-inner">
               <div className="prod-sale-price-flex">
-                <p className="prod-old-price old-price">${productObj?.oldPrice}</p>
-                <span className="sale-txt">{productObj?.sale}% off</span>
+                <p className="prod-old-price old-price">${productObj?.oldPrice.toFixed(2)}</p>
+                <span className="sale-txt">
+                  {state.isLoggedIn? newSaleForUsers : productObj?.sale}% off
+                </span>
               </div>
-              <p className="prod-new-price new-price">${productObj?.price}</p>
+
+              <p className="prod-new-price new-price">
+                ${state.isLoggedIn? 
+                  Number(newPriceForUsers).toFixed(2) :
+                  productObj?.price.toFixed(2)
+                }
+              </p>
             </div>
 
             <p className="in-stock">
@@ -207,9 +230,7 @@ export default function ProductPage(
                 ref={addCartBtnRef} 
                 className="add-cart-btn new-card-btn"
               >
-                <span className="material-symbols-outlined new-cart-icon">
-                  shopping_cart
-                </span>
+                {isOnCart? <RemoveFromCartIcon /> : <AddToCartIcon />}
                 <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
               </button>
             </div>
@@ -237,13 +258,11 @@ export default function ProductPage(
                     });
                   }
                 }} 
-                className="new-card-btn prod-fav-btn"
+                className="add-cart-btn new-card-btn prod-fav-btn"
               >
-                <span 
-                  data-favorite={isFavorite? "true" : "false"}
-                  className="material-symbols-outlined prod-fav-icon"
-                >
-                  favorite
+                <span>
+                  <FavoriteFillIcon className={isFavorite? "favorite fill" : "favorite"} />
+                  <FavoriteIcon className="unfill" />
                 </span>
                 <span>{isFavorite? 'Added to Favorites' : 'Add to Favorites'}</span>
               </button>
@@ -256,50 +275,64 @@ export default function ProductPage(
 
         <div ref={intersectionWrapperRef} className="intersection-wrapper">
           <div className="intersect-img-flex">
-            <img className="intersect-img" src={imgSrc} alt={productObj?.alt} />
+            <LazyProductImage
+              className="intersect-img"
+              alt={productObj?.alt}
+              imageName={productObj?.img}
+            />
             <p>{productObj?.title}</p>
           </div>
 
           <div className="intersect-price-btn-flex">
             <div className="intersect-price">
               <div className="prod-sale-price-flex">
-                <p className="prod-old-price old-price">${productObj?.oldPrice}</p>
+                <p 
+                  aria-label={`Old price: ${productObj?.oldPrice}`} 
+                  className="prod-old-price old-price"
+                >
+                  ${productObj?.oldPrice.toFixed(2)}
+                </p>
                 <span className="sale-txt">{productObj?.sale}%</span>
               </div>
 
-              <p className="prod-new-price new-price">${productObj?.price}</p>
+              <p className="prod-new-price new-price">
+                ${state.isLoggedIn? 
+                  Number(newPriceForUsers).toFixed(2) :
+                  productObj?.price.toFixed(2)
+                }
+              </p>
             </div>
 
             <div className="button-wrapper">
               <LoadingSpinner isLoading={cartLoadingButton} />
 
-              <button 
-                onClick={async () => {
-                  if (productObj) {
-                    handleCart(productObj, isOnCart).then(() => {
-                      setActiveFeedback({ value: 'Cart', action: isOnCart? 'remove' : 'add' });
-                      setFeedbackArray(prev => {
-                        const newArr = [
-                          { value: 'Cart', action: isOnCart? 'remove' : 'add' } as ActiveFeedback, 
-                          ...prev 
-                        ];
-                        return newArr; 
+              <div>
+                <button 
+                  onClick={async () => {
+                    if (productObj) {
+                      handleCart(productObj, isOnCart).then(() => {
+                        setActiveFeedback({ value: 'Cart', action: isOnCart? 'remove' : 'add' });
+                        setFeedbackArray(prev => {
+                          const newArr = [
+                            { value: 'Cart', action: isOnCart? 'remove' : 'add' } as ActiveFeedback, 
+                            ...prev 
+                          ];
+                          return newArr; 
+                        });
                       });
-                    });
 
-                    await delay(2000);
-                    setFeedbackArray((prev: any) => {
-                      return prev.slice(0, -1); 
-                    });
-                  }
-                }} 
-                className="new-card-btn copy-btn"
-              >
-                <span className="material-symbols-outlined new-cart-icon">
-                  shopping_cart
-                </span>
-                <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
-              </button>
+                      await delay(2000);
+                      setFeedbackArray((prev: any) => {
+                        return prev.slice(0, -1); 
+                      });
+                    }
+                  }} 
+                  className="new-card-btn copy-btn"
+                >
+                  {isOnCart? <RemoveFromCartIcon /> : <AddToCartIcon />}
+                  <span>{isOnCart? 'Remove from Cart' : 'Add to Cart'}</span>
+                </button>
+              </div>
             </div>
 
           </div>

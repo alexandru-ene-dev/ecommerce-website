@@ -42,6 +42,8 @@ html.dark-mode {
   --txt-hov2: hsl(0, 0%, 80%);
   --error: hsl(0, 100%, 45%);
   --red: hsl(0, 100%, 45%);
+  --red-hov: hsl(0, 100%, 47%);
+  --sync-error: hsl(0, 100%, 45%);
   --sale-txt-bg: hsl(0, 0%, 20%);
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 80%);
@@ -95,8 +97,10 @@ html.light-mode {
   --txt-hov: hsl(0, 0%, 100%);
   --txt-clr2: hsl(146, 100%, 25%);
   --txt-hov2: hsl(146, 100%, 35%);
-  --error: hsl(0, 87%, 85%);
+  --error: hsl(0, 100%, 30%);
   --red: hsl(0, 90%, 40%);
+  --red-hov: hsl(0, 100%, 41%);
+  --sync-error: hsl(0, 100%, 87%);
   --sale-txt-bg: hsl(146, 100%, 25%);
   --sale-txt-clr: hsl(0, 0%, 100%);
   --sale-txt-hov: hsl(0, 0%, 90%);

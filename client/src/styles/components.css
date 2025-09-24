@@ -3,13 +3,16 @@
 
 .go-top-btn {
   display: none;
+  width: 50px;
+  height: 50px;
   position: fixed;
   z-index: 2000;
   bottom: 25%;
   right: 10px;
-  background-color: var(--btn-bg);
-  color: white;
   border: none;
+  border-radius: 50%;
+  background-color: var(--btn-bg);
+  color: hsl(0, 0%, 100%);
 }
 
 .go-top-btn:hover,

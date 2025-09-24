@@ -1,6 +1,7 @@
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useLocation } from 'react-router-dom'
 
+
 const HandlePadding = (
   { setStickyBtnHeight, setIsBtnVisible }: 
   { 
@@ -18,4 +19,4 @@ const HandlePadding = (
   return null
 };
 
-export { HandlePadding };
+export default HandlePadding;

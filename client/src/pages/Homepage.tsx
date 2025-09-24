@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { getHomeNewProducts } from '../services/getHomeNewProducts.ts';
 import NewProduct from '../components/NewProduct.tsx';
 import { type NewProductType } from '../components/types.ts';
 import CartFavoritesFeedback from '../components/CartFavoritesFeedback.tsx';
 
-import HeroImage from '../assets/images/innovative-tech.jpg';
+import HeroImage from '../images/innovative-tech.webp';
 import useLoadingContext from '../hooks/useLoadingContext.ts';
 import delay from '../utils/delay.ts';
-import RecentlyViewed from '../components/RecentlyViewed.tsx';
-import Deals from '../components/Deals.tsx';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
+import LazyProductImage from '../components/LazyProductImage.tsx';
+
+
+const RecentlyViewed = lazy(() => import('../components/RecentlyViewed.tsx'));
+const Deals = lazy(() => import('../components/Deals.tsx'));
 
 
 export type ActiveFeedback = {
@@ -23,14 +25,12 @@ const Homepage = () => {
   const { setLoading } = useLoadingContext();
   const [ haveNewProducts, setHaveNewProducts ] = useState(false);
   const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
-  const joinUsImg = new URL('../assets/images/join-us.jpg', import.meta.url).href;
 
   const { state } = useAuthContext();
   const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
   const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
 
   const newProductElements = newProducts.map(item => {
-    const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
     const encodedQuery = item.title.replaceAll(' ', '-');
     
     return (
@@ -39,7 +39,6 @@ const Homepage = () => {
         setActiveFeedback={setActiveFeedback}
         key={item.id}
         item={item} 
-        imgSrc={imgSrc} 
         encodedQuery={encodedQuery} 
       />
     );
@@ -48,6 +47,7 @@ const Homepage = () => {
 
   useEffect(() => {
     const getProducts = async () => {
+      const { getHomeNewProducts } = await import('../services/getHomeNewProducts.ts');
       const products = await getHomeNewProducts();
 
       if (!products.success) {
@@ -67,7 +67,7 @@ const Homepage = () => {
   return (
     <main>
       { feedbackArray.length > 0 &&
-        <ul className="cart-favorites-feedback">
+        <ul aria-live="polite" className="cart-favorites-feedback">
           {feedbackArray.map((feedback, i) => {
             return ( 
               <CartFavoritesFeedback
@@ -99,10 +99,14 @@ const Homepage = () => {
         </div>
       }
 
-      <Deals />
+      <Suspense>
+        <Deals />
+      </Suspense>
 
       <div className="join-wrapper">
-        <Link 
+        <h2 className="section_title">Join us now</h2>
+        <Link
+          aria-label={state.isLoggedIn? 'See all products' : 'Go to register page'} 
           onClick={async () => {
             setLoading(true);
             await delay(700);
@@ -111,10 +115,11 @@ const Homepage = () => {
           to={state.isLoggedIn? "/categories/all" : "/register"}
         >
           <div className="join-img-wrapper">
-            <img 
+            <LazyProductImage 
+              imageName="join-us.jpg" 
+              alt="A tech office with people working"
               className="join-img" 
-              src={joinUsImg} 
-              alt="A tech office with people working" />
+            />
 
             <p className="join-par">{state.isLoggedIn? "Congrats!" : "Join us"}</p>
 
@@ -128,7 +133,12 @@ const Homepage = () => {
         </Link>
       </div>
 
-      <RecentlyViewed />
+      <Suspense>
+        <RecentlyViewed 
+          setFeedbackArray={setFeedbackArray}
+          setActiveFeedback={setActiveFeedback}
+        />
+      </Suspense>
 
     </main>
   );

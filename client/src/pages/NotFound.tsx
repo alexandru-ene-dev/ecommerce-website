@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import notFoundPic from '../assets/images/404.png';
+import notFoundPic from '../images/404.png';
 
 
 const NotFound = () => {
@@ -7,7 +7,7 @@ const NotFound = () => {
     <section className="not-found">
       <div className="not-found-flex">
         <div className="not-found-img-wrap">
-          <img src={notFoundPic} alt="Page not found" />
+          <img loading="lazy" src={notFoundPic} alt="Page not found" />
         </div>
 
         <h1 className="section_title">Unfortunately, we couldn't find the page you were looking for...</h1>

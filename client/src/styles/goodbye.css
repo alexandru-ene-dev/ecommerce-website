@@ -1,0 +1,30 @@
+.goodbye-page {
+  margin-top: 11rem;
+  padding: 1em;
+  color: var(--clr-prim);
+  text-align: center;
+}
+
+.goodbye-page p {
+  font-size: 1.25rem;
+}
+
+.goodbye-img-wrap {
+  border-radius: 50%;
+  max-width: 20em;
+  overflow: hidden;
+}
+
+.goodbye-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: covers;
+}
+
+.goodbye-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em 5em;
+}

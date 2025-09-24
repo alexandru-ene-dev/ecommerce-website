@@ -78,10 +78,8 @@ const Cart = () => {
         setDeleteCartMode(false);
       }
 
-      if (localCart.length > 0) {
-        await delay(500);
-        setIsLoadingCart(false);
-      }
+      await delay(500);
+      setIsLoadingCart(false);
     }
 
     handleModes();
@@ -90,7 +88,7 @@ const Cart = () => {
 
   if (isLoadingCart) {
     return (
-      <section className="favorites-section loading">
+      <section className="items-page loading">
         <h1 className="category-page-title">Loading Cart...</h1>
         <LoadingSpinner isLoading={isLoadingCart} />
       </section>
@@ -99,7 +97,7 @@ const Cart = () => {
 
 
   return (
-    <section className="favorites-section">
+    <section className="items-page">
       { feedbackArray.length > 0 &&
         <ul className="cart-favorites-feedback">
           {feedbackArray.map((feedback, i) => {
@@ -114,16 +112,15 @@ const Cart = () => {
         </ul>
       }
 
-      {status && <p className="clear-status">{status}</p>}
+      {status && <p role="alert" className="clear-status">{status}</p>}
 
       <div className={!localCart.length? "clear-wrap no-favorites" : "clear-wrap"}>
-        <div className="fav-title-txt">
-          <h1 className="favorites-title">
-            <span className="material-symbols-outlined favorites-icon">shopping_cart</span>
+        <div className="section-title-wrapper">
+          <h1 className="section-title">
             <span>Your Cart</span>
           </h1>
 
-          <p className="favorites-par">{
+          <p className="items-par">{
             localCart && localCart.length > 0?
               `You have ${localCart.length} ${
                 localCart.length > 1? 'products' : 'product'
@@ -133,10 +130,16 @@ const Cart = () => {
         </div>
 
         {isDeleteCartMode? 
-          (<div className="clear-confirmation">
+          (<div
+            aria-live="assertive"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirmation" 
+            className="clear-confirmation"
+          >
             <LoadingSpinner isLoading={isLoading} />
 
-            <p>Are you sure you want to remove all the products from your cart? This action cannot be undone.</p>
+            <p id="confirmation">Are you sure you want to remove all the products from your cart? This action cannot be undone.</p>
 
             <div>
               <button 

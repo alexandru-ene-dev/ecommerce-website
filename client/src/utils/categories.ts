@@ -31,7 +31,7 @@ export const categories: Category[] = [
         content: ['Phones', 'Accessories']
       }
     ],
-    src: 'laptops.jpeg',
+    src: 'laptops.webp',
     alt: 'Laptops, tablets and phones'
   },
 
@@ -42,7 +42,7 @@ export const categories: Category[] = [
       { name: 'Desktop Applications', slug: 'desktop-applications' },
       { name: 'Antivirus Programs', slug: 'antivirus-programs' }
     ],
-    src: 'software.jpg',
+    src: 'software.webp',
     alt: 'Software'
   },
 
@@ -53,7 +53,7 @@ export const categories: Category[] = [
       { name: 'Gaming Accessories', slug: 'gaming-accessories' },
       { name: 'Video Games', slug: 'video-games' }
     ],
-    src: 'gaming.jpeg',
+    src: 'gaming.webp',
     alt: 'Gaming'
   },
 
@@ -65,7 +65,7 @@ export const categories: Category[] = [
       { name: 'Air Conditioners & Heating', slug: 'air-conditioners-and-heating' },
       { name: 'Everyday Use', slug: 'everyday-use' }
     ], 
-    src: 'electronics.jpg',
+    src: 'electronics.webp',
     alt: 'Electronics'
   },
 
@@ -80,7 +80,7 @@ export const categories: Category[] = [
       { name: 'Shoes', slug: 'shoes' },
       { name: 'Accessories', slug: 'accessories' }
     ],
-    src: 'fashion.jpg',
+    src: 'fashion.webp',
     alt: 'Men fashion'
   },
 
@@ -91,7 +91,7 @@ export const categories: Category[] = [
       { name: 'Star Wars', slug: 'star-wars' },
       { name: 'Cyberpunk 2077', slug: 'cyberpunk-2077' }
     ],
-    src: 'collections.jpg',
+    src: 'collections.webp',
     alt: 'Movie and game-themed merchandise'
   },
 
@@ -102,7 +102,7 @@ export const categories: Category[] = [
       { name: '50% off', slug: '50-off' },
       { name: 'Giveaways', slug: 'giveaways' }
     ],
-    src: 'offers.jpg',
+    src: 'offers.webp',
     alt: 'Cheap offers'
   },
 
@@ -113,7 +113,7 @@ export const categories: Category[] = [
       { name: 'How React Changed the Web', slug: 'how-react-changed-the-web' },
       { name: '2025 Fullstack Roadmap', slug: '2025-fullstack-roadmap' } 
     ],
-    src: 'newsletter.jpg',
+    src: 'newsletter.webp',
     alt: 'Newsletter'
   }
 ];

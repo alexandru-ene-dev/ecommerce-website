@@ -9,8 +9,9 @@ import { Link, useLocation } from 'react-router-dom';
 import delay from "../utils/delay.ts";
 import useLoadingContext from "../hooks/useLoadingContext.ts";
 import { useSearchParams } from "react-router-dom";
-import NoProductsPic from '../assets/images/no-products.jpg';
+import NoProductsPic from '../images/no-products.jpg';
 import LoadingSpinner from "../components/LoadingSpinner.tsx";
+import LazyProductImage from "../components/LazyProductImage.tsx";
 
 
 const CategoryPage = () => {
@@ -85,16 +86,15 @@ const CategoryPage = () => {
   if (products[0]?.content) {
     isSubcategoryPage = products[0]?.content?.length > 0 && !subSubcategory;
   }
-  // const isProductPage = !!(products.length > 0 && subSubcategory) || !products[0]?.content?.length;
 
 
   const subcategoryElements = isSubcategoryPage &&
     products[0]?.content?.map((item: any) => {
       const subslug = item?.name.toLowerCase().replaceAll(' ', '-');
-      const imgSrc = new URL(`../assets/images/${item.img}`, import.meta.url).href;
 
       return (
-        <Link 
+        <Link
+          aria-label={`View ${item.name}`} 
           key={nanoid()} 
           className="prod-category"
           to={`${pathname}/${subslug}`}
@@ -103,7 +103,7 @@ const CategoryPage = () => {
 
           <div className="img-description-flex">
             <div className="prod-category_img-wrap">
-              <img className="prod-category_img" src={imgSrc} />
+              <LazyProductImage className="prod-category_img" imageName={item.img} alt={item} />
             </div>
 
             <p className="prod-category_description">{item.description}</p>
@@ -114,13 +114,11 @@ const CategoryPage = () => {
 
 
   const productElements = products.map(prod => {
-    const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
     const slug = prod.title.replaceAll(' ', '-')
     
     return (
       <NewProduct
         key={prod._id}
-        imgSrc={imgSrc} 
         encodedQuery={slug}
         item={prod} 
       />
@@ -143,7 +141,7 @@ const CategoryPage = () => {
       <main className="category-page-main">
         <div className="not-found-flex">
           <div className="not-found-img-wrap">
-            <img className="not-found-product-img" src={NoProductsPic} />
+            <img loading="lazy" className="not-found-product-img" src={NoProductsPic} />
           </div>
 
           <div>
@@ -171,6 +169,7 @@ const CategoryPage = () => {
     return (
       <div className="all-prod-section">
         <h1 className="category-page-title">Everything Progressio has to offer</h1>
+        
         <div data-all="true" className="new-section-grid-wrapper">
           <div className="new-section-grid">
             {productElements}

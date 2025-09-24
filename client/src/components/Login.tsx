@@ -1,12 +1,5 @@
-import { 
-  useState, type MouseEvent,
-  type ChangeEvent, type FormEvent, useRef,
-  type Dispatch,
-  type SetStateAction
-} from 'react';
-
+import { useState, type Dispatch, type SetStateAction, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import loginUserService from '../services/loginUserService';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import LoadingSpinner from './LoadingSpinner';
@@ -20,100 +13,41 @@ import { getCart } from '../utils/cartStorage';
 import { getLocalFavorites } from '../utils/localFavorites';
 import useFavoritesContext from '../hooks/useFavoritesContext';
 import { forwardRef } from 'react';
-import { useInputContext } from '../hooks/useInputContext';
+import { useThemeContext } from '../hooks/useThemeContext';
 import { type Theme, type ThemeIcon } from '../context/types';
+import ProfileIcon from '../images/icons/profile-icon.svg?component';
+import ProfileSquareIcon from '../images/icons/profile-icon2.svg?component';
+import LoginIcon from '../images/icons/login-icon.svg?component';
+import LogoutIcon from '../images/icons/logout-icon.svg?component';
 
 
 type LoginPropsType = {
   visibleLoginMenu?: boolean,
   setVisibleLoginMenu?: Dispatch<SetStateAction<boolean>>,
-  showAccount?: boolean,
-  setShowAccount?: Dispatch<SetStateAction<boolean>>,
   handleMenus?: (menu: string) => void,
-  activeMenu?: string | null
 };
 
 
-const LoginMenu = (
+const Login = forwardRef<HTMLDivElement, LoginPropsType>((
   { 
+    visibleLoginMenu, 
     setVisibleLoginMenu,
     handleMenus,
-    setShowAccount
-  }: { 
-    setVisibleLoginMenu?: Dispatch<SetStateAction<boolean>>
-    handleMenus?: (menu: string) => void,
-    setShowAccount?: Dispatch<SetStateAction<boolean>>
-
-  }
+  }, ref
 ) => {
-  const [ email, setEmail ] = useState('');
-  const [ pass, setPass ] = useState('');
-  const [ error, setError ] = useState<string | null>(null);
-  const [ visiblePass, setVisiblePass ] = useState(false);
-  const [ showLogoutConfirm, setLogoutConfirm ] = useState(false);
 
-  const [ isLoading, setLoading ] = useState(false);
   const { state, dispatch } = useAuthContext();
-  const navigate = useNavigate();
-  const loginWrapperRef = useRef<HTMLTableSectionElement | null>(null);
-  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
-
   const { avatar } = useAvatar();
   const nameInitial = state.user?.firstName.slice(0, 1).toUpperCase();
-  const [ keepMeLogged, setKeepMeLogged ] = useState(false);
+  const [ showLogoutConfirm, setLogoutConfirm ] = useState(false);
   const { setLocalCart } = useCartContext();
+
   const { setLocalFavorites } = useFavoritesContext();
-  const { dispatch: themeDispatch } = useInputContext();
-
-
-  const togglePass = (e: MouseEvent) => {
-    if (e) e.preventDefault();
-    setVisiblePass(prev => !prev);
-  };
-
-
-  const handleEmailInput = (e: ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
-    if (!target) return;
-    setEmail(target.value);
-  };
-
-
-  const handlePasswordInput = (e: ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
-    if (!target) return;
-    setPass(target.value);
-  };
-
-
-  const handleLogin = async (e: FormEvent) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      setError(null);
-      const login = await loginUserService(email, pass, keepMeLogged);
-
-      if (!login.success) {
-        setError(login.message);
-        return;
-      }
-  
-      await delay(500);
-      setLoading(false);
-      dispatch({ type: 'LOGIN', payload: login.user });
-
-      if (!setVisibleLoginMenu) return;
-      setVisibleLoginMenu(false);
-      navigate('/profile');
-      location.reload();
-
-      setError(login.message);
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { dispatch: themeDispatch } = useThemeContext();
+  const [ isLoading, setLoading ] = useState(false);
+  const [ _, setError ] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const accountBtnRef = useRef<HTMLButtonElement | null>(null);
 
 
   const handleLogout = async () => {
@@ -129,15 +63,11 @@ const LoginMenu = (
       await delay(1000);
       setLoading(false);
       dispatch({ type: 'LOGOUT', payload: null });
-      if (!setVisibleLoginMenu) return;
-      setVisibleLoginMenu(false);
 
-      if (!handleMenus) return;
-      handleMenus('');
+      handleMenus?.('');
       navigate('/');
-
       
-      const localTheme = localStorage.getItem('theme') as Theme;
+      const localTheme = localStorage.getItem('theme') as Theme || 'os-default';
       themeDispatch({ 
         type: 'TOGGLE_THEME', 
         theme: localTheme, 
@@ -157,242 +87,193 @@ const LoginMenu = (
   };
 
 
-  return (
-    <div 
-      ref={loginWrapperRef} 
-      className="login-wrapper"
-      onClick={(e) => e.stopPropagation()}
-      onMouseEnter={(e) => e.stopPropagation()}
-    >
-      <button
-        ref={closeButtonRef}
-        onClick={() => {
-          if (!setShowAccount || !handleMenus) return;
-          setShowAccount(false);
-          handleMenus('');
-        }} 
-        className="close-menu-btn close-login-btn"
-      >
-        <span className="material-symbols-outlined">close</span>
-      </button>
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target) return;
 
-      {state.isLoggedIn && avatar? 
-        <img className="login-avatar" src={avatar} /> :
-        ( state.isLoggedIn? 
-          <div className="account-initial">{nameInitial}</div> : null 
-        )
+      if (!target.closest('.login-wrapper')) {
+        setLogoutConfirm(false);
       }
+    }
 
-      <h2 className="login-title">
-        {state.isLoggedIn? `Hey, ${state.user?.firstName}!` : 'Sign In'}
-      </h2>
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
 
-      {!state.isLoggedIn &&
-        <div className="login-stats">
-          <form onSubmit={handleLogin} className="login-form" noValidate>
-            <input 
-              onChange={handleEmailInput} 
-              value={email} 
-              className="input" 
-              type="email" 
-              placeholder="E-mail address" 
-            />
 
-            <div className="login-pass-wrapper">
-              <input
-                onChange={handlePasswordInput}
-                value={pass}
-                className="input login-pass-inp" 
-                type={visiblePass? "text" : "password"} 
-                placeholder="Password" 
-              />
+  useEffect(() => {
+    if (!showLogoutConfirm) return;
 
-              <button 
-                aria-label={visiblePass? "Hide password" : "Show password"} 
-                onClick={togglePass} 
-                className="visible-pass-btn"
-              >
-                <span 
-                  className="material-symbols-outlined visible-pass-icon"
-                >
-                  {visiblePass? "visibility_off" : "visibility"}
-                </span>
-              </button>
-            </div>
+    const focusableEls = document.querySelectorAll(
+      '.logout-confirm-modal button'
+    ) as NodeListOf<HTMLButtonElement>;
 
-            {error && <div className="error-message">{error}</div>}
+    const firstEl = focusableEls[0];
+    const lastEl = focusableEls[focusableEls.length - 1];
 
-            <div className="forgot-pass-wrap">
-              <label htmlFor="keep-logged" className="keep-logged-label">
-                <input
-                  onChange={() => setKeepMeLogged(prev => !prev)}
-                  checked={keepMeLogged? true : false} 
-                  id="keep-logged" 
-                  type="checkbox" 
-                  className="keep-logged-checkbox checkbox-inp" 
-                />
-                <p className="keep-logged-text">Keep me logged in</p>
-              </label>
-
-              <a href="#">Forgot password?</a>
-            </div>
-            
-            <button className="login-btn sign-in-btn">Sign In</button>
-          </form>
-
-          <div className="create-account-wrapper">
-            <h2 className="login-title">New to Progressio?</h2>
-          
-            <p className="create-account-par">Create an account to check out faster and receive emails about your orders, new products, events and special offers!</p>
-            
-            <Link 
-              onClick={() => {
-                if (!setVisibleLoginMenu) return;
-                setVisibleLoginMenu(prev => !prev);
-              }} 
-              to="/register" 
-              className="login-btn sign-in-btn"
-            >
-              Create Account
-            </Link>
-
-            <button className="login-btn sign-in-btn">Sign Up with Google</button>
-          </div>
-        </div>
+    const trapFocus = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        } else if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      } else if (e.key === 'Escape') {
+        setLogoutConfirm(false);
+        accountBtnRef.current?.focus();
       }
+    };
 
-      {state.isLoggedIn &&
-        <div className="account-stats">
-          <Link 
-            onClick={() => {
-              if (!setVisibleLoginMenu) return;
-              setVisibleLoginMenu(false);
-            }} 
-            to='/profile' 
-            className="new-card-btn"
-          >
-            Profile
-          </Link>
+    document.addEventListener('keydown', trapFocus);
+    firstEl.focus();
 
-          <button 
-            onClick={() => setLogoutConfirm(true)} 
-            className="new-card-btn"
-          >
-            Log Out
-          </button>
-
-          {showLogoutConfirm && 
-            <div className="logout-confirm-modal">
-              <p className="logout-confirm-par">Are you sure you want to logout?</p>
-
-              <button 
-                className="new-card-btn confirm-logout-btn" 
-                onClick={handleLogout}
-              >
-                Yes, log me out
-              </button>
-
-              <button 
-                className="new-card-btn confirm-logout-btn" 
-                onClick={() => setLogoutConfirm(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          }
-        </div>
-      }
-
-      <LoadingSpinner isLoading={isLoading} />
-    </div>
-  );
-};
+    return () => document.removeEventListener('keydown', trapFocus);
+  }, [showLogoutConfirm]);
 
 
-const Login = forwardRef<HTMLDivElement, LoginPropsType>((
-  { 
-    visibleLoginMenu, 
-    setVisibleLoginMenu, 
-    showAccount, 
-    setShowAccount,
-    handleMenus,
-    activeMenu
-  }, ref
-) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      setVisibleLoginMenu?.(false);
 
-  const { state } = useAuthContext();
-  const { avatar } = useAvatar();
-  const nameInitial = state.user?.firstName.slice(0, 1).toUpperCase();
+      const accountBtn = accountBtnRef.current;
+      if (!accountBtn) return;
+      accountBtn.focus();
+    }
+  };
+
+
+  useEffect(() => {
+    if (visibleLoginMenu) {
+      handleFocusFirstElement();
+    }
+  }, [visibleLoginMenu]);
+
+
+  const handleFocusFirstElement = () => {
+    const firstFocusableEl = document.querySelectorAll(
+      '.login-wrapper [role="menuitem"]'
+    )[0] as HTMLElement;
+
+    firstFocusableEl?.focus();
+  };
 
   
   return (
-    <div
-      ref={ref}
-      className="account-btn-wrapper"
-      onClick={() => {
-        if (!handleMenus) return;
-        handleMenus('login');
-        if (!setShowAccount) return;
-        setShowAccount(false);
-      }}
-      onMouseEnter={() => {
-        if (!activeMenu || activeMenu === 'mobileMenu') {
-          if (!setShowAccount) return;
-          setShowAccount(true);
-        }
-      }}
-      onMouseLeave={() => {
-        if (!setShowAccount) return;
-        setShowAccount(false);
-      }}
-    >
-      <button className="account-btn header-btn">
-        {state.isLoggedIn && avatar? 
-          <img className="avatar" src={avatar} /> :
-          <span className={
-            state.isLoggedIn ?
-              "header-btn_name-icon" :
-              "material-symbols-outlined header-btn-icon"
-          }>
-            {state.isLoggedIn? nameInitial : "account_circle"}
-          </span>
-        }
-      </button>
+    <>
+      <LoadingSpinner isLoading={isLoading} />
 
-
-      {showAccount && (!activeMenu || activeMenu === 'mobileMenu') && 
-        <div 
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!setShowAccount || !handleMenus) return;
-            handleMenus('login');
-            setShowAccount(false);
-          }} 
-          className="account-hov-menu"
+      <div ref={ref} className="account-btn-wrapper">
+        <button
+          ref={accountBtnRef} 
+          className="account-btn header-btn"
+          aria-label="Account" 
+          aria-haspopup="true" 
+          aria-controls="login-menu" 
+          aria-expanded={visibleLoginMenu? 'true' : 'false'}
+          onClick={() => handleMenus?.('login')}
         >
-          <h2>Progressio Account</h2>
-
-          {state.isLoggedIn? 
+          {state.isLoggedIn && avatar? 
+            <img className="avatar" src={avatar} /> :
             <div>
-              <p>{`${state?.user?.firstName} ${state?.user?.lastName}`}</p>
-              <p>{state?.user?.email}</p>
-            </div> :
-
-            <div>Login / Register</div>
+              {state.isLoggedIn ?
+                <span className="header-btn_name-icon">
+                  {nameInitial}
+                </span> :
+                
+                <ProfileIcon className="header-btn" />
+              }
+            </div>
           }
-        </div>
-      }
+        </button>
 
-      {visibleLoginMenu && setVisibleLoginMenu &&
-        <LoginMenu
-          setVisibleLoginMenu={setVisibleLoginMenu}
-          handleMenus={handleMenus}
-          setShowAccount={setShowAccount}
-        />
-      }
-    </div>
+
+        {visibleLoginMenu && setVisibleLoginMenu &&
+          <div
+            onKeyDown={handleKeyDown} 
+            role="menu" 
+            id="login-menu" 
+            className="login-wrapper"
+            tabIndex={-1}
+          >
+            {!state.isLoggedIn &&
+              <Link
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleMenus?.('');
+                }} 
+                role="menuitem" 
+                className="new-card-btn" 
+                to="/login"
+              >
+                <LoginIcon />
+                <span>Login or Register</span>
+              </Link>
+            }
+
+
+            {state.isLoggedIn &&
+              <div className="account-stats">
+                <Link 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setVisibleLoginMenu(false);
+                    if (handleMenus) handleMenus('');
+                  }}
+                  id="menu2"
+                  role="menuitem" 
+                  to='/profile' 
+                  className="new-card-btn"
+                >
+                  <ProfileSquareIcon />
+                  <span>Profile</span>
+                </Link>
+
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLogoutConfirm(true);
+                  }}
+                  role="menuitem" 
+                  className="new-card-btn"
+                >
+                  <LogoutIcon />
+                  <span>Log Out</span> 
+                </button>
+
+                {showLogoutConfirm && 
+                  <div 
+                    className="logout-confirm-modal"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="logout-title"
+                  >
+                    <p id="logout-title" className="logout-confirm-par">Are you sure you want to logout?</p>
+
+                    <button 
+                      className="new-card-btn confirm-logout-btn" 
+                      onClick={handleLogout}
+                    >
+                      Yes, log me out
+                    </button>
+
+                    <button 
+                      className="new-card-btn confirm-logout-btn" 
+                      onClick={() => setLogoutConfirm(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </>
   );
 });
 
 export default Login;
-export { LoginMenu };

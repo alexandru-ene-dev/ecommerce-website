@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import FavoriteProduct from '../components/FavoriteProduct';
+import FavoriteItem from '../components/FavoriteItem';
 import useFavoritesContext from '../hooks/useFavoritesContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { clearLocalFavorites } from '../utils/localFavorites';
-
 import clearUserFavorites from '../services/clearUserFavorites';
+
 import { useAuthContext } from '../hooks/useAuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import delay from '../utils/delay';
@@ -22,6 +22,7 @@ const Favorites = () => {
   const [ isLoadingFav, setIsLoadingFav ] = useState(true);
   const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
   const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
+  const clearFavoritesBtnRef = useRef<HTMLButtonElement | null>(null);
 
 
   const clearFavorites = async () => {
@@ -65,19 +66,33 @@ const Favorites = () => {
         setDeleteFavoritesMode(false);
       }
 
-      if (localFavorites.length > 0) {
-        await delay(500);
-        setIsLoadingFav(false);
-      }
+      await delay(500);
+      setIsLoadingFav(false);
     }
 
     handleModes();
   }, [localFavorites.length]);
 
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isDeleteFavoritesMode) {
+        setDeleteFavoritesMode(false);
+
+        const clearRef = clearFavoritesBtnRef.current;
+        if (!clearRef) return;
+        clearRef.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDeleteFavoritesMode]);
+
+
   if (isLoadingFav) {
     return (
-      <section className="favorites-section loading">
+      <section className="items-page loading">
         <h1 className="category-page-title">Loading Favorites...</h1>
         <LoadingSpinner isLoading={isLoadingFav} />
       </section>
@@ -86,7 +101,7 @@ const Favorites = () => {
 
 
   return (
-    <section className="favorites-section">
+    <section className="items-page">
       { feedbackArray.length > 0 &&
         <ul className="cart-favorites-feedback">
           {feedbackArray.map((feedback, i) => {
@@ -101,28 +116,38 @@ const Favorites = () => {
         </ul>
       }
 
-      {status && <p className="clear-status">{status}</p>}
+      {status && <p role="alert" className="clear-status">{status}</p>}
 
       <div className={!localFavorites.length? "clear-wrap no-favorites" : "clear-wrap"}>
-        <div className="fav-title-txt">
-          <h1 className="favorites-title">
-            <span className="material-symbols-outlined favorites-icon">favorite</span>
+
+        <div className="section-title-wrapper">
+          <h1 className="section-title">
             <span>Your Favorites</span>
           </h1>
 
-          <p className="favorites-par">{
-            localFavorites.length > 0?
+        
+          <p className="items-par">
+            {
+            localFavorites.length > 0 ?
               `You have ${localFavorites.length} favorite ${
                 localFavorites.length > 1? 'products' : 'product'
               }` : 
               'You didn\'t save any favorites yet'
-          }</p>
+            }
+          </p>
         </div>
+        
 
         {isDeleteFavoritesMode?
-          (<div className="clear-confirmation">
+          (<div 
+            role="dialog"
+            aria-live="assertive" 
+            aria-modal="true" 
+            aria-labelledby="confirmation" 
+            className="clear-confirmation"
+          >
             <LoadingSpinner isLoading={isLoading} />
-            <p>Are you sure you want to remove all your favorite products? This action cannot be undone.</p>
+            <p id="confirmation">Are you sure you want to remove all your favorite products? This action cannot be undone.</p>
 
             <div>
               <button 
@@ -141,22 +166,24 @@ const Favorites = () => {
           </div>) :
           
           (localFavorites.length?  
-            <button 
+            <button
+              ref={clearFavoritesBtnRef} 
               onClick={() => setDeleteFavoritesMode(true)} 
               className="new-card-btn"
             >
               Clear All Favorites
-            </button> : null)
+            </button> : null
+          )
         }
       </div>
 
       {localFavorites.length?  
-        <div className="fav-container">
+        <div className="item-container">
           {isLoading && <LoadingSpinner isLoading={isLoading}/>}
 
           {localFavorites && localFavorites.map(fav => {
             return (
-              <FavoriteProduct 
+              <FavoriteItem 
                 setFeedbackArray={setFeedbackArray}
                 setActiveFeedback={setActiveFeedback}
                 key={fav.id} 

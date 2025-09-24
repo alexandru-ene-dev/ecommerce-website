@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import aboutHero from '../assets/images/about-hero.jpg'; // Optional banner image
+import aboutHero from '../images/about-hero.jpg';
+import CogIcon from '../images/icons/cog-icon.svg?component';
+
 
 const About = () => {
   return (
@@ -13,7 +15,7 @@ const About = () => {
         <Link to="/" className="logo">
           <h2>
             Pro
-            <span className="material-symbols-outlined cog-icon">settings</span>
+            <CogIcon className="cog-icon" />
             gressio
           </h2>
         </Link>
@@ -57,7 +59,6 @@ const About = () => {
         </ul>
       </section>
 
-      {/* Call to Action */}
       <section className="about-cta">
         <h3>Ready to explore?</h3>
         <Link to="/" className="back-shopping-btn new-card-btn">Shop now</Link>
