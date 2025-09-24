@@ -16,10 +16,10 @@ import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState, lazy, Suspense } from 'react';
 import initializeAuth from './services/initializeAuth.tsx';
 import ScrollToHash from './components/ScrollToHash.tsx';
+import Homepage from './pages/Homepage.tsx';
 
 
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
-const Homepage = lazy(() =>import('./pages/Homepage.tsx'));
 const Register = lazy(() => import('./pages/RegisterPage.tsx'));
 const Favorites = lazy(() => import('./pages/Favorites.tsx'));
 const Cart = lazy(() => import('./pages/Cart.tsx'));
@@ -168,7 +168,7 @@ function App() {
     <>
       <ScrollToHash />
       <Header />
-      
+
       <Suspense fallback={<div>Loading...</div>}>
         <ScrollTop />
         <LoaderLine />

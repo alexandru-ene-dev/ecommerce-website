@@ -1,10 +1,11 @@
 import { categories, type Category } from '../utils/categories.ts';
 import { useMenuContext } from '../hooks/useMenuContext.ts';
 import delay from '../utils/delay.ts';
-
 import { Link } from 'react-router-dom';
 import useIsMobile from '../hooks/useIsMobile.ts';
 import { forwardRef } from 'react';
+import ChevronLeftIcon from '../images/icons/chevron-left-icon.svg?component';
+import ChevronRightIcon from '../images/icons/chevron-right-icon.svg?component';
 
 
 type MobileMenuPropsType = {
@@ -90,6 +91,7 @@ const MobileMenu =  forwardRef<HTMLDivElement, MobileMenuPropsType>((
                         onClick={() => handleSelectCategory(category)}
                       >
                         {category.title}
+                        <ChevronRightIcon />
                       </button>
                     </li>
                   );
@@ -107,7 +109,7 @@ const MobileMenu =  forwardRef<HTMLDivElement, MobileMenuPropsType>((
                   className="back-menu-btn" 
                   onClick={handleBack}
                 >
-                  <span aria-hidden="false" className="material-symbols-outlined">chevron_left</span>
+                  <ChevronLeftIcon />
                 </button>
 
                 <h2 className="selected-category-title">
