@@ -87,8 +87,9 @@ button[data-dir="next"] {
   position: absolute;
   border: none;
   border-radius: 50%;
+  background-color: var(--btn-bg);
   font-size: 1.75rem;
-  opacity: .8;
+  opacity: .9;
   transition: opacity 300ms;
 }
 .controller:hover,
