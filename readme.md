@@ -7,7 +7,7 @@ This project was built from scratch as a self-learning challenge, covering every
 
 ## Tech Stack
 
-- **Frontend**: React + TypeScript
+- **Frontend**: React + TypeScript + CSS
 - **Backend**: NodeJS + Express + TypeScript
 - **Database**: MongoDB + Mongoose
 - **Authentication**: JWT (JSON Web Token)
@@ -51,6 +51,7 @@ Alexander Ene (uzzy412)
 Self-taught passionate developer
 
 Contact: 
+
 - **GitHub**: [uzzy412](https://github.com/Uzzy412 "Visit my GitHub")
 - **Dev.to**: [uzzy412_73](https://dev.to/uzzy412_73 "Visit my dev profile")
 - **Discord**: [uzzy412](https://discord.com/users/1103352748134645851 "Visit my discord")
