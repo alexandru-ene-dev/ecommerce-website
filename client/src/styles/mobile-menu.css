@@ -112,7 +112,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding-inline: 1em;
+  padding: .75em 1em;
   background: none;
   border: none;
   color: var(--menu-link-clr);
@@ -123,11 +123,6 @@
 .product-category-name:hover,
 .product-category-name:focus {
   background-color: var(--menu-link-hov);
-}
-
-.product-category-name::after {
-  content: "\1F892";
-  font-size: 2.5rem;
 }
 
 .product-category:last-child {

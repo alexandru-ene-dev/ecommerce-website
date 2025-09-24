@@ -1,5 +1,5 @@
 import { useThemeContext } from '../hooks/useThemeContext.ts';
-import { useState, useEffect, useRef, lazy, Suspense } from 'react'; 
+import { useState, useEffect, useRef } from 'react'; 
 import StickySaleText from './StickySaleText.tsx';
 import { changeThemeService } from '../services/changeThemeService.ts';
 import SearchBar from './SearchBar.tsx';
@@ -15,12 +15,11 @@ import useIsMobile from '../hooks/useIsMobile.ts';
 import MobileMenu from './MobileMenu.tsx';
 import Login from './Login.tsx';
 import { useMenuContext } from '../hooks/useMenuContext.ts';
+
 import CogIcon from '../images/icons/cog-icon.svg?component';
-
-
-const CartMenu = lazy(() => import('./CartMenu.tsx'));
-const FavoritesMenu = lazy(() => import('./FavoritesMenu.tsx'));
-const DesktopMenu = lazy(() => import('./DesktopMenu.tsx'));
+import CartMenu from './CartMenu.tsx';
+import FavoritesMenu from './FavoritesMenu.tsx';
+import DesktopMenu from './DesktopMenu.tsx';
 
 
 const Header = () => {
@@ -226,26 +225,22 @@ const Header = () => {
               setVisibleLoginMenu={setVisibleLoginMenu}
             />
 
-            <Suspense>
-              <FavoritesMenu
-                ref={favoritesRef}
-                handleMenus={handleMenus} 
-                closeModal={closeModal}
-                isFavoritesHovered={isFavoritesHovered}
-                setIsFavoritesHovered={setIsFavoritesHovered} 
-              />
-            </Suspense>
+            <FavoritesMenu
+              ref={favoritesRef}
+              handleMenus={handleMenus} 
+              closeModal={closeModal}
+              isFavoritesHovered={isFavoritesHovered}
+              setIsFavoritesHovered={setIsFavoritesHovered} 
+            />
 
-            <Suspense>
-              <CartMenu
-                ref={cartRef}
-                handleMenus={handleMenus}
-                closeModal={closeModal}
-                isCartHovered={isCartHovered}
-                setIsCartHovered={setIsCartHovered}
-              />
-            </Suspense>
-  
+            <CartMenu
+              ref={cartRef}
+              handleMenus={handleMenus}
+              closeModal={closeModal}
+              isCartHovered={isCartHovered}
+              setIsCartHovered={setIsCartHovered}
+            />
+
             <ThemeSwitcher
               ref={themeRef}
               handleMenus={handleMenus}
@@ -259,15 +254,14 @@ const Header = () => {
         {/* Mobile Search Bar */}
         {isMobile && <SearchBar />}
 
-        <Suspense>
-          {!isMobile && 
-            <DesktopMenu
-              setVisibleHeader={setVisibleHeader}
-              activeIndex={activeIndex}
-              setActiveIndex={setActiveIndex}
-            />
-          }
-        </Suspense>
+
+        {!isMobile && 
+          <DesktopMenu
+            setVisibleHeader={setVisibleHeader}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+          />
+        }
       </nav>
 
       <StickySaleText />

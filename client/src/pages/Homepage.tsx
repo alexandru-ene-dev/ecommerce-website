@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import NewProduct from '../components/NewProduct.tsx';
 import { type NewProductType } from '../components/types.ts';
@@ -9,10 +9,8 @@ import useLoadingContext from '../hooks/useLoadingContext.ts';
 import delay from '../utils/delay.ts';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
 import LazyProductImage from '../components/LazyProductImage.tsx';
-
-
-const RecentlyViewed = lazy(() => import('../components/RecentlyViewed.tsx'));
-const Deals = lazy(() => import('../components/Deals.tsx'));
+import RecentlyViewed from '../components/RecentlyViewed.tsx';
+import Deals from '../components/Deals.tsx';
 
 
 export type ActiveFeedback = {
@@ -99,9 +97,7 @@ const Homepage = () => {
         </div>
       }
 
-      <Suspense>
-        <Deals />
-      </Suspense>
+      <Deals />
 
       <div className="join-wrapper">
         <h2 className="section_title">Join us now</h2>
@@ -133,13 +129,10 @@ const Homepage = () => {
         </Link>
       </div>
 
-      <Suspense>
-        <RecentlyViewed 
-          setFeedbackArray={setFeedbackArray}
-          setActiveFeedback={setActiveFeedback}
-        />
-      </Suspense>
-
+      <RecentlyViewed 
+        setFeedbackArray={setFeedbackArray}
+        setActiveFeedback={setActiveFeedback}
+      />
     </main>
   );
 };

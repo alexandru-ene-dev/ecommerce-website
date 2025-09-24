@@ -3,8 +3,9 @@
 
 .go-top-btn {
   display: none;
-  width: 50px;
-  height: 50px;
+  align-items: center;
+  width: 40px;
+  height: 40px;
   position: fixed;
   z-index: 2000;
   bottom: 25%;
@@ -13,6 +14,11 @@
   border-radius: 50%;
   background-color: var(--btn-bg);
   color: hsl(0, 0%, 100%);
+
+  & svg {
+    width: 35px;
+    height: 35px;
+  }
 }
 
 .go-top-btn:hover,
@@ -21,7 +27,7 @@
 }
 
 .go-top-btn[data-visible="true"] {
-  display: block;
+  display: flex;
 }
 
 .input {
