@@ -153,9 +153,10 @@
   position: relative;
   isolation: isolate;
   border-radius: 50%;
-  fill: hsl(0, 0%, 100%);
-  
-  & span { font-size: 1.25rem; }
+
+  & svg {
+    fill: hsl(0, 0%, 100%);
+  }
 }
 
 .menu-item-btn:hover {
