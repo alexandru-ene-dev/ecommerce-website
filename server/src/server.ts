@@ -25,6 +25,9 @@ import uploadAvatarRoute from './routes/uploadAvatarRoute.js';
 import changePasswordRoute from './routes/changePasswordRoute.js';
 import changeThemeRoute from './routes/changeThemeRoute.js';
 import syncRoute from './routes/syncRoute.js'
+import deleteAccountRoute from './routes/deleteAccountRoute.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 
 dotenv.config();
@@ -56,6 +59,21 @@ app.use('/favorites', favoritesRoute);
 app.use('/account/change-password', changePasswordRoute);
 app.use('/account/theme', changeThemeRoute);
 app.use('/api/sync', syncRoute);
+app.use('/users', deleteAccountRoute);
+
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from the frontend's dist folder
+app.use(express.static(path.resolve(__dirname, '../client/dist')));
+
+// Catch-all route: send index.html for client-side routing (SPA)
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+});
+
 
 
 // connect to database & run the server

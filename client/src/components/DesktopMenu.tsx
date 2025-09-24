@@ -1,14 +1,17 @@
 import { categories } from "../utils/categories";
 import { Link } from 'react-router-dom';
 import { type Dispatch, type MouseEvent, type SetStateAction } from "react";
+import LazyProductImage from "./LazyProductImage";
 
 
 const DesktopMenu = (
   {
+    setVisibleHeader,
     activeIndex,
     setActiveIndex
   }:
   {
+    setVisibleHeader: Dispatch<SetStateAction<boolean>>,
     activeIndex: number | null,
     setActiveIndex: Dispatch<SetStateAction<number | null>>
   }
@@ -36,7 +39,6 @@ const DesktopMenu = (
   }; 
 
   const categoryElements = categories.map((cat, i) => {
-    const imgSrc = new URL(`../assets/images/${cat.src}`, import.meta.url).href;
     const isActive = activeIndex === i;
 
     return (
@@ -56,6 +58,7 @@ const DesktopMenu = (
                 {cat.subcategories.map((sub, index) => (
                   <li key={index} className="subcategory-item">
                     <Link
+                      onFocus={() => setVisibleHeader(true)}
                       onClick={handleSublinkClick} 
                       className="sublink" 
                       to={`/categories/${sub.slug}`}
@@ -66,13 +69,18 @@ const DesktopMenu = (
                 ))}
               </ul>
 
-              <img src={imgSrc} alt={cat.alt} />
+              <LazyProductImage 
+                imageName={cat.src} 
+                alt={cat.alt} 
+                className={"desktop-link-img"}
+              />
             </div>
           </div>
         )}
       </li>
     );
   });
+
 
   return (
     <div className="desktop-nav">

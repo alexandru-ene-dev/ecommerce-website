@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import ChevronUpIcon from '../images/icons/chevron-up-icon.svg?component';
+
 
 const BackToTop = () => {
   const [ visible, setVisible ] = useState(false);
@@ -17,13 +19,15 @@ const BackToTop = () => {
     return () => window.removeEventListener('scroll', toggleVisibillity);
   }, []);
 
+
   return (
     <button
+      aria-label="Go back to top"
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       data-visible={visible? 'true' : 'false'}
       className="material-symbols-outlined go-top-btn"
     >
-      keyboard_control_key
+      <ChevronUpIcon />
     </button>
   )
 };

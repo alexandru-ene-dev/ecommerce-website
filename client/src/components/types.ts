@@ -26,5 +26,6 @@ export type NewProductType = {
   subcategory: string,
   content?: string[],
   link: string,
+  imgPath: string,
   quantity: number
 }

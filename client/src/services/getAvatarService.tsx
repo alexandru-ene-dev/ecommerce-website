@@ -2,7 +2,11 @@ import api from "../api";
 import handleErrors from "../utils/handleErrors";
 
 
-const getAvatarService = async (userId: string) => {
+const getAvatarService = async (userId: string | undefined) => {
+  if (!userId) {
+    return null;
+  }
+
   try {
     const res = await api.get(`/users/${userId}/avatar`);
     const data = res.data;

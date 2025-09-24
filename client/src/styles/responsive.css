@@ -2,7 +2,7 @@
 /* ------------ MEDIA QUERIES ------------- */
 
 @media (min-width: 500px) {
-  .favorites-menu_content-wrapper {
+  .menu-content-wrapper {
     width: 25em;
     position: absolute;
     right: -15px;
@@ -10,7 +10,7 @@
     border-radius: 10px;
   }
 
-  .favorites-menu_content-wrapper:after {
+  .menu-content-wrapper:after {
     display: block;
   }
 
@@ -24,21 +24,6 @@
 
   .prod-price-wrapper {
     margin-top: 0;
-  }
-}
-
-@media (min-width: 700px) {
-  .login-wrapper {
-    width: 35em;
-    position: absolute;
-    right: -15px;
-    top: 38px;
-    border-radius: 10px;
-    bottom: initial;
-  }
-
-  .login-wrapper::after {
-    display: block;
   }
 }
 
@@ -135,10 +120,17 @@
     gap: 2em;
     width: 100%;
     max-width: 50em;
+  }
 
-    & img {
-      width: 30em;
-    }
+  .link-card-wrapper .lazy-img-wrapper {
+    width: 30em;
+    height: 15em;
+  }
+
+  .desktop-link-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .sublink {
@@ -174,22 +166,6 @@
     gap: 1em;
   }
 
-  .header-btn-icon {
-    font-size: 1.75rem;
-  }
-
-  .modal {
-    display: none;
-  }
-
-  body:has(.modal[data-visible="true"]) {
-    overflow-y: auto;
-  }
-
-  .favorites-section {
-    margin-top: 11rem;
-  }
-
   .create-account-section {
     margin-top: 13rem;
   }
@@ -204,7 +180,6 @@
 
   .product-wrapper {
     margin-top: 13.5rem;
-    /* padding: 0; */
   }
 
   .prod-price-wrapper {
@@ -251,32 +226,15 @@
     font-size: 1rem;
   }
 
-  .cart-wrapper {
-    margin-top: 12rem;
-  }
-
-  .fav-hover_menu {
-    top: 56px;
-    right: 0;
-  }
-
   .profile-section {
     margin-top: 12rem;
   }
 
-  .account-hov-menu {
-    top: 47px;
-    right: -12px;
-  }
-
-  .favorites-menu_content-wrapper {
-    right: -12px;
-    top: 47px;
-  }
-
+  .account-hov-menu,
+  .menu-content-wrapper,
   .login-wrapper {
-    right: -12px;
     top: 47px;
+    right: -12px;
   }
 
   .theme-list_wrapper {
@@ -303,12 +261,6 @@
     display: flex;
     justify-content: space-around;
     gap: 5em;
-  }
-
-  .footer-links_btn::marker {
-    display: none;
-    height: 0;
-    width: 0;
   }
 
   .product-wrapper .recently-viewed,

@@ -43,18 +43,17 @@
 }
 
 .cog-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  fill: var(--clr-prim);
   animation: spinnn 5s linear infinite;
-  font-size: clamp(1.5rem, 2vw, 2.25rem);
-  padding: 0;
-  border-radius: 50%;
 } 
 
 @keyframes spinnn {
   from { transform: rotateZ(0); }
   to { transform: rotateZ(360deg); }
+}
+
+.search-icon {
+  fill: var(--clr-prim);
 }
 
 .account-wrapper {
@@ -79,7 +78,7 @@
   border: none;
   border-radius: 50%;
   background-color: transparent;
-  color: var(--clr-prim);
+  fill: var(--clr-prim);
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
@@ -88,7 +87,7 @@
 
 .header-btn:hover,
 .header-btn:focus {
-  color: var(--icon-hov);
+  & svg { fill: var(--icon-hov); }
 
   & .header-btn_name-icon {
     border: 2px solid var(--icon-hov);
@@ -97,11 +96,6 @@
   & p {
     color: var(--clr-prim);
   }
-}
-
-.header-btn-icon {
-  position: relative;
-  font-size: 1.3rem;
 }
 
 .search-wrapper {
@@ -167,6 +161,10 @@
   outline: none;
   color: var(--search-btn-clr);
   background-color: var(--search-btn-foc);
+
+  & svg {
+    fill: hsl(0, 0%, 100%);
+  }
 }
 
 .header-btn_name-icon {
@@ -192,7 +190,7 @@
   padding: 3px;
   border-radius: 50%;
   background-color: var(--red);
-  color: white;
+  color: hsl(0, 0%, 100%);
   font-size: .6rem;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
@@ -218,7 +216,7 @@
   border-radius: 10px;
   z-index: 6000;
   cursor: pointer;
-  color: white;
+  color: hsl(0, 0%, 100%);
 
   & p {
     margin: 0 0 .5em 0;

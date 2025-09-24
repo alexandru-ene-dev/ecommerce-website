@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from './LoadingSpinner';
 import delay from '../utils/delay';
+import SearchIcon from '../images/icons/search-icon.svg?component';
 
 
 const SearchBar = () => {
@@ -26,8 +27,10 @@ const SearchBar = () => {
     <search className="search-wrapper">
       <LoadingSpinner isLoading={isLoading} />
       
-      <form onSubmit={submitSearch} className="search-form">
-        <input 
+      <form id="search-form" onSubmit={submitSearch} className="search-form">
+        <input
+          id="search-field" 
+          aria-label="Search field"
           className="input search-input"
           onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchInput(e.target.value)} 
           type="search"
@@ -35,8 +38,8 @@ const SearchBar = () => {
           value={searchInput}
         />
   
-        <button className="search-btn">
-          <span className="material-symbols-outlined search-icon">search</span>
+        <button aria-label="Search" className="search-btn">
+          <SearchIcon className="search-icon" />
         </button>
       </form>
     </search>

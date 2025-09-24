@@ -48,8 +48,14 @@ const MobileMenu =  forwardRef<HTMLDivElement, MobileMenuPropsType>((
   
 
   return (
-    <div ref={ref} className="hamburger-menu-wrapper">
-      <button 
+    <div 
+      ref={ref} 
+      className="hamburger-menu-wrapper"
+    >
+      <button
+        aria-label={visibleMobileMenu ? 'Close menu' : 'Open menu'}
+        aria-expanded={visibleMobileMenu ? 'true' : 'false'}
+        aria-controls="mobile-menu" 
         data-closed-icon={visibleMobileMenu? 'true' : 'false'}
         className="hamburger-btn" 
         onClick={() => handleMenus('mobileMenu')}
@@ -63,17 +69,28 @@ const MobileMenu =  forwardRef<HTMLDivElement, MobileMenuPropsType>((
     
 
       {isMobile && 
-        <div className="modal" data-visible={visibleMobileMenu? "true" : "false"}>
-          <div className="mobile-menu" data-visible={visibleMobileMenu? "true" : "false"}>
+        <div
+          inert={!visibleMobileMenu ? true : undefined} 
+          className="modal" 
+          data-visible={visibleMobileMenu? "true" : "false"}
+        >
+          <div 
+            id="mobile-menu" 
+            className="mobile-menu"
+            role="navigation" 
+            data-visible={visibleMobileMenu? "true" : "false"}
+          >
             {state.view === 'menu' && (
               <ul className="products-categories-list">
                 {categories.map((category, index) => {
                   return (
-                    <li 
-                      key={index} 
-                      className="product-category" 
-                      onClick={() => handleSelectCategory(category)}>
-                      <a href="#" className="product-category-name">{category.title}</a>
+                    <li key={index} className="product-category">
+                      <button 
+                        className="product-category-name"
+                        onClick={() => handleSelectCategory(category)}
+                      >
+                        {category.title}
+                      </button>
                     </li>
                   );
                 })}
@@ -85,8 +102,12 @@ const MobileMenu =  forwardRef<HTMLDivElement, MobileMenuPropsType>((
                 "subcategory-view open" : "subcategory-view"
             }>
               <div className="back-title-flex">
-                <button className="back-menu-btn" onClick={handleBack}>
-                  <span className="material-symbols-outlined">chevron_left</span>
+                <button 
+                  aria-label="Go back to main menu" 
+                  className="back-menu-btn" 
+                  onClick={handleBack}
+                >
+                  <span aria-hidden="false" className="material-symbols-outlined">chevron_left</span>
                 </button>
 
                 <h2 className="selected-category-title">

@@ -1,11 +1,19 @@
+import CheckIcon from '../images/icons/check-icon.svg?component';
+import CloseIcon from '../images/icons/close-icon.svg?component';
+
+
 const ValidationItem = (props: { label: string, valid: boolean }) => (
   <li className={props.valid ? 'validation-item valid-item' : 'validation-item invalid-item'}>
-    <span>{props.label}</span>
+    <span aria-hidden="true">{props.label}</span>
+
     <span 
-      className={`material-symbols-outlined ${props.valid? "valid" : "invalid"}`}
+      className="visually-hidden"
+      role="status"
     >
-      {props.valid ? 'check' : 'close'}
+      {props.valid ? `Met: ${props.label}` : `Not met: ${props.label}`}
     </span>
+
+    {props.valid ? <CheckIcon className="valid"/> : <CloseIcon className="invalid"/>}
   </li>
 );
 

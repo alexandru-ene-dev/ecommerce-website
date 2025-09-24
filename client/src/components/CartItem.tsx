@@ -3,15 +3,20 @@ import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 import type { NewProductType } from "./types";
 import useFavoritesContext from "../hooks/useFavoritesContext";
 import { useNavigate } from "react-router-dom";
+
 import { type ActiveFeedback } from "../pages/Homepage";
 import delay from "../utils/delay";
-
 import useHandleCart from "../hooks/useHandleCart";
 import useHandleFavorites from "../hooks/useHandleFavorites";
 import { Link } from 'react-router-dom';
 import QuantitySelector from "./QuantitySelector";
+
 import LoadingSpinner from "./LoadingSpinner";
 import { useAuthContext } from "../hooks/useAuthContext";
+import RemoveIcon from '../images/icons/delete-icon.svg?component';
+import FavoriteIcon from '../images/icons/favorite-icon.svg?component';
+import FavoriteFillIcon from '../images/icons/favorite-fill-icon.svg?component';
+import LazyProductImage from "./LazyProductImage";
 
 
 type CartItemProps = {
@@ -32,7 +37,6 @@ const CartItem = (
   const { localCart, setLocalCart } = useCartContext();
   const { localFavorites, setLocalFavorites } = useFavoritesContext(); 
   const [ quantity, setQuantity ] = useState(1);
-  const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
   const slug = prod.title.replace(' ', '-');
 
   const isFavorite = localFavorites && localFavorites.some(p => p._id === prod._id);
@@ -85,10 +89,12 @@ const CartItem = (
       {loadingButton && <LoadingSpinner isLoading={loadingButton} />}
 
       <div
+        aria-label={`View details for ${prod.title}`}
         onClick={() => navigate(`/products/${slug}`)} 
         className="cart-img-wrapper"
       >
-        <button 
+        <button
+          aria-label={`Remove ${prod.title} from favorites`} 
           onClick={async (e) => {
             e.stopPropagation();
             handleFavorites(prod, isFavorite).then(() => {
@@ -107,20 +113,21 @@ const CartItem = (
               return prev.slice(0, -1); 
             });
           }} 
-          className="add-fav-btn new-fav-btn">
-          <span 
-            data-favorite={isFavorite? "true" : "false"}
-            className="material-symbols-outlined new-fav-icon"
-          >
-            favorite
-          </span>
+          className="add-fav-btn new-fav-btn"
+        >
+          <FavoriteFillIcon className={isFavorite? "favorite fill" : "favorite"} />
+          <FavoriteIcon className="unfill" />
         </button>
 
-        <img className="cart-img" src={imgSrc} alt={prod.alt} />
+        <LazyProductImage className="cart-img" alt={prod.alt} imageName={prod.img} />
       </div>
 
       <div className="price-cart-wrap">
-        <Link className="cart-product_link" to={`/products/${slug}`}>
+        <Link
+          aria-label={`View details for ${prod.title}`} 
+          className="cart-product_link" 
+          to={`/products/${slug}`}
+        >
           <p className="cart-product_title new-card-title">{prod.title}</p>
         </Link>
 
@@ -133,7 +140,10 @@ const CartItem = (
           </p>
 
           <p className="new-card-price">
-            <span className="old-price">
+            <span
+              aria-label={`Old price: ${prod.oldPrice}`} 
+              className="old-price"
+            >
               ${(prod.oldPrice * (prod.quantity || 1)).toFixed(2)}
             </span>
 
@@ -155,7 +165,8 @@ const CartItem = (
 
           <div>
             <button
-              className="new-card-btn cart-item-btn"
+              aria-label={`Remove ${prod.title} from cart`}
+              className="cart-remove-item"
               onClick={async () => {
                 handleCart(prod, isInCart).then(() => {
                   setActiveFeedback({ value: 'Cart', action: isInCart? 'remove' : 'add' });
@@ -174,7 +185,7 @@ const CartItem = (
                 });
               }}
             >
-              <span className="material-symbols-outlined">delete</span>
+              <RemoveIcon />
             </button>
           </div>
         </div>

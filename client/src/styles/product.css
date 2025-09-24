@@ -3,15 +3,9 @@
   margin-top: 12rem;
   margin-inline: auto;
   padding-inline: clamp(1em, 2vw, 2em);
-
-  & .new-cart-icon,
-  & .prod-fav-icon {
-    font-size: 1.25rem;
-  }
 }
 
 .prod-title {
-  height: 50px;
   max-width: 30em;
   margin-bottom: 2em;
   margin-inline: auto;
@@ -61,16 +55,16 @@
   display: flex;
   align-items: center;
   gap: 1em;
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: clamp(.9rem, 1vw, 1rem);
 }
 
 .prod-old-price {
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-size: clamp(1.15rem, 1.5vw, 1.5rem);
   margin: 0;
 }
 
 .prod-new-price {
-  font-size: clamp(2rem, 2.5vw, 2.5rem);
+  font-size: clamp(1.5rem, 1.5vw, 2rem);
   margin: 0;
 }
 
@@ -80,44 +74,19 @@
   gap: 1em;
   margin: 0;
   margin-top: .75em;
-  color: rgb(5, 173, 5);
+  color: hsl(120, 94%, 35%);
   font-weight: 700;
   text-transform: uppercase;
 }
 
 .in-stock-icon {
   padding: .15em .5em;
-  background-color:rgb(5, 173, 5);
-  color: white;
+  background-color:hsl(120, 94%, 35%);
+  color: hsl(0, 0%, 100%);
 }
 
 .prod-fav-btn {
   margin-top: 1em;
-}
-
-.prod-fav-icon[data-favorite="true"] {
-  color: var(--red);
-  animation: favorite-fill 300ms forwards;
-}
-
-.prod-fav-icon[data-favorite="false"] {
-  animation: favorite-unfill 300ms forwards;
-}
-
-@keyframes favorite-unfill {
-  0% { font-variation-settings: 'FILL' 1 }
-  25% { font-variation-settings: 'FILL' 0.75 }
-  50% { font-variation-settings: 'FILL' 0.5 }
-  75% { font-variation-settings: 'FILL' 0.25 }
-  100% { font-variation-settings: 'FILL' 0 }
-}
-
-@keyframes favorite-fill {
-  0% { font-variation-settings: 'FILL' 0 }
-  25% { font-variation-settings: 'FILL' 0.25 }
-  50% { font-variation-settings: 'FILL' 0.5 }
-  75% { font-variation-settings: 'FILL' 0.75 }
-  100% { font-variation-settings: 'FILL' 1 }
 }
 
 .estimated-delivery,
@@ -164,10 +133,15 @@
   transform: translateY(150%);
 }
 
+.intersect-img-flex .lazy-img-wrapper {
+  max-width: 50px;
+  max-height: 50px;
+  min-width: 30px;
+}
+
 .intersect-img {
-  width: 25%;
-  height: 50px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
 }
 
 .intersect-img-flex {
@@ -205,7 +179,6 @@
   gap: clamp(.5rem, 2vw, 5rem);
   width: 100%;
   max-width: 30em;
-
   
   & .prod-sale-price-flex {
     column-gap: .5rem;
@@ -221,7 +194,7 @@
   }
 
   & .prod-new-price {
-    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
   }
 
   & .copy-btn {
@@ -230,10 +203,6 @@
     padding-inline: 1em;
     font-size: 1rem;
   }
-}
-
-.copy-btn .new-cart-icon {
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
 }
 
 .button-wrapper {

@@ -6,11 +6,17 @@ import { useAuthContext } from '../hooks/useAuthContext';
 
 import useCartContext from '../hooks/useCartContext';
 import { Link } from 'react-router-dom';
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { type ActiveFeedback } from '../pages/Homepage';
+
 import CartFavoritesFeedback from './CartFavoritesFeedback';
 import delay from '../utils/delay';
+import FavoriteIcon from '../images/icons/favorite-icon.svg?component';
+import RemoveFromCartIcon from '../images/icons/remove-shopping-cart-icon.svg?component';
+import AddToCartIcon from '../images/icons/add-shopping-cart-icon.svg?component';
+import CancelIcon from '../images/icons/cancel-icon.svg?component';
+import LazyProductImage from './LazyProductImage';
 
 
 type FavoritesPropsType = {
@@ -39,18 +45,22 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
   const { state } = useAuthContext();
   const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
   const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+
+  const handleEscape = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      setIsFavoritesHovered(false);
+      
+      const buttonElement = buttonRef.current;
+      if (!buttonElement) return;
+      buttonElement.focus();
+    }
+  };
 
 
   return (
-    <div
-      ref={ref} 
-      className="favorites-menu"
-      onClick={(e) => {
-        e.stopPropagation();
-        closeModal();
-        handleMenus('favorites');
-      }}
-    >
+    <div ref={ref} className="menu">
       { feedbackArray.length > 0 &&
         <ul className="cart-favorites-feedback">
           {feedbackArray.map((feedback, i) => {
@@ -65,28 +75,50 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
         </ul>
       } 
 
-      <button className="fav-btn header-btn">
-        <span className="material-symbols-outlined header-btn-icon">
-          favorite
-          {localFavorites && localFavorites?.length > 0 && 
-            <span className="fav-cart-count">{localFavorites?.length}</span>}
-        </span>
+      <button
+        ref={buttonRef} 
+        aria-label="Favorites"
+        aria-expanded={isFavoritesHovered? 'true' : "false"} 
+        aria-haspopup="true"
+        aria-controls="favorites-menu"
+        className="fav-btn header-btn"
+        onClick={(e) => {
+          e.stopPropagation();
+          closeModal();
+          handleMenus('favorites');
+        }}
+      >
+        <FavoriteIcon className="header-btn" />
+        {localFavorites && localFavorites?.length > 0 && 
+          <span 
+            aria-label={
+              `You have ${localFavorites.length} favorite ${localFavorites.length > 1? 'products' : 'product'}`
+            } 
+            className="fav-cart-count"
+          >
+            {localFavorites?.length}
+          </span>
+        }
       </button>
 
 
       {isFavoritesHovered &&
-        <div className="favorites-menu_content-wrapper"> 
-          <div onClick={(e) => e.stopPropagation()} className="favorites-menu_content">
-            <h1 className="favorites-title">
-              <span className="material-symbols-outlined favorites-icon">favorite</span>
+        <div 
+          onKeyDown={handleEscape} 
+          role="menu" 
+          id="favorites-menu" 
+          className="menu-content-wrapper"
+        > 
+          <div onClick={(e) => e.stopPropagation()} className="menu-content">
+            <h2 className="section-title">
+              <FavoriteIcon />
               <span>Your Favorites</span>
-            </h1>
+            </h2>
 
 
             {localFavorites && localFavorites.map((prod, i) => {
               const isFavorite = localFavorites && localFavorites.some(p => p._id === prod._id);
               const isInCart = localCart && localCart.some(p => p._id === prod._id);
-              const imgSrc = new URL(`../assets/images/${prod.img}`, import.meta.url).href;
               const slug = prod.title.replaceAll(' ', '-');
               
               const isProdLoading = activeLoadingIndex === i;
@@ -94,24 +126,34 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
               const newPriceForUsers = (prod.oldPrice - (newSaleForUsers / 100 * prod.oldPrice)).toFixed(2);
               
               return (
-                <div key={prod._id} className="fav-hover_prod">
+                <div key={prod._id} className="menu-item">
                   {isProdLoading &&
                     <LoadingSpinner isLoading={loadingButton || cartLoadingButton} 
                   />}
 
-                  <Link onClick={() => setIsFavoritesHovered(false)} to={`/products/${slug}`}>
-                    <img className="fav-hover_img" src={imgSrc} />
+                  <Link
+                    role="menuitem"
+                    aria-label={`View product details for ${prod.title}`} 
+                    onClick={() => setIsFavoritesHovered(false)} 
+                    to={`/products/${slug}`}
+                  >
+                    <LazyProductImage
+                      className="menu-item-img"
+                      alt={prod.title}
+                      imageName={prod.img}
+                    />
                   </Link>
 
-                  <Link 
+                  <Link
+                    role="menuitem"  
                     onClick={() => setIsFavoritesHovered(false)} 
                     to={`/products/${slug}`} 
-                    className="fav-hover_prod-title"
+                    className="menu-item-title"
                   >
                     {prod.title}
                   </Link>
 
-                  <p className="fav-hover_prod-price">
+                  <p className="menu-item-price">
                     <span className="old-price">{prod.oldPrice.toFixed(2)}</span>
                     <span>
                       ${state.isLoggedIn ? 
@@ -121,7 +163,9 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
                     </span>
                   </p>
 
-                  <button 
+                  <button
+                    role="menuitem"
+                    aria-label="Remove from favorites" 
                     onClick={async (e) => {
                       e.stopPropagation();
                       setActiveLoadingIndex(i);
@@ -141,12 +185,14 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
                         return prev.slice(0, -1); 
                       });
                     }} 
-                    className="fav-hover_remove-btn"
+                    className="menu-item-btn"
                   >
-                    <span className="material-symbols-outlined">close</span>
+                    <CancelIcon />
                   </button>
 
-                  <button 
+                  <button
+                    role="menuitem"
+                    aria-label={isInCart? 'Remove from cart' : 'Add to cart'} 
                     onClick={async (e) => {
                       e.stopPropagation();
                       setActiveLoadingIndex(i); 
@@ -166,11 +212,9 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
                         return prev.slice(0, -1); 
                       });;
                     }}
-                    className="fav-hover_remove-btn"
+                    className="menu-item-btn"
                   >
-                    <span className="material-symbols-outlined fav-hover_cart-ico">
-                      {isInCart? "remove_shopping_cart" : "add_shopping_cart"}
-                    </span>
+                    {isInCart? <RemoveFromCartIcon /> : <AddToCartIcon />}
                   </button> 
                 </div>
               );
@@ -178,22 +222,23 @@ const FavoritesMenu = forwardRef<HTMLDivElement, FavoritesPropsType>((
 
 
             {localFavorites && localFavorites.length === 0 && 
-              <div className="fav-hover_menu-no-fav">
+              <div className="menu-no-item">
                 <span>You didn't save any favorites yet...</span>
               </div>
             }
           </div>
 
-          <Link 
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsFavoritesHovered(false);
-              }} 
-              to="/favorites" 
-              className="fav-hover_btn new-card-btn"
-            >
-              Go to Favorites
-            </Link>
+          <Link
+            role="menuitem" 
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsFavoritesHovered(false);
+            }} 
+            to="/favorites" 
+            className="menu-btn new-card-btn"
+          >
+            Go to Favorites
+          </Link>
         </div>
       }
     </div>

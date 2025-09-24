@@ -13,13 +13,14 @@ const QuantitySelector = (
     onIncrease,
     onDecrease,
     min = 1,
-    max,
+    max = 10,
   }: QuantitySelectorProps
 ) => {
 
   return (
     <div className="quantity-selector">
-      <button 
+      <button
+        aria-label="Reduce quantity by 1"
         className="cart-item-btn new-card-btn" 
         onClick={onDecrease} 
         disabled={quantity <= min}
@@ -27,9 +28,10 @@ const QuantitySelector = (
         -
       </button>
 
-      <span className="quantity">{quantity}</span>
+      <span aria-live="polite" className="quantity">{quantity}</span>
 
-      <button 
+      <button
+        aria-label="Increase quantity by 1" 
         className="cart-item-btn new-card-btn" 
         onClick={onIncrease} 
         disabled={max !== undefined && quantity >= max}

@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import delay from '../utils/delay';
 import { useAvatar } from '../context/AuthContext/AvatarContext';
@@ -8,14 +8,30 @@ import { handleRemoveAvatar } from '../services/removeAvatarService';
 import { changePasswordService } from '../services/changePasswordService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ValidationItem from '../components/ValidationItem';
-import editNameService from '../services/editNameService';
 
+import editNameService from '../services/editNameService';
 import syncService from '../services/syncService';
-import { LoginMenu } from '../components/Login';
 import { getLocalFavorites } from '../utils/localFavorites';
 import { getCart } from '../utils/cartStorage';
+
 import useFavoritesContext from '../hooks/useFavoritesContext';
 import useCartContext from '../hooks/useCartContext';
+import deleteAccountService from '../services/deleteAccountService';
+import { useNavigate } from 'react-router-dom';
+
+import RemoveIcon from '../images/icons/delete-icon.svg?component';
+import CancelIcon from '../images/icons/cancel-icon.svg?component';
+import CloseIcon from '../images/icons/close-icon.svg?component';
+import EditIcon from '../images/icons/edit-icon.svg?component';
+import SyncIcon from '../images/icons/sync-icon.svg?component';
+import EncryptedIcon from '../images/icons/encrypted-icon.svg?component';
+
+import AddPhotoIcon from '../images/icons/add-photo-icon.svg?component';
+import SaveIcon from '../images/icons/save-icon.svg?component';
+import VisibilityOnIcon from '../images/icons/visibility-icon.svg?component';
+import VisibilityOffIcon from '../images/icons/visibility-off-icon.svg?component';
+import CheckIcon from '../images/icons/check-icon.svg?component';
+
 
 
 type Status = {
@@ -28,9 +44,9 @@ type Field = 'current' | 'new' | 'confirm';
 
 const Profile = () => {
   const { state, dispatch } = useAuthContext();
-  const [firstName, setFirstName] = useState<string | ''>('');
-  const [lastName, setLastName] = useState<string | ''>('');
-  const [isEditingName, setIsEditingName] = useState(false);
+  const [ firstName, setFirstName ] = useState<string | ''>('');
+  const [ lastName, setLastName ] = useState<string | ''>('');
+  const [ isEditingName, setIsEditingName ] = useState(false);
   const [ status, setStatus ] = useState<Status>({ status: null, message: ' '});
 
   const { avatar, setAvatar } = useAvatar();
@@ -45,6 +61,8 @@ const Profile = () => {
     confirm: false
   });
   const [ isLoading, setLoading ] = useState(false);
+  const [ isProfileLoading, setIsProfileLoading ] = useState(true);
+  
 
   const validations = {
     length: newPassword.length >= 8,
@@ -68,6 +86,8 @@ const Profile = () => {
 
   const [ avatarStatus, setAvatarStatus ] = useState<Status>({ status: null, message: ' '});
   const [ avatarLoading, setAvatarLoading ] = useState(false);
+  const [ confirmDeleteAccount, setConfirmDelete ] = useState(false);
+  const navigate = useNavigate();
 
 
   let syncConfirmMessage: string = '';
@@ -85,13 +105,11 @@ const Profile = () => {
     const files = e.target.files;
 
     if (!files || files.length === 0) {
-      alert('No file selected.');
       return;
     }
 
     const file = files[0];
     if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file.');
       return;
     }
 
@@ -312,14 +330,55 @@ const Profile = () => {
   };
 
 
-  if (!state.isLoggedIn) {
+  const handleDelete = async () => {
+    if (!state.user?._id) return;
+
+    const result = await deleteAccountService(state.user._id);
+
+    if (!result.success) {
+      setStatus({ status: 'error', message: 'We couldn\'t delete the account' });
+      return;
+    }
+
+    dispatch({ type: "LOGOUT", payload: null });
+    navigate('/goodbye')
+    setStatus({ status: 'success', message: 'The account was successfully deleted' });
+    
+    sessionStorage.setItem('deletedAccount', 'true');
+    await delay(1000);
+  };
+
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!state.isLoggedIn) {
+        setIsProfileLoading(true);
+        await delay(500);
+        setIsProfileLoading(false);
+      } else {
+        await delay(500);
+        setIsProfileLoading(false);
+      }
+    }
+
+    loadProfile();
+  }, [state.isLoggedIn]);
+
+
+  if (isProfileLoading) {
     return (
-      <section className="profile-section not-logged-in">
-        <h1 className="section_title">Hey there! Log in or create an account to enjoy everything Progressio has to offer!</h1>
-        
-        <LoginMenu />
+      <section className="items-page loading">
+        <h1 className="category-page-title">Loading Profile...</h1>
+
+        <LoadingSpinner isLoading={isProfileLoading} />
       </section>
     );
+  }
+
+
+  if (!state.isLoggedIn) {
+    setIsProfileLoading(false);
+    navigate('/login');
   }
   
 
@@ -339,27 +398,35 @@ const Profile = () => {
         </div>
 
         <div className="avatar-btns">
-          <label htmlFor="avatar-upload" className="custom-avatar-upload new-card-btn">
+          <label htmlFor="avatar-upload" className="avatar-btn">
             <input
+              aria-label="Add or change avatar"
               id="avatar-upload"
-              className="new-card-btn hidden-input"
+              className="hidden-input"
               name="image"
               type="file"
               accept="image/*"
               onChange={handleImageChange}
             />
-            <span className="material-symbols-outlined">add_a_photo</span>
+            <AddPhotoIcon />
           </label>
 
           {avatar && (
-            <button className="new-card-btn rmv-avatar-btn custom-avatar-upload" onClick={removeAvatar}>
-              <span className="material-symbols-outlined">delete_forever</span>
+            <button
+              aria-label="Remove avatar" 
+              className="avatar-btn" 
+              onClick={removeAvatar}
+            >
+              <RemoveIcon />
             </button>
           )}
         </div>
 
         {avatarStatus && 
-          <div className={`edit-status ${avatarStatus.status === 'error'? 'error' : 'success'}`}>
+          <div 
+            aria-live="polite" 
+            className={`edit-status ${avatarStatus.status === 'error'? 'error' : 'success'}`}
+          >
             {avatarStatus.message}
           </div>
         }
@@ -370,7 +437,12 @@ const Profile = () => {
 
         <div className="profile-info">
           {isEditingName ? (
-            <div className="edit-menu">
+            <div
+              aria-labelledby="confirmation" 
+              role="dialog" 
+              aria-modal="true"  
+              className="edit-menu"
+            >
               <input
                 className="input profile-input"
                 type="text"
@@ -388,12 +460,12 @@ const Profile = () => {
               />
 
               <button className="new-card-btn" onClick={handleNameEdit}>
-                <span className="material-symbols-outlined">save</span>
+                <SaveIcon />
                 <span>Save</span>
               </button>
 
               <button className="new-card-btn" onClick={() => setIsEditingName(false)}>
-                <span className="material-symbols-outlined">cancel</span>
+                <CancelIcon />
                 <span>Cancel</span>
               </button>
             </div>
@@ -411,7 +483,7 @@ const Profile = () => {
                   }
                 }
               }>
-                <span className="material-symbols-outlined">edit</span>
+                <EditIcon />
                 <span>Edit Name</span>
               </button>
             </>
@@ -419,11 +491,14 @@ const Profile = () => {
         </div>
 
 
-
-
         {syncMode ? 
-          <div className="sync-menu">
-            <h2>Sync your cart and favorites from your browser storage</h2>
+          <div
+            aria-labelledby="sync" 
+            role="dialog" 
+            aria-modal="true"  
+            className="sync-menu"
+          >
+            <h2 id="sync">Sync your cart and favorites from your browser storage</h2>
 
             <label htmlFor="cart">
               <input 
@@ -451,7 +526,7 @@ const Profile = () => {
               Sync your favorites
             </label>
 
-            {syncError && <p className="edit-status error">{syncError}</p>}
+            {syncError && <p className="edit-status sync-error">{syncError}</p>}
 
 
             <button
@@ -464,7 +539,7 @@ const Profile = () => {
                 setSyncConfirm(true);
               }}
             >
-              <span className="material-symbols-outlined">sync</span>
+              <SyncIcon />
               <span>Sync</span>
             </button>
 
@@ -477,7 +552,7 @@ const Profile = () => {
                 setSyncError('');
               }}
             >
-              <span className="material-symbols-outlined">cancel</span>
+              <CancelIcon />
               <span>Cancel</span>
             </button>
 
@@ -490,7 +565,7 @@ const Profile = () => {
                   className="new-card-btn" 
                   onClick={() => handleSync()}
                 >
-                  <span className="material-symbols-outlined">sync</span>
+                  <SyncIcon />
                   <span>Yes, sync from browser local storage</span>
                 </button>
 
@@ -498,7 +573,7 @@ const Profile = () => {
                   className="new-card-btn" 
                   onClick={() => setSyncConfirm(false)}
                 >
-                  <span className="material-symbols-outlined">cancel</span>
+                  <CancelIcon />
                   <span>Cancel</span>
                 </button>
               </div>
@@ -509,17 +584,18 @@ const Profile = () => {
             className="new-card-btn" 
             onClick={() => setSyncMode(true)}
           >
-            <span className="material-symbols-outlined">sync</span>
+            <SyncIcon />
             <span>Sync Cart and Favorites</span>
           </button>
         }
 
 
-
-
         <div className="password-section">
           {isChangingPassword? 
             <form
+              aria-label="Change your password" 
+              role="dialog" 
+              aria-modal="true" 
               className="password-change-form" 
               name="password-change-form" 
               onSubmit={(e) => {
@@ -544,15 +620,11 @@ const Profile = () => {
                   } 
                   className="visible-pass-btn"
                 >
-                  <span 
-                    className="material-symbols-outlined visible-pass-icon"
-                  >
-                    {isPassVisible['new']? "visibility_off" : "visibility"}
-                  </span>
+                  {isPassVisible['new']? <VisibilityOffIcon /> : <VisibilityOnIcon />}
                 </button>
               </div>
 
-              <ul className="password-requirements">
+              <ul aria-live="polite" className="password-requirements">
                 <ValidationItem label="At least 8 characters" valid={validations.length} />
                 <ValidationItem label="At least one lowercase letter" valid={validations.lowercase} />
                 <ValidationItem label="At least one uppercase letter" valid={validations.uppercase} />
@@ -562,17 +634,13 @@ const Profile = () => {
                 {isPasswordValid && 
                   <li className="validation-item">
                     <span>
-                      {newPassword === confirmPassword?
+                      {newPassword === confirmPassword ?
                         "Passwords match" :
                         "Passwords do not match"
                       }
                     </span>
 
-                    <span className={`
-                      material-symbols-outlined ${newPassword === confirmPassword? "valid" : "invalid"
-                    }`}>
-                      {newPassword === confirmPassword? "check" : "close"}
-                    </span>
+                    {newPassword === confirmPassword? <CheckIcon /> : <CloseIcon />}
                   </li>
                 }
               </ul>
@@ -594,15 +662,9 @@ const Profile = () => {
                   }  
                   className="visible-pass-btn"
                 >
-                  <span 
-                    className="material-symbols-outlined visible-pass-icon"
-                  >
-                    {isPassVisible['confirm']? "visibility_off" : "visibility"}
-                  </span>
+                  {isPassVisible['confirm']? <VisibilityOffIcon /> : <VisibilityOnIcon />}
                 </button>
               </div>
-
-
 
 
               {isPasswordValid && confirmPassword === newPassword &&
@@ -628,8 +690,8 @@ const Profile = () => {
                       }  
                       className="visible-pass-btn"
                     >
-                      <span className="material-symbols-outlined visible-pass-icon">
-                        {isPassVisible['current']? "visibility_off" : "visibility"}
+                      <span aria-hidden="true" className="material-symbols-outlined visible-pass-icon">
+                        {isPassVisible['current']? <VisibilityOffIcon /> : <VisibilityOnIcon />}
                       </span>
                     </button>
                   </div>
@@ -637,10 +699,9 @@ const Profile = () => {
               }
 
 
-
               {currentPassword &&
                 <button className="new-card-btn change-pass-btn">
-                  <span className="material-symbols-outlined">encrypted</span>
+                  <span aria-hidden="true" className="material-symbols-outlined">encrypted</span>
                   <span>Change Password</span>
                 </button>
               }
@@ -655,23 +716,67 @@ const Profile = () => {
                 }} 
                 className="new-card-btn cancel-password-btn"
               >
-                <span className="material-symbols-outlined">cancel</span>
+                <CancelIcon />
                 <span>Cancel</span>
               </button>
             </form> :
 
             <button className="new-card-btn" onClick={() => setIsChangingPassword(true)}>
-              <span className="material-symbols-outlined">encrypted</span>
+              <EncryptedIcon />
               <span>Change Password</span>
             </button>
           }
         </div>
 
-        <div className={
-          status.status === 'success'? 'edit-status success' : 'edit-status error'
-        }>
-          {status.message}
+
+        <div className="delete-account-section">
+          {confirmDeleteAccount ? 
+            (
+              <div 
+                aria-labelledby="delete-confirmation" 
+                role="dialog" 
+                aria-modal="true" 
+                className="delete-confirm-modal"
+              >
+                <p id="delete-confirmation">Are you sure you want to delete your account? This will remove all your data, including your favorites, cart and premium points. This cannot be undone.</p>
+
+                <button 
+                  onClick={handleDelete} 
+                  className="new-card-btn delete"
+                >
+                  <RemoveIcon />
+                  <span>Yes, delete</span>
+                </button>
+
+                <button 
+                  onClick={() => setConfirmDelete(false)} 
+                  className="new-card-btn cancel"
+                >
+                  <CancelIcon />
+                  <span>Cancel</span>
+                </button>
+              </div>
+            ) :
+            
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="new-card-btn delete"
+            >
+              <RemoveIcon />
+              <span>Delete Account</span>
+            </button>
+          }
         </div>
+
+
+
+        {status.status && 
+          <div aria-live="polite" className={
+            status.status === 'success'? 'edit-status success' : 'edit-status error'
+          }>
+            {status.message}
+          </div>
+        }
       </div>
     </div>
   );

@@ -1,4 +1,8 @@
-import { useState, type MouseEvent, type ChangeEvent, type FormEvent } from 'react';
+import { 
+  useState, useRef, type MouseEvent,
+  type ChangeEvent, type FormEvent,
+  useEffect 
+} from 'react';
 import registerUserService from '../services/registerUserService.ts';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner.tsx';
@@ -10,6 +14,8 @@ import ValidationItem from '../components/ValidationItem.tsx';
 import useCartContext from '../hooks/useCartContext.ts';
 import { useAvatar } from '../context/AuthContext/AvatarContext.tsx';
 import useFavoritesContext from '../hooks/useFavoritesContext.ts';
+import VisibilityOnIcon from '../images/icons/visibility-icon.svg?component';
+import VisibilityOffIcon from '../images/icons/visibility-off-icon.svg?component';
 
 
 const Register = () => {
@@ -29,6 +35,8 @@ const Register = () => {
   const [ error, setError ] = useState<string | null>(null);
   const navigate = useNavigate();
   const { dispatch } = useAuthContext();
+  const closeDialogRef = useRef<HTMLButtonElement | null>(null);
+  const firstNameRef = useRef<HTMLInputElement | null>(null);
 
   const validations = {
     length: password.length >= 8,
@@ -138,15 +146,45 @@ const Register = () => {
   };
 
 
+  useEffect(() => {
+    const closeDialogButton = closeDialogRef.current;
+    if (!closeDialogButton) return;
+
+    if (isModalOpen) {
+      closeDialogButton.focus();
+    } else {
+      closeDialogButton.blur();
+    }
+  }, [isModalOpen]);
+
+
+  useEffect(() => {
+    firstNameRef.current?.focus();
+  }, []);
+
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        setIsModalOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isModalOpen]);
+
+
   return (
     <section className="create-account-section">
       <h1 className="register-title">Create Account</h1>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form name="register-form" onSubmit={handleSubmit} noValidate>
         <div className="name-wrapper">
           <div className="name-wrapper_flex">
             <label htmlFor="first-name">First Name *</label>
-            <input 
+            <input
+              ref={firstNameRef} 
               value={firstName} 
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
               className="input register-input" 
@@ -194,17 +232,13 @@ const Register = () => {
               onClick={togglePass} 
               className="visible-pass-btn"
             >
-              <span 
-                className="material-symbols-outlined visible-pass-icon"
-              >
-                {visiblePass? "visibility_off" : "visibility"}
-              </span>
+              {visiblePass? <VisibilityOffIcon /> : <VisibilityOnIcon />}
             </button>
           </div>
 
           <p>Must include at least 8 characters, an upper and a lowercase character, a number and a special character.</p>
 
-          <ul className="password-requirements">
+          <ul aria-live="polite" aria-atomic="true" className="password-requirements">
             <ValidationItem label="At least 8 characters" valid={validations.length} />
             <ValidationItem label="At least one lowercase letter" valid={validations.lowercase} />
             <ValidationItem label="At least one uppercase letter" valid={validations.uppercase} />
@@ -229,17 +263,19 @@ const Register = () => {
               onClick={toggleConfirmPass} 
               className="visible-pass-btn"
             >
-              <span 
+              <span
+                aria-hidden="true" 
                 className="material-symbols-outlined visible-pass-icon"
               >
-                {visibleConfirmPass? "visibility_off" : "visibility"}
+                {visibleConfirmPass? <VisibilityOffIcon /> : <VisibilityOnIcon />}
               </span>
             </button>
           </div>
         </div>
 
-        <label className="checkbox-label">
+        <label htmlFor="accept-terms" className="checkbox-label">
           <input
+            id="accept-terms"
             onChange={() => setAcceptTerms(prev => !prev)}
             className="checkbox-inp" 
             type="checkbox"
@@ -248,13 +284,14 @@ const Register = () => {
           <p>I have read and agree with <a className="terms-link" href="#">Progressio Terms and Conditions</a>, <a className="terms-link" href="#">Privacy Policy</a> and confirm I am at least 16 years old.</p>
         </label>
 
-        <label className="checkbox-label">
-          <input className="checkbox-inp" type="checkbox" />
+        <label htmlFor="optional-subscribe" className="checkbox-label">
+          <input id="optional-subscribe" className="checkbox-inp" type="checkbox" />
           <p>Optional: I subscribe to Progressio Newsletter</p>
         </label>
 
-        <label className="checkbox-label">
-          <input 
+        <label htmlFor="keep-logged" className="checkbox-label">
+          <input
+            id="keep-logged" 
             type="checkbox" 
             className="checkbox-inp"
             onChange={() => setKeepMeLogged(prev => !prev)}
@@ -263,19 +300,30 @@ const Register = () => {
           <p>Keep me logged in</p>
         </label>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message" role="alert">{error}</div>}
         <button className="create-account-btn">Create Account</button>
       </form>
 
-      <div data-open={isModalOpen? "true" : "false"} className="success-register_modal">
+      <div
+        role="dialog"
+        aria-live="assertive"
+        aria-hidden={isModalOpen? "false" : "true"}
+        aria-labelledby="success-register"
+        aria-modal="true" 
+        data-open={isModalOpen? "true" : "false"}
+        tabIndex={isModalOpen? 0 : -1} 
+        className="success-register_modal"
+      >
         <div className="success-register_modal-content">
-          <p className="success-register_par"> 
+          <p id="success-register" className="success-register_par"> 
             You now have a Progressio account!
           </p>
           <p className="success-register_par">Use your credentials to log in.</p>
           <p className="success-register_par">Enjoy the experience of unbeatable tech deals, exclusive discounts, and the smartest way to shop online!</p>
 
-          <button 
+          <button
+            ref={closeDialogRef}
+            aria-label="Close dialog" 
             className="close-menu-btn close-login-btn" 
             onClick={() => {
               setFirstName('');
@@ -288,7 +336,7 @@ const Register = () => {
               navigate('/profile');
             }}
           >
-            <span className="material-symbols-outlined">close</span>
+            <span aria-hidden="true" className="material-symbols-outlined">close</span>
           </button>
         </div>
       </div>

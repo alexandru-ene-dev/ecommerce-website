@@ -8,24 +8,27 @@ import useCartContext from '../hooks/useCartContext.ts';
 import useFavoritesContext from '../hooks/useFavoritesContext.ts';
 import useHandleFavorites from '../hooks/useHandleFavorites.ts';
 import useHandleCart from '../hooks/useHandleCart.ts';
+import ShoppingCartIcon from '../images/icons/shopping-cart-icon.svg?component';
+import FavoriteIcon from '../images/icons/favorite-icon.svg?component';
+
+import FavoriteFillIcon from '../images/icons/favorite-fill-icon.svg?component';
 import LoadingSpinner from './LoadingSpinner.tsx';
 import { type Dispatch, type SetStateAction } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
 import { type ActiveFeedback } from '../pages/Homepage.tsx';
+import LazyProductImage from './LazyProductImage.tsx';
 
 
 const NewProduct = (
   { 
     setFeedbackArray,
     setActiveFeedback,
-    imgSrc,
     encodedQuery,
     item, 
   }:
   { 
     setFeedbackArray?: Dispatch<SetStateAction<ActiveFeedback[] | []>>
     setActiveFeedback?: Dispatch<SetStateAction<ActiveFeedback | null>>
-    imgSrc: string, 
     encodedQuery: string, 
     item: NewProductType
   }
@@ -46,6 +49,14 @@ const NewProduct = (
   const newPriceForUsers = (item.oldPrice - (newSaleForUsers / 100 * item.oldPrice)).toFixed(2);
 
 
+  const handleProductClick = async () => {
+    setLoading(true);
+    await delay(700);
+    getProduct(encodedQuery);
+    setLoading(false);
+  };
+
+
   return (
     <div className="new-section-card">
       <div className="card-img-wrapper">
@@ -53,7 +64,8 @@ const NewProduct = (
           <span className="join-extra-sale">Plus -5% off</span>
         }
 
-        <button 
+        <button
+          aria-label={`${isFavorite? 'Remove' : 'Add'} ${item.title} from favorites`} 
           onClick={async () => {
             handleFavorites(item, isFavorite).then(() => {
               if (setFeedbackArray && setActiveFeedback) {
@@ -75,26 +87,23 @@ const NewProduct = (
               });
             }
           }} 
-          className="add-fav-btn new-fav-btn">
-          <span 
-            data-favorite={isFavorite? "true" : "false"}
-            className="material-symbols-outlined new-fav-icon"
-          >
-            favorite
-          </span>
+          className="add-fav-btn new-fav-btn"
+        >
+          <FavoriteFillIcon className={isFavorite? "favorite fill" : "favorite"} />
+          <FavoriteIcon className="unfill" />
         </button>
 
-        <Link 
+        <Link
+          aria-label={`View details for ${item.title}`} 
           to={`/${item.link}/${encodedQuery}`}
-          onClick={async () => {
-            setLoading(true);
-            await delay(700);
-            getProduct(encodedQuery);
-            setLoading(false);
-          }}
+          onClick={handleProductClick}
         >   
           <div className="img-wrapper-inner">
-            <img className="new-card-img" src={imgSrc} alt={item.alt} />
+            <LazyProductImage 
+              className="new-card-img" 
+              imageName={item.img} 
+              alt={item.alt} 
+            />
           </div>
         </Link>
       </div>
@@ -102,12 +111,7 @@ const NewProduct = (
       <div className="new-card-details-wrapper">
         <Link 
           to={`/${item.link}/${encodedQuery}`}
-          onClick={async () => {
-            setLoading(true);
-            await delay(700);
-            getProduct(encodedQuery);
-            setLoading(false);
-          }}
+          onClick={handleProductClick}
           className="new-card-title"
         >
           {item.title}
@@ -122,7 +126,12 @@ const NewProduct = (
           </p>
 
           <p className="new-card-price">
-            <span className="old-price">${item.oldPrice.toFixed(2)}</span>
+            <span 
+              className="old-price"
+              aria-label={`Old price: ${item.oldPrice}`} 
+            >
+              ${item.oldPrice.toFixed(2)}
+            </span>
             <span className="new-price">
               ${state.isLoggedIn? newPriceForUsers : item.price.toFixed(2)}
             </span>
@@ -133,6 +142,7 @@ const NewProduct = (
           <LoadingSpinner isLoading={cartLoadingButton} />
 
           <button 
+            aria-label={`${isOnCart? 'Remove' : 'Add'} ${item.title} from cart`} 
             onClick={async () => {
               handleCart(item, isOnCart).then(() => {
                 if (setActiveFeedback && setFeedbackArray) {
@@ -156,9 +166,7 @@ const NewProduct = (
             }} 
             className="add-cart-btn new-card-btn"
           >
-            <span className="material-symbols-outlined new-cart-icon">
-              shopping_cart
-            </span>
+            <ShoppingCartIcon />
             <span>
               {isOnCart? 'Remove from Cart' : 'Add to Cart'}
             </span>

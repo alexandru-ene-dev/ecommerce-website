@@ -1,39 +1,40 @@
 import Header from './components/Header.tsx';
 import Footer from './components/Footer.tsx';
 import BackToTop from './components/BackToTop.tsx';
-import { ScrollTop } from './components/ScrollTop.tsx';
-import { useInputContext } from './hooks/useInputContext.ts';
-
-import { HandlePadding } from './components/HandlePadding.tsx';
-import NotFound from './pages/NotFound.tsx';
-import Homepage from './pages/Homepage.tsx';
-import Register from './pages/RegisterPage.tsx';
-import Favorites from './pages/Favorites.tsx';
-
-import Cart from './pages/Cart.tsx';
-import About from './pages/About.tsx';
-import Contact from './pages/Contact.tsx';
-import Profile from './pages/Profile.tsx';
-import ProductPage from './pages/ProductPage.tsx';
-
+import { useThemeContext } from './hooks/useThemeContext.ts';
 import { useAuthContext } from './hooks/useAuthContext.ts';
 import { getLocalFavorites } from './utils/localFavorites.ts';
-import CategoryPage from './pages/CategoryPage.tsx';
-import LoaderLine from './components/LoaderLine.tsx';
-import { getCart } from './utils/cartStorage.ts';
 
+import { getCart } from './utils/cartStorage.ts';
 import useCartContext from './hooks/useCartContext.ts';
-import { getAvatarService } from './services/getAvatarService.tsx';
 import { useAvatar } from './context/AuthContext/AvatarContext.tsx';
 import useFavoritesContext from './hooks/useFavoritesContext.ts';
 import type { Theme, ThemeIcon } from './context/types.ts';
 
 import './styles/index.css';
 import { Route, Routes } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import initializeAuth from './services/initializeAuth.tsx';
-import SearchPage from './pages/SearchPage.tsx';
 import ScrollToHash from './components/ScrollToHash.tsx';
+
+
+const NotFound = lazy(() => import('./pages/NotFound.tsx'));
+const Homepage = lazy(() =>import('./pages/Homepage.tsx'));
+const Register = lazy(() => import('./pages/RegisterPage.tsx'));
+const Favorites = lazy(() => import('./pages/Favorites.tsx'));
+const Cart = lazy(() => import('./pages/Cart.tsx'));
+const About = lazy(() => import('./pages/About.tsx'));
+
+const Profile = lazy(() => import('./pages/Profile.tsx'));
+const ProductPage = lazy(() => import('./pages/ProductPage.tsx'));
+const Goodbye = lazy(() => import('./pages/Goodbye.tsx'));
+const CategoryPage = lazy(() => import('./pages/CategoryPage.tsx'));
+const LoginPage = lazy(() => import('./pages/LoginPage.tsx'));
+const SearchPage = lazy(() => import('./pages/SearchPage.tsx'));
+
+const LoaderLine = lazy(() => import('./components/LoaderLine.tsx'));
+const HandlePadding = lazy(() => import('./components/HandlePadding.tsx'));
+const ScrollTop = lazy(() => import('./components/ScrollTop.tsx'));
 
 
 function App() {
@@ -42,14 +43,14 @@ function App() {
   const { setAvatar } = useAvatar();
   const { setLocalFavorites } = useFavoritesContext();
 
-  const { dispatch: themeDispatch } = useInputContext();
+  const { dispatch: themeDispatch } = useThemeContext();
   // sticky button on product page
   const [ isBtnVisible, setIsBtnVisible ] = useState(false);
   const [ stickyBtnHeight, setStickyBtnHeight ] = useState(30);
 
 
   useEffect(() => {
-    const theme = (state?.user?.theme || localStorage.getItem('theme') || 'os-default') as Theme;
+    const theme = (state?.user?.theme || localStorage.getItem('theme') || 'os-default') as Theme; 
 
     if (theme === 'os-default') {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -67,12 +68,17 @@ function App() {
       document.documentElement.className = theme;
     }
 
+    if (state?.user?.theme) {
+      localStorage.setItem('theme', state.user.theme);
+    }
+
     themeDispatch({ 
       type: 'TOGGLE_THEME', 
       theme: theme, 
       themeIcon: (theme as Theme === 'os-default'? 'contrast' : theme.replace('-', '_')) as ThemeIcon
     });
   }, [state.isLoggedIn, state?.user?.theme]);
+
 
 
   useEffect(() => {
@@ -117,10 +123,17 @@ function App() {
   // initialize auth
   useEffect(() => {
     const auth = async () => {
-      const result = await initializeAuth();
-      if (!result.success) return;
-
-      authDispatch({ type: 'LOGIN', payload: result.user });
+      try {
+        const result = await initializeAuth();
+        if (!result.success) return;
+  
+        authDispatch({ type: 'LOGIN', payload: result.user });
+      } catch (err) {
+        return {
+          success: false,
+          message: err
+        }
+      }
     };
     
     auth();
@@ -129,21 +142,21 @@ function App() {
 
   useEffect(() => {
     const getAvatar = async () => {
-      if (!state.isLoggedIn) {
+      if (!state.isLoggedIn || !state.user?._id || !state.user?.avatar) {
         return;
       }
 
       try {
-        if (!state.user) return;
-        const avatar = await getAvatarService(state.user._id);
+        const { getAvatarService } = await import('./services/getAvatarService.tsx');
+        const result = await getAvatarService(state.user._id);
 
-        if (avatar.success === false) {
-          return;
+        if (result?.success && result.avatar) {
+          setAvatar(`data:image/png;base64,${result.avatar}`);
+        } else {
+          setAvatar(null);
         }
-
-        setAvatar(`data:image/png;base64,${avatar.avatar}`);
       } catch (err) {
-        return;
+        setAvatar(null);
       }
     };
 
@@ -153,36 +166,39 @@ function App() {
 
   return (
     <>
-      <ScrollTop />
       <ScrollToHash />
-      <LoaderLine />
       <Header />
-      <HandlePadding 
-        setStickyBtnHeight={setStickyBtnHeight}
-        setIsBtnVisible={setIsBtnVisible}
-      />
       
-      <Routes>
-        <Route path='/' element={<Homepage />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/favorites' element={<Favorites />} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ScrollTop />
+        <LoaderLine />
+        <HandlePadding 
+          setStickyBtnHeight={setStickyBtnHeight}
+          setIsBtnVisible={setIsBtnVisible}
+        />
+        <Routes>
+          <Route path='/' element={<Homepage />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/favorites' element={<Favorites />} />
 
-        <Route path='/cart' element={<Cart />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/contact' element={<Contact />} />
-        
-        <Route path='/products/:name' element={
-          <ProductPage 
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/login' element={<LoginPage />} />
+          
+          <Route path='/products/:name' element={
+            <ProductPage 
             setIsBtnVisible={setIsBtnVisible} 
             setStickyBtnHeight={setStickyBtnHeight}  
-          />
-        }/>
+            />
+          }/>
 
-        <Route path='/search' element={<SearchPage />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/categories/:subcategory/:subSubcategory?' element={<CategoryPage />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
+          <Route path='/search' element={<SearchPage />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/goodbye' element={<Goodbye />} />
+          <Route path='/categories/:subcategory/:subSubcategory?' element={<CategoryPage />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </Suspense>
 
       <BackToTop />
 
