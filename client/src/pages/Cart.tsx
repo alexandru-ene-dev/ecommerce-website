@@ -125,7 +125,7 @@ const Cart = () => {
               `You have ${localCart.length} ${
                 localCart.length > 1? 'products' : 'product'
               } in your cart` : 
-              'You cart is empty'
+              'Your cart is empty'
           }</p>
         </div>
 
