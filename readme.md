@@ -1,6 +1,6 @@
 # E-commerce Website
 
-A beginner-friendly fullstack e-commerce platform built using **TypeScript**, **React**, **Node.js**, **Express**, and **MongoDB**.  
+A fullstack e-commerce platform built using **TypeScript**, **React**, **Node.js**, **Express**, and **MongoDB**.  
 This project was built from scratch as a self-learning challenge, covering everything from UI to backend logic, authentication, and state management.
 
 ---
@@ -36,6 +36,7 @@ This project was built from scratch as a self-learning challenge, covering every
 ---
 
 ## Screenshots
+
 - **Homepage**: [homepage](https://imgur.com/a/jYGJ4xb)
 - **Profile**: [profile](https://imgur.com/a/elMnbw8) 
 - **Favorites**: [favorites](https://imgur.com/6ZzkrIg)
@@ -47,13 +48,14 @@ This project was built from scratch as a self-learning challenge, covering every
 
 ## Author
 
-Alexander Ene (uzzy412)
+Alexandru Ene
 Self-taught passionate developer
 
 Contact: 
 
-- **GitHub**: [uzzy412](https://github.com/Uzzy412 "Visit my GitHub")
-- **Dev.to**: [uzzy412_73](https://dev.to/uzzy412_73 "Visit my dev profile")
+- **Email**: alexandru.ene.dev@gmail.com
+- **GitHub**: [alexandru-ene-dev](https://github.com/alexandru-ene-dev "Visit my GitHub")
+- **Dev.to**: [alexandru-ene-dev](https://dev.to/alexandru-ene-dev "Visit my dev profile")
 - **Discord**: [uzzy412](https://discord.com/users/1103352748134645851 "Visit my discord")
 
 ---
