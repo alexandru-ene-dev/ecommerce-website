@@ -12,7 +12,7 @@ import initializeAuth from '../services/initializeAuth.tsx';
 import '../styles/index.css';
 
 
-const appConfig = () => {
+const appConfigs = () => {
   const { state, dispatch: authDispatch } = useAuthContext();
   const { setLocalCart } = useCartContext();
   const { setAvatar } = useAvatar();
@@ -138,5 +138,5 @@ const appConfig = () => {
   }, [state.isLoggedIn, state?.user?._id]);
 };
 
-export default appConfig;
+export default appConfigs;
 
