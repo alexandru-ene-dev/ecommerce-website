@@ -2,7 +2,7 @@ import Header from './components/Header.tsx';
 import Footer from './components/Footer.tsx';
 import BackToTop from './components/BackToTop.tsx';
 import ScrollToHash from './components/ScrollToHash.tsx';
-import appConfigs from './components/AppConfigs.ts';
+import appConfigs from './components/appConfigs.ts';
 
 import LoaderLine from './components/LoaderLine.tsx';
 import HandlePadding from './components/HandlePadding.tsx';
