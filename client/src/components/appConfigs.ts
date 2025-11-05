@@ -12,6 +12,8 @@ import initializeAuth from '../services/initializeAuth.tsx';
 import '../styles/index.css';
 
 
+// app configurations
+
 const appConfigs = () => {
   const { state, dispatch: authDispatch } = useAuthContext();
   const { setLocalCart } = useCartContext();
