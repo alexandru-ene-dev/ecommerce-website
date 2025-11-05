@@ -2,15 +2,14 @@ import { useTypewriter } from "../hooks/useTypewriter.ts";
 import { Link } from 'react-router-dom';
 import { type DealsType } from "../utils/deals.ts";
 import deals from '../utils/deals.ts';
-
-import { useRef, useEffect, type MouseEvent } from 'react';
+import { useRef, useEffect, useState, type MouseEvent } from 'react';
 import ChevronLeftIcon from '../images/icons/chevron-left-icon.svg?component';
 import ChevronRightIcon from '../images/icons/chevron-right-icon.svg?component';
-import LazyProductImage from "./LazyProductImage.tsx";
 
 
 const Deals = () => {
   const dealSlideRef = useRef<HTMLUListElement>(null);
+  const [ transitioning, setTransitioning ] = useState(false);
 
 
   const changeSlide = (e: MouseEvent<HTMLButtonElement>): void => {
@@ -25,17 +24,27 @@ const Deals = () => {
     const currentScroll = container.scrollLeft;
 
     if (direction === 'right') {
+      if (transitioning) return;
+
       if (currentScroll >= maxScroll) {
         container.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
         container.scrollBy({ left: slideWidth, behavior: 'smooth' });
       }
+      
+      setTransitioning(true);
+      setTimeout(() => setTransitioning(false), 500);
     } else if (direction === 'left') {
+      if (transitioning) return;
+
       if (currentScroll <= 0) {
         container.scrollTo({ left: maxScroll, behavior: 'smooth' });
       } else {
         container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
       }
+
+      setTransitioning(true);
+      setTimeout(() => setTransitioning(false), 500);
     }
   };
 
@@ -54,7 +63,12 @@ const Deals = () => {
       } else {
         container.scrollBy({ left: slideWidth, behavior: 'smooth' });
       }
+
+      setTransitioning(true);
+
+      setTimeout(() => setTransitioning(false), 600);
     }, 5000); 
+
     return () => clearTimeout(interval);
   }, []);
 
@@ -70,7 +84,7 @@ const Deals = () => {
           <p className="deal-text">{typedText}</p>
 
           <div className="deal-image-wrapper">
-            <LazyProductImage className="deal-img" imageName={src} alt={alt} />
+            <img className="deal-img" src={src} alt={alt} />
           </div>
         </Link>
       </li>

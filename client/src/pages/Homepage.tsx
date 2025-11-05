@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import NewProduct from '../components/NewProduct.tsx';
 import { type NewProductType } from '../components/types.ts';
 import CartFavoritesFeedback from '../components/CartFavoritesFeedback.tsx';
-
 import HeroImage from '../images/innovative-tech.webp';
+
 import useLoadingContext from '../hooks/useLoadingContext.ts';
 import delay from '../utils/delay.ts';
 import { useAuthContext } from '../hooks/useAuthContext.ts';
@@ -21,16 +21,20 @@ export type ActiveFeedback = {
 
 const Homepage = () => {
   const { setLoading } = useLoadingContext();
-  const [ haveNewProducts, setHaveNewProducts ] = useState(false);
   const [ newProducts, setNewProducts ] = useState<NewProductType[]>([]);
-
   const { state } = useAuthContext();
   const [ feedbackArray, setFeedbackArray ] = useState<ActiveFeedback[] | []>([]);
   const [ _, setActiveFeedback ] = useState<ActiveFeedback | null>(null);
 
+  const SKELETON_COUNT = 8;
+  const skeletonElements = [...Array(SKELETON_COUNT)].map((_, index) => (
+    <div key={index} className="new-section-card skeleton">
+    </div>
+  ));
+
   const newProductElements = newProducts.map(item => {
     const encodedQuery = item.title.replaceAll(' ', '-');
-    
+
     return (
       <NewProduct
         setFeedbackArray={setFeedbackArray}
@@ -39,7 +43,7 @@ const Homepage = () => {
         item={item} 
         encodedQuery={encodedQuery} 
       />
-    );
+    ); 
   });
 
 
@@ -49,12 +53,10 @@ const Homepage = () => {
       const products = await getHomeNewProducts();
 
       if (!products.success) {
-        setHaveNewProducts(false);
         setNewProducts([]);
         return;
       }
 
-      setHaveNewProducts(true);
       setNewProducts(products.products);
     };
 
@@ -79,23 +81,26 @@ const Homepage = () => {
       }
 
       <div className="hero-wrapper">
-        <img className="hero-img" src={HeroImage} alt="A highly tech background" />
+        {
+          HeroImage? 
+            <img className="hero-img" src={HeroImage} alt="A highly tech background" />
+            :
+            <div className="hero-img skeleton"></div>
+        }
         <h1 className="title">
           Future is here! Explore latest tech with smartest prices.
         </h1>
       </div>
     
-      {haveNewProducts && 
-        <div id="new" className="new-section">
-          <h2 className="section_title">What's New?</h2>
+      <div id="new" className="new-section">
+        <h2 className="section_title">What's New?</h2>
 
-          <div className="new-section-grid-wrapper">
-            <div className="new-section-grid">
-              {newProductElements}
-            </div>
+        <div className="new-section-grid-wrapper">
+          <div className="new-section-grid">
+            {newProductElements.length? newProductElements : skeletonElements}
           </div>
         </div>
-      }
+      </div> 
 
       <Deals />
 
