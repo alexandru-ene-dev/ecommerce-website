@@ -1,3 +1,8 @@
+import matrix from '../images/matrix.jpg';
+import games from '../images/games.jpg';
+import future from '../images/future.jpg';
+
+
 export type DealsType = {
   text: string,
   id: number,
@@ -13,7 +18,7 @@ const deals = [
   {
     id: 1,
     text: '50% off on matrix merchandise!',
-    src: 'matrix.jpg',
+    src: matrix,
     alt: 'matrix merchandise',
     active: true,
     url: '/categories/matrix',
@@ -24,7 +29,7 @@ const deals = [
   {
     id: 2,
     text: 'From 20% off on latest video games!',
-    src: 'games.jpg',
+    src: games,
     alt: 'latest video games deal',
     active: false,
     url: '/categories/video-games',
@@ -34,7 +39,7 @@ const deals = [
   {
     id: 3,
     text: 'Buy 1, get 2! And many more on future tech!',
-    src: 'future.jpg',
+    src: future,
     alt: 'future technology deal',
     active: false,
     url: '/categories/buy-1-get-2',
